@@ -9,4 +9,5 @@ export type Message = {
 export type ChatSettings = {
   model: string;
   systemPrompt: string;
+  adminMode?: boolean;
 };

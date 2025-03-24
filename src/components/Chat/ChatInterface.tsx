@@ -1,17 +1,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, X, MessageSquare, Settings, ChevronDown } from 'lucide-react';
+import { Send, X, MessageSquare, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { sendChatMessage } from '@/services/chatService';
 import { Message } from '@/types/chat';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +17,16 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from 'lucide-react';
+
+// Admin mode constant - set to false to hide the settings button for visitors
+const ADMIN_MODE = false; 
 
 const ChatInterface = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -148,66 +152,68 @@ const ChatInterface = () => {
               <span className="font-display text-lg">CHAT</span>
             </div>
             <div className="flex items-center space-x-1">
-              <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className="text-deadpunch-gray-light hover:text-white"
-                  >
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
-                  <DialogHeader>
-                    <DialogTitle>Chat Settings</DialogTitle>
-                    <DialogDescription className="text-deadpunch-gray-light">
-                      Customize your AI assistant's behavior
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="model">AI Model</Label>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="w-full justify-between">
-                            {modelOptions.find(m => m.value === selectedModel)?.label || selectedModel}
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-full bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
-                          {modelOptions.map((option) => (
-                            <DropdownMenuItem 
-                              key={option.value} 
-                              onClick={() => setSelectedModel(option.value)}
-                            >
-                              {option.label}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="system-prompt">System Prompt / Knowledge Base</Label>
-                      <Textarea
-                        id="system-prompt"
-                        className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark min-h-[100px]"
-                        placeholder="Describe how the AI should behave or provide domain knowledge"
-                        value={systemPrompt}
-                        onChange={(e) => setSystemPrompt(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
+              {ADMIN_MODE && (
+                <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
+                  <DialogTrigger asChild>
                     <Button 
-                      className="bg-deadpunch-red hover:bg-deadpunch-red-hover" 
-                      onClick={handleSettingsSave}
+                      variant="ghost" 
+                      size="icon"
+                      className="text-deadpunch-gray-light hover:text-white"
                     >
-                      Save Changes
+                      <Settings className="h-4 w-4" />
                     </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+                  </DialogTrigger>
+                  <DialogContent className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
+                    <DialogHeader>
+                      <DialogTitle>Chat Settings</DialogTitle>
+                      <DialogDescription className="text-deadpunch-gray-light">
+                        Customize your AI assistant's behavior
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="model">AI Model</Label>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="w-full justify-between">
+                              {modelOptions.find(m => m.value === selectedModel)?.label || selectedModel}
+                              <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-full bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
+                            {modelOptions.map((option) => (
+                              <DropdownMenuItem 
+                                key={option.value} 
+                                onClick={() => setSelectedModel(option.value)}
+                              >
+                                {option.label}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="system-prompt">System Prompt / Knowledge Base</Label>
+                        <Textarea
+                          id="system-prompt"
+                          className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark min-h-[100px]"
+                          placeholder="Describe how the AI should behave or provide domain knowledge"
+                          value={systemPrompt}
+                          onChange={(e) => setSystemPrompt(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button 
+                        className="bg-deadpunch-red hover:bg-deadpunch-red-hover" 
+                        onClick={handleSettingsSave}
+                      >
+                        Save Changes
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              )}
               <Button 
                 variant="ghost" 
                 size="icon" 
