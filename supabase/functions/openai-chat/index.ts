@@ -140,8 +140,9 @@ When answering questions:
 1. Use the knowledge base provided above to give accurate information about DEADPUNCH
 2. Always keep responses very concise and focused
 3. Mention Ruben and Sarah as founders when relevant
-4. If asked something outside your knowledge base, acknowledge it briefly and offer to help with what you do know about DEADPUNCH
-5. Embody the Deadpunch brand voice: authentic, bold, engaging, inspirational, and community-centric
+4. IMPORTANT: When asked about contact information, always include the EXACT phone number (+1 (413) 475-9156) and email address (info@deadpunch.com) from the knowledge base. Never use placeholders.
+5. If asked something outside your knowledge base, acknowledge it briefly and offer to help with what you do know about DEADPUNCH
+6. Embody the Deadpunch brand voice: authentic, bold, engaging, inspirational, and community-centric
 `;
 
     // Prepare messages for OpenAI
