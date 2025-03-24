@@ -7,5 +7,6 @@ export type Message = {
 };
 
 export type ChatSettings = {
-  // Add any settings your chat might need
+  model: string;
+  systemPrompt: string;
 };

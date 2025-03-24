@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase';
 // Request type for chat messages
 type ChatRequest = {
   message: string;
+  model?: string;
+  systemPrompt?: string;
 };
 
 // Response type from the API
@@ -25,12 +27,17 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
       };
     }
 
+    // Use provided model and systemPrompt or fall back to defaults
+    const model = request.model || "gpt-4o";
+    const systemPrompt = request.systemPrompt || 
+      "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful.";
+
     // Call the Supabase Edge Function that will handle the OpenAI API request
     const { data, error } = await supabase.functions.invoke('openai-chat', {
       body: {
         message: request.message,
-        model: "gpt-4o-mini",
-        systemPrompt: "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful."
+        model,
+        systemPrompt
       }
     });
 
