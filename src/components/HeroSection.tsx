@@ -98,8 +98,8 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Modified: Decorative Gradient - Height reduced from h-32 to h-16 to show more content below */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-deadpunch-dark to-transparent"></div>
+      {/* Modified: Further reduced gradient height from h-16 to h-8 to show more of the pool table content below */}
+      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-deadpunch-dark to-transparent"></div>
       
       {/* Animated Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
