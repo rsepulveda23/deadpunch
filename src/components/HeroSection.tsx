@@ -102,13 +102,6 @@ const HeroSection = () => {
 
       {/* Responsive gradient height - smaller on desktop, slightly larger on mobile */}
       <div className={`absolute bottom-0 left-0 right-0 ${isMobile ? 'h-8' : 'h-4'} bg-gradient-to-t from-deadpunch-dark to-transparent`}></div>
-      
-      {/* Animated Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="w-8 h-12 border-2 border-white/30 rounded-full flex justify-center p-1">
-          <div className="w-1 h-3 bg-white/60 rounded-full animate-pulse"></div>
-        </div>
-      </div>
     </div>
   );
 };
