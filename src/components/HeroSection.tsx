@@ -1,10 +1,12 @@
 
 import { useEffect, useRef } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     // Reveal animation for elements
@@ -98,8 +100,8 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Modified: Further reduced gradient height from h-16 to h-8 to show more of the pool table content below */}
-      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-deadpunch-dark to-transparent"></div>
+      {/* Responsive gradient height - smaller on desktop, slightly larger on mobile */}
+      <div className={`absolute bottom-0 left-0 right-0 ${isMobile ? 'h-8' : 'h-4'} bg-gradient-to-t from-deadpunch-dark to-transparent`}></div>
       
       {/* Animated Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
