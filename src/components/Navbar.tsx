@@ -49,13 +49,24 @@ const Navbar = () => {
           </a>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button 
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden text-white hover:text-deadpunch-red focus:outline-none transition-colors duration-300"
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Mobile TikTok Icon and Menu Button */}
+        <div className="md:hidden flex items-center space-x-4">
+          <a 
+            href="https://www.tiktok.com/@deadpunch.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-white hover:text-deadpunch-red transition-colors duration-300"
+            aria-label="TikTok"
+          >
+            <TikTokIcon size={40} />
+          </a>
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-white hover:text-deadpunch-red focus:outline-none transition-colors duration-300"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -65,15 +76,6 @@ const Navbar = () => {
         } overflow-hidden`}
       >
         <div className="container mx-auto px-4 flex flex-col space-y-4">
-          <a 
-            href="https://www.tiktok.com/@deadpunch.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300 py-2"
-          >
-            <TikTokIcon size={56} className="mr-2" />
-            <span>Follow on TikTok</span>
-          </a>
           <a 
             href="#notify" 
             className="btn-primary text-center my-2"
