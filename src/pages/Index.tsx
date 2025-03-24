@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import EmailForm from '@/components/EmailForm';
+import ChatBubble from '@/components/ChatBubble';
 
 const Index = () => {
   useEffect(() => {
@@ -50,6 +51,9 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      
+      {/* Chat Bubble */}
+      <ChatBubble />
     </main>
   );
 };
