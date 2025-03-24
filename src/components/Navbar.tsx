@@ -36,7 +36,7 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6">
           <a 
-            href="https://www.tiktok.com/@deadpunchofficial" 
+            href="https://www.tiktok.com/@deadpunch.com" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-white hover:text-deadpunch-red transition-colors duration-300"
@@ -66,7 +66,7 @@ const Navbar = () => {
       >
         <div className="container mx-auto px-4 flex flex-col space-y-4">
           <a 
-            href="https://www.tiktok.com/@deadpunchofficial" 
+            href="https://www.tiktok.com/@deadpunch.com" 
             target="_blank" 
             rel="noopener noreferrer"
             className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300 py-2"

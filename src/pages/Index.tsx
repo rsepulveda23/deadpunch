@@ -54,7 +54,7 @@ const Index = () => {
           {/* Social Media Links */}
           <div className="flex items-center space-x-4 mb-4 md:mb-0">
             <a 
-              href="https://www.tiktok.com/@deadpunchofficial" 
+              href="https://www.tiktok.com/@deadpunch.com" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
