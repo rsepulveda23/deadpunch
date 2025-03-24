@@ -56,7 +56,7 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
       // For development/testing when Edge Function might not be deployed yet
       if (error.message?.includes("Failed to send a request to the Edge Function")) {
         return {
-          message: "For website administrators: You need to set up the Supabase Edge Function. Log in to Supabase dashboard, go to Edge Functions, use the AI Assistant option to create a function named 'openai-chat', and add your OpenAI API key as OPENAI_API_KEY in secrets."
+          message: "The AI chat service is currently undergoing maintenance. Please try again later or contact support if the issue persists."
         };
       }
       
