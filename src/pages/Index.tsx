@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
@@ -43,16 +42,14 @@ const Index = () => {
       
       <footer className="py-6 border-t border-deadpunch-dark-lighter">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
+          <div className="flex items-center mb-4 md:mb-0">
             <img 
               src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
               alt="DEADPUNCH" 
-              className="h-8 object-contain" 
+              className="h-8 object-contain mr-4" 
             />
-          </div>
-          
-          {/* Social Media Links */}
-          <div className="flex items-center space-x-4 mb-4 md:mb-0">
+            
+            {/* Social Media Links moved next to logo */}
             <a 
               href="https://www.tiktok.com/@deadpunch.com" 
               target="_blank" 
