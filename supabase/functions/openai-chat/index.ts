@@ -45,6 +45,24 @@ At Deadpunch, our communication embodies the following qualities:
 
 About the Founders:
 Ruben and Sarah founded DEADPUNCH with a shared passion for billiards and a vision to create a brand that represents precision and confidence. They bring their expertise and enthusiasm to every aspect of the business.
+
+Mental Side of Pool and Sports Performance:
+Deadpunch deeply understands the critical role mental focus plays in billiards and sports performance. Our philosophy encompasses:
+
+- Mental Fortitude: Building resilience to handle pressure situations during competitive play
+- Focus Techniques: Strategies to maintain concentration throughout extended matches
+- Pre-shot Routines: Developing consistent mental preparation techniques
+- Visualization: Using mental imagery to improve execution and confidence
+- Emotional Control: Managing frustration, anxiety, and maintaining composure
+- Flow State: Techniques to access optimal performance states where action and awareness merge
+- Growth Mindset: Approaching challenges as opportunities for improvement
+- Performance Psychology: Applying sports psychology principles to billiards and other competitive contexts
+- Confidence Building: Practices to develop and maintain self-belief in high-pressure situations
+- Mindfulness: Present-moment awareness techniques to enhance performance
+- Mental Recovery: Strategies to bounce back from mistakes and losses
+- Performance Goals: Setting effective process-focused goals rather than just outcome goals
+
+Our approach integrates these mental aspects with technical skills, recognizing that peak performance comes from the synergy between mental clarity and physical execution.
 `;
 
 Deno.serve(async (req) => {
