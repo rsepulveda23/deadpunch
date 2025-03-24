@@ -1,4 +1,3 @@
-
 // Follow this setup guide to integrate the Deno runtime into your application:
 // https://deno.land/manual/examples/deploy_node_server
 
@@ -31,6 +30,10 @@ Frequently Asked Questions:
 - How can I stay updated on Deadpunch news and releases? Follow us on TikTok and other social media platforms, and consider subscribing to our newsletter through our website to receive the latest updates.
 - Can I collaborate with Deadpunch or contribute content? We welcome collaborations and community contributions. Please reach out to us via our contact page with your ideas or proposals.
 - Will Deadpunch products be available internationally? We aim to make our products accessible to a global audience. Details on shipping and availability will be provided closer to our product launch.
+
+Contact Information:
+- TikTok: https://www.tiktok.com/@deadpunch.com
+- Email: info@deadpunch.com
 
 Brand Voice/Tone:
 At Deadpunch, our communication embodies the following qualities:
