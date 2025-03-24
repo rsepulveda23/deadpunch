@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import EmailForm from '@/components/EmailForm';
+import ChatInterface from '@/components/Chat/ChatInterface';
 
 const Index = () => {
   useEffect(() => {
@@ -35,6 +36,9 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <EmailForm />
+      
+      {/* Add the ChatInterface component */}
+      <ChatInterface />
       
       <footer className="py-6 border-t border-deadpunch-dark-lighter">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
