@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 
 const Index = () => {
   useEffect(() => {
-    // Ensure the document title is set to DEADPUNCH
+    // Force document title to be DEADPUNCH
     document.title = "DEADPUNCH";
   }, []);
 
