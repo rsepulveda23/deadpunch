@@ -40,7 +40,7 @@ const Index = () => {
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <img 
-              src="/public/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+              src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
               alt="DEADPUNCH" 
               className="h-8 object-contain" 
             />
