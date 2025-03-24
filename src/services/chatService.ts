@@ -18,7 +18,7 @@ type ChatResponse = {
 // Default settings with updated knowledge base
 export const defaultChatSettings: ChatSettings = {
   model: "gpt-4o-mini", // Default to gpt-4o-mini
-  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah. Keep your responses brief and concise (maximum 1-2 short paragraphs). Embody a bold, authentic, and inspiring voice. When users ask about mental performance in billiards or sports, share insights about focus, concentration, mental fortitude, visualization, and flow states - these topics are a core part of the DEADPUNCH philosophy."
+  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah. Keep your responses brief and concise (maximum 1-2 short paragraphs). Be bold, not corny. Sound confident, not cocky. Use punchy language like 'locked in,' 'clean hit,' and 'respect the grind' when appropriate."
 };
 
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
