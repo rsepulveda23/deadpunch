@@ -1,4 +1,3 @@
-
 // This file handles the integration with OpenAI API via Supabase
 
 import { supabase } from '@/lib/supabase';
@@ -19,7 +18,7 @@ type ChatResponse = {
 // Default settings with updated knowledge base
 export const defaultChatSettings: ChatSettings = {
   model: "gpt-4o-mini", // Default to gpt-4o-mini
-  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand that embodies precision, focus, and confidence. Deadpunch represents those who are locked in, daring, and fully alive in moments of action. We cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits. Respond in an authentic, bold, engaging, inspirational, and community-centric voice that reflects our brand values."
+  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah. Keep your responses brief and concise (maximum 1-2 short paragraphs). Embody a bold, authentic, and inspiring voice."
 };
 
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {

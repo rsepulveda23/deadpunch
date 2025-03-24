@@ -14,7 +14,7 @@ interface ChatMessage {
 const knowledgeBase = `
 What is Deadpunch?
 
-Deadpunch is more than just a brand; it's a mindset that embodies precision, focus, and confidence. Originating from the world of billiards, Deadpunch represents those who are locked in, daring, and fully alive in moments of action. We cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits.
+Deadpunch is more than just a brand; it's a mindset that embodies precision, focus, and confidence. Originating from the world of billiards, Deadpunch represents those who are locked in, daring, and fully alive in moments of action. Founded by Ruben and Sarah, we cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits.
 
 What features/services do you offer?
 
@@ -39,6 +39,9 @@ At Deadpunch, our communication embodies the following qualities:
 - Engaging: We strive to captivate and involve our audience, encouraging active participation.
 - Inspirational: We aim to motivate our community to pursue mastery and embrace challenges.
 - Community-Centric: Our language fosters a sense of belonging, emphasizing collaboration and shared passion.
+
+About the Founders:
+Ruben and Sarah founded DEADPUNCH with a shared passion for billiards and a vision to create a brand that represents precision and confidence. They bring their expertise and enthusiasm to every aspect of the business.
 `;
 
 Deno.serve(async (req) => {
@@ -66,15 +69,15 @@ Deno.serve(async (req) => {
     console.log(`Processing chat request with model: ${model}`)
 
     // Enhanced system prompt with knowledge base
-    const defaultSystemPrompt = `You are a helpful assistant for DEADPUNCH, a billiards-focused brand that embodies precision, focus, and confidence. Be concise, knowledgeable, and helpful about Deadpunch and respond in their authentic, bold, engaging, inspirational, and community-centric voice.
+    const defaultSystemPrompt = `You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah. Keep responses brief and concise (1-2 short paragraphs maximum).
 
 ${knowledgeBase}
 
 When answering questions:
 1. Use the knowledge base provided above to give accurate information about DEADPUNCH
-2. Be enthusiastic about the brand and its values
-3. Keep responses concise and focused
-4. If asked something outside your knowledge base, acknowledge it and offer to help with what you do know about DEADPUNCH
+2. Always keep responses very concise and focused
+3. Mention Ruben and Sarah as founders when relevant
+4. If asked something outside your knowledge base, acknowledge it briefly and offer to help with what you do know about DEADPUNCH
 5. Embody the Deadpunch brand voice: authentic, bold, engaging, inspirational, and community-centric
 `;
 
@@ -101,7 +104,7 @@ When answering questions:
         model,
         messages,
         temperature: 0.7,
-        max_tokens: 500
+        max_tokens: 300  // Reduced from 500 to encourage shorter responses
       })
     })
 
