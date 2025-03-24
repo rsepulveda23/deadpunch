@@ -9,6 +9,21 @@ const Index = () => {
   useEffect(() => {
     // Force document title to be DEADPUNCH
     document.title = "DEADPUNCH";
+    
+    // Add a more aggressive approach to ensure title stays set
+    const observer = new MutationObserver(() => {
+      if (document.title !== "DEADPUNCH") {
+        document.title = "DEADPUNCH";
+      }
+    });
+    
+    observer.observe(document.querySelector('title'), { 
+      subtree: true, 
+      characterData: true, 
+      childList: true 
+    });
+    
+    return () => observer.disconnect();
   }, []);
 
   return (
