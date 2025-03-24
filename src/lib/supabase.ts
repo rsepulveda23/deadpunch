@@ -1,9 +1,9 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// These environment variables would be set in your Supabase project
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Hardcoded Supabase credentials for this project
+const supabaseUrl = 'https://yunwcbujnowcifbkfjmr.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1bndjYnVqbm93Y2lmYmtmam1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI3ODg1NTksImV4cCI6MjA1ODM2NDU1OX0.KTz1o0xYgYjIqrB9K4up-bri-0dhl0irldPy2TcsQY4';
 
 // Check if Supabase credentials are available
 const isSupabaseConfigured = supabaseUrl && supabaseAnonKey;
