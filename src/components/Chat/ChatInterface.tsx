@@ -7,9 +7,6 @@ import { useToast } from '@/hooks/use-toast';
 import { sendChatMessage, defaultChatSettings } from '@/services/chatService';
 import { Message } from '@/types/chat';
 
-// Admin mode constant - set to false to hide the settings button for visitors
-const ADMIN_MODE = false; 
-
 const ChatInterface = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -59,7 +56,7 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      // Call the chat service with model and system prompt from defaultChatSettings
+      // Call the chat service with default settings - GPT-4o Mini
       const response = await sendChatMessage({
         message: inputValue,
         model: defaultChatSettings.model,
