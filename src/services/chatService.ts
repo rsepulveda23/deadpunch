@@ -16,10 +16,10 @@ type ChatResponse = {
   message: string;
 };
 
-// Default settings with enhanced knowledge base
+// Default settings with updated knowledge base
 export const defaultChatSettings: ChatSettings = {
   model: "gpt-4o-mini", // Default to gpt-4o-mini
-  systemPrompt: "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful about this revolutionary AI-powered combat sports experience that combines advanced AI analysis, motion tracking, and immersive technology to create the ultimate combat sports training and entertainment system. DEADPUNCH offers real-time feedback, skill analysis, and personalized training programs for fighters of all levels. The platform features smart gloves with sensors, training analytics dashboards, global leaderboards, and competitive events for users to showcase their skills."
+  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand that embodies precision, focus, and confidence. Deadpunch represents those who are locked in, daring, and fully alive in moments of action. We cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits. Respond in an authentic, bold, engaging, inspirational, and community-centric voice that reflects our brand values."
 };
 
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
