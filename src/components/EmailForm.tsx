@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Mail, Loader2, CheckCircle } from 'lucide-react';
+import { Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
 
@@ -29,11 +29,21 @@ const EmailForm = () => {
       
       if (result.success) {
         setIsSuccess(true);
-        toast({
-          title: "Success!",
-          description: "You've been added to our notification list.",
-          variant: "default"
-        });
+        
+        // If it's a mock response, show a different message
+        if (result.mock) {
+          toast({
+            title: "Development Mode",
+            description: "Email saved in development mode. Connect Supabase to enable database storage.",
+            variant: "default"
+          });
+        } else {
+          toast({
+            title: "Success!",
+            description: "You've been added to our notification list.",
+            variant: "default"
+          });
+        }
         
         // Reset the form after 2 seconds
         setTimeout(() => {
