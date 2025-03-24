@@ -1,5 +1,6 @@
 
 import { useEffect } from 'react';
+import { TikTok } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import EmailForm from '@/components/EmailForm';
@@ -49,6 +50,20 @@ const Index = () => {
               className="h-8 object-contain" 
             />
           </div>
+          
+          {/* Social Media Links */}
+          <div className="flex items-center space-x-4 mb-4 md:mb-0">
+            <a 
+              href="https://www.tiktok.com/@deadpunchofficial" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
+              aria-label="TikTok"
+            >
+              <TikTok size={22} />
+            </a>
+          </div>
+          
           <div className="text-deadpunch-gray-light text-sm">
             &copy; {new Date().getFullYear()} DEADPUNCH. All rights reserved.
           </div>
