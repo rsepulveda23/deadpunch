@@ -26,7 +26,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
         <a href="#" className="flex items-center">
           <img 
-            src="/public/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+            src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
             alt="DEADPUNCH" 
             className="h-10 md:h-12 object-contain transition-transform duration-300 hover:scale-105" 
           />

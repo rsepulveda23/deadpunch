@@ -67,7 +67,7 @@ const HeroSection = () => {
           className="logo-container animate-reveal animate-float w-full max-w-md mb-12 md:mb-16"
         >
           <img
-            src="/public/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png"
+            src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png"
             alt="DEADPUNCH Logo"
             className="w-full h-auto"
           />
