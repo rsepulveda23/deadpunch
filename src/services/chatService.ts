@@ -1,5 +1,7 @@
 
-// This file handles the integration with OpenAI API
+// This file handles the integration with OpenAI API via Supabase
+
+import { supabase } from '@/lib/supabase';
 
 // Request type for chat messages
 type ChatRequest = {
@@ -11,72 +13,45 @@ type ChatResponse = {
   message: string;
 };
 
-// OpenAI API specific types
-type OpenAIMessage = {
-  role: "system" | "user" | "assistant";
-  content: string;
-};
-
-type OpenAIRequest = {
-  model: string;
-  messages: OpenAIMessage[];
-  temperature?: number;
-  max_tokens?: number;
-};
-
-// Your API key - in a real production app, this would be stored securely on a backend
-const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY_HERE"; // Replace with your actual API key
-
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
   try {
-    // OpenAI API endpoint
-    const endpoint = "https://api.openai.com/v1/chat/completions";
+    console.log("Sending request to Supabase Edge Function...");
     
-    // Format the request for OpenAI
-    const openAIRequest: OpenAIRequest = {
-      model: "gpt-4o-mini", // Using GPT-4o-mini model
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful."
-        },
-        {
-          role: "user",
-          content: request.message
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 500
-    };
-
-    console.log("Sending request to OpenAI API...");
-    
-    // Make the API call
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
-      },
-      body: JSON.stringify(openAIRequest)
-    });
-
-    // Check for successful response
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("OpenAI API error:", errorData);
-      throw new Error(`API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+    // Check if Supabase is configured
+    if (!supabase) {
+      console.error("Supabase is not configured properly");
+      return {
+        message: "Error: Supabase connection is not available. Please check your configuration."
+      };
     }
 
-    // Parse the response
-    const data = await response.json();
-    
-    // Extract the message content from the response
-    const responseMessage = data.choices[0]?.message?.content || "Sorry, I couldn't generate a response.";
-    
-    return {
-      message: responseMessage
-    };
+    // Call the Supabase Edge Function that will handle the OpenAI API request
+    const { data, error } = await supabase.functions.invoke('openai-chat', {
+      body: {
+        message: request.message,
+        model: "gpt-4o-mini",
+        systemPrompt: "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful."
+      }
+    });
+
+    // Check for errors
+    if (error) {
+      console.error("Supabase Edge Function error:", error);
+      throw new Error(`Supabase error: ${error.message || 'Unknown error'}`);
+    }
+
+    // If we get a successful response, return it
+    if (data && data.response) {
+      return {
+        message: data.response
+      };
+    } else {
+      // If the response format is unexpected
+      console.error("Unexpected response format:", data);
+      return {
+        message: "Sorry, I received an unexpected response format. Please try again later."
+      };
+    }
   } catch (error) {
     console.error("Error in chat service:", error);
     // Return a user-friendly error message

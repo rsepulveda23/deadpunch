@@ -7,6 +7,5 @@ export type Message = {
 };
 
 export type ChatSettings = {
-  apiKey: string;
-  // Add any other settings your chat might need
+  // Add any settings your chat might need
 };
