@@ -63,13 +63,13 @@ const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-4 z-10 flex flex-col items-center">
-        {/* Logo */}
+        {/* Logo - adjusted size */}
         <div 
           ref={logoRef}
-          className="logo-container animate-reveal animate-float w-full max-w-md mb-12 md:mb-16"
+          className="logo-container animate-reveal animate-float w-full max-w-xs md:max-w-sm mb-12 md:mb-16"
         >
           <img
-            src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png"
+            src="/lovable-uploads/3dd00c39-4f0c-4610-89d4-7c4122ecccf1.png"
             alt="DEADPUNCH Logo"
             className="w-full h-auto"
           />
