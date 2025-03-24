@@ -25,7 +25,7 @@ export const saveEmailSubscription = async (email: string) => {
   
   try {
     const { error } = await supabase!
-      .from('email_subscriptions')
+      .from('deadpunch_email_capture')  // Updated table name
       .insert([{ email, created_at: new Date().toISOString() }]);
     
     if (error) throw error;
