@@ -69,7 +69,7 @@ const HeroSection = () => {
           <img
             src="/public/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png"
             alt="DEADPUNCH Logo"
-            className="w-full h-auto"
+            className="w-full h-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
           />
         </div>
 
