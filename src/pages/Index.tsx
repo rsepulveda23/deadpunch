@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
@@ -54,10 +55,11 @@ const Index = () => {
               href="https://www.tiktok.com/@deadpunch.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
+              className="flex items-center text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
               aria-label="TikTok"
             >
               <TikTokIcon size={64} />
+              <span className="ml-2 text-sm font-medium">Follow Us</span>
             </a>
           </div>
           

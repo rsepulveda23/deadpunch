@@ -39,10 +39,11 @@ const Navbar = () => {
             href="https://www.tiktok.com/@deadpunch.com" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-white hover:text-deadpunch-red transition-colors duration-300"
+            className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
             aria-label="TikTok"
           >
             <TikTokIcon size={64} />
+            <span className="ml-2 font-medium">Follow Us</span>
           </a>
           <a href="#notify" className="btn-primary animate-reveal delay-300">
             Notify Me
@@ -55,10 +56,11 @@ const Navbar = () => {
             href="https://www.tiktok.com/@deadpunch.com" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-white hover:text-deadpunch-red transition-colors duration-300"
+            className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
             aria-label="TikTok"
           >
             <TikTokIcon size={40} />
+            <span className="ml-1 text-sm font-medium">Follow</span>
           </a>
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
