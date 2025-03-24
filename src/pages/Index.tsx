@@ -60,7 +60,7 @@ const Index = () => {
               className="text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
               aria-label="TikTok"
             >
-              <TikTokIcon size={32} />
+              <TikTokIcon size={64} />
             </a>
           </div>
           

@@ -42,7 +42,7 @@ const Navbar = () => {
             className="text-white hover:text-deadpunch-red transition-colors duration-300"
             aria-label="TikTok"
           >
-            <TikTokIcon size={32} />
+            <TikTokIcon size={64} />
           </a>
           <a href="#notify" className="btn-primary animate-reveal delay-300">
             Notify Me
@@ -71,7 +71,7 @@ const Navbar = () => {
             rel="noopener noreferrer"
             className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300 py-2"
           >
-            <TikTokIcon size={28} className="mr-2" />
+            <TikTokIcon size={56} className="mr-2" />
             <span>Follow on TikTok</span>
           </a>
           <a 
