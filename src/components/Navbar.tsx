@@ -33,10 +33,10 @@ const Navbar = () => {
         </a>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8">
-          <a href="#" className="text-white hover:text-deadpunch-red font-medium transition-colors duration-300">Home</a>
-          <a href="#features" className="text-white hover:text-deadpunch-red font-medium transition-colors duration-300">About</a>
-          <a href="#notify" className="btn-primary">Notify Me</a>
+        <div className="hidden md:flex items-center">
+          <a href="#notify" className="btn-primary animate-reveal delay-300">
+            Notify Me
+          </a>
         </div>
 
         {/* Mobile Menu Button */}
@@ -55,20 +55,6 @@ const Navbar = () => {
         } overflow-hidden`}
       >
         <div className="container mx-auto px-4 flex flex-col space-y-4">
-          <a 
-            href="#" 
-            className="text-white hover:text-deadpunch-red font-medium transition-colors duration-300 py-2"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Home
-          </a>
-          <a 
-            href="#features" 
-            className="text-white hover:text-deadpunch-red font-medium transition-colors duration-300 py-2"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            About
-          </a>
           <a 
             href="#notify" 
             className="btn-primary text-center my-2"

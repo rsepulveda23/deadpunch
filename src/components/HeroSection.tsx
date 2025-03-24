@@ -88,15 +88,11 @@ const HeroSection = () => {
             <span className="block text-deadpunch-red text-3xl md:text-4xl lg:text-5xl">Get ready. The game is about to change.</span>
           </h1>
           <p className="text-deadpunch-gray-light text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-            DEADPUNCH is redefining the limits of athletic performance. 
-            Be the first to experience the revolution.
+            Be the first to know. Sign up to receive exclusive updates on early access when DEADPUNCH launches.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <a href="#notify" className="btn-primary w-full sm:w-auto animate-reveal delay-300">
+          <div className="flex justify-center items-center">
+            <a href="#notify" className="btn-primary animate-reveal delay-300">
               Notify Me
-            </a>
-            <a href="#features" className="btn-outline w-full sm:w-auto animate-reveal delay-400">
-              Learn More
             </a>
           </div>
         </div>

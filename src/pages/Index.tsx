@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
-import Features from '@/components/Features';
 import EmailForm from '@/components/EmailForm';
 
 const Index = () => {
@@ -35,7 +34,6 @@ const Index = () => {
       
       <Navbar />
       <HeroSection />
-      <Features />
       <EmailForm />
       
       <footer className="py-6 border-t border-deadpunch-dark-lighter">
