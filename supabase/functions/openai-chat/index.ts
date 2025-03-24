@@ -99,12 +99,6 @@ Deadpunch deeply understands the critical role mental focus plays in billiards a
 - Performance Goals: Setting effective process-focused goals rather than just outcome goals
 
 Our approach integrates these mental aspects with technical skills, recognizing that peak performance comes from the synergy between mental clarity and physical execution.
-
-// Style Guide for Chatbot Responses:
-- Be bold, not corny.
-- Sound confident, not cocky.
-- Keep replies brief unless asked for detail.
-- Use punchy language ("locked in," "clean hit," "respect the grind").
 `;
 
 Deno.serve(async (req) => {
@@ -131,23 +125,49 @@ Deno.serve(async (req) => {
 
     console.log(`Processing chat request with model: ${model}`)
 
-    // Enhanced system prompt with knowledge base
+    // Enhanced system prompt with stronger emphasis on knowledge base and contact info
     const defaultSystemPrompt = `You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah.
 
-IMPORTANT: Always consult the DEADPUNCH knowledge base first before responding to any questions. Base your answers primarily on this information, and only use your general knowledge to complement when needed.
-
-${knowledgeBase}
-
-Instructions for answering questions:
-1. FIRST check the knowledge base above for relevant information.
-2. ALWAYS include the EXACT contact details when asked:
+CRITICAL INSTRUCTIONS: 
+1. ALWAYS check the knowledge base FIRST for information.
+2. When asked about contact information, ALWAYS provide the EXACT contact details without referring to a website or contact page:
    - Phone: +1 (413) 475-9156
    - Email: info@deadpunch.com
    - TikTok: @deadpunch.com
-3. Keep responses brief and concise (1-2 short paragraphs maximum).
-4. If the information is not in the knowledge base, politely state that you don't have specific details on that topic.
-5. Embody the Deadpunch brand voice: authentic, bold, engaging, inspirational, and community-centric.
+
+${knowledgeBase}
+
+Additional response guidelines:
+1. Keep responses brief and concise (1-2 short paragraphs maximum).
+2. If someone asks how to contact DEADPUNCH, provide the phone, email and TikTok directly - DO NOT tell them to check a website.
+3. Be bold and confident in your tone, but not cocky or arrogant.
+4. If information is not in the knowledge base, clearly state you don't have those specific details.
+5. Use punchy billiards language like "locked in," "clean hit," and "respect the grind" when appropriate.
 `;
+
+    // Check if the message is asking about contact information
+    const lowerCaseMessage = message.toLowerCase();
+    if (
+      lowerCaseMessage.includes("contact") || 
+      lowerCaseMessage.includes("reach") || 
+      lowerCaseMessage.includes("phone") || 
+      lowerCaseMessage.includes("email") || 
+      lowerCaseMessage.includes("get in touch") ||
+      lowerCaseMessage.includes("call")
+    ) {
+      // Direct response for contact-related queries
+      return new Response(
+        JSON.stringify({ 
+          response: "You can contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com. Our TikTok is @deadpunch.com." 
+        }),
+        { 
+          headers: { 
+            ...corsHeaders,
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
+    }
 
     // Prepare messages for OpenAI
     const messages = [
@@ -201,9 +221,12 @@ Instructions for answering questions:
   } catch (error) {
     console.error('Error processing request:', error)
     
-    // Return error response
+    // Return error response with contact information
     return new Response(
-      JSON.stringify({ error: error.message || 'An unexpected error occurred' }),
+      JSON.stringify({ 
+        error: error.message || 'An unexpected error occurred',
+        response: "Sorry, I encountered an error. Please contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com."
+      }),
       { 
         status: 500,
         headers: { 
@@ -214,4 +237,3 @@ Instructions for answering questions:
     )
   }
 })
-
