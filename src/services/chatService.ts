@@ -1,62 +1,85 @@
 
-// This file will handle the actual API integration
-// Replace the mock implementation with your actual API call
+// This file handles the integration with OpenAI API
 
-// The type of request you'll send will depend on your specific API
+// Request type for chat messages
 type ChatRequest = {
   message: string;
   apiKey: string;
-  // Add any other parameters your API requires
 };
 
-// The type of response you expect from your API
+// Response type from the API
 type ChatResponse = {
   message: string;
-  // Add any other fields your API returns
+};
+
+// OpenAI API specific types
+type OpenAIMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
+};
+
+type OpenAIRequest = {
+  model: string;
+  messages: OpenAIMessage[];
+  temperature?: number;
+  max_tokens?: number;
 };
 
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
   try {
-    // This is where you'll implement your actual API call
-    // Example using fetch:
-    /*
-    const response = await fetch('YOUR_API_ENDPOINT', {
-      method: 'POST',
+    // OpenAI API endpoint
+    const endpoint = "https://api.openai.com/v1/chat/completions";
+    
+    // Format the request for OpenAI
+    const openAIRequest: OpenAIRequest = {
+      model: "gpt-4o-mini", // Using GPT-4o-mini model
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful."
+        },
+        {
+          role: "user",
+          content: request.message
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 500
+    };
+
+    console.log("Sending request to OpenAI API...");
+    
+    // Make the API call
+    const response = await fetch(endpoint, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${request.apiKey}`
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${request.apiKey}`
       },
-      body: JSON.stringify({
-        message: request.message,
-        // Include any other parameters your API needs
-      }),
+      body: JSON.stringify(openAIRequest)
     });
 
+    // Check for successful response
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const errorData = await response.json();
+      console.error("OpenAI API error:", errorData);
+      throw new Error(`API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
     }
 
+    // Parse the response
     const data = await response.json();
+    
+    // Extract the message content from the response
+    const responseMessage = data.choices[0]?.message?.content || "Sorry, I couldn't generate a response.";
+    
     return {
-      message: data.message || data.response || data.answer,
-      // Map any other fields from your API response
+      message: responseMessage
     };
-    */
-
-    // For now, we'll return a mock response
-    return mockChatResponse(request);
   } catch (error) {
-    console.error('Error in chat service:', error);
-    throw error;
+    console.error("Error in chat service:", error);
+    // Return a user-friendly error message
+    return {
+      message: `Error: ${error instanceof Error ? error.message : "Failed to connect to AI service. Please check your API key and try again."}`
+    };
   }
-};
-
-// This mock function should be replaced with your actual API integration
-const mockChatResponse = async (request: ChatRequest): Promise<ChatResponse> => {
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  return {
-    message: `This is a mock response to: "${request.message}". Replace the mockChatResponse function in chatService.ts with your actual API integration.`
-  };
 };

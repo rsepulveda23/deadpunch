@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, X, MessageSquare } from 'lucide-react';
+import { Send, X, MessageSquare, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -14,6 +14,7 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiKey, setApiKey] = useState('');
   const [hasApiKey, setHasApiKey] = useState(false);
+  const [isApiKeyValid, setIsApiKeyValid] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -50,6 +51,11 @@ const ChatInterface = () => {
     }
   };
 
+  const validateApiKey = (key: string) => {
+    // Basic validation: OpenAI API keys typically start with "sk-" and are around 51 characters
+    return key.trim().startsWith('sk-') && key.trim().length > 40;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading) return;
@@ -57,7 +63,7 @@ const ChatInterface = () => {
     if (!hasApiKey) {
       toast({
         title: "API Key Required",
-        description: "Please enter your API key first.",
+        description: "Please enter your OpenAI API key first.",
         variant: "destructive",
       });
       return;
@@ -91,6 +97,18 @@ const ChatInterface = () => {
       };
       
       setMessages(prev => [...prev, aiMessage]);
+      
+      // If we got an error message containing "API key", mark the key as invalid
+      if (response.message.toLowerCase().includes("api key") && response.message.toLowerCase().includes("error")) {
+        setIsApiKeyValid(false);
+        toast({
+          title: "API Key Error",
+          description: "Your OpenAI API key appears to be invalid. Please check it and try again.",
+          variant: "destructive",
+        });
+      } else {
+        setIsApiKeyValid(true);
+      }
     } catch (error) {
       toast({
         title: "Error",
@@ -105,21 +123,42 @@ const ChatInterface = () => {
 
   const handleApiKeySubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (apiKey.trim()) {
-      // Save API key to localStorage
-      localStorage.setItem('chatApiKey', apiKey);
-      setHasApiKey(true);
+    
+    if (!apiKey.trim()) {
       toast({
-        title: "API Key Saved",
-        description: "Your API key has been saved for this session.",
+        title: "Error",
+        description: "API key cannot be empty.",
+        variant: "destructive",
       });
+      return;
     }
+    
+    // Validate API key format
+    if (!validateApiKey(apiKey)) {
+      toast({
+        title: "Invalid API Key Format",
+        description: "Please enter a valid OpenAI API key. It should start with 'sk-' and be around 51 characters long.",
+        variant: "destructive",
+      });
+      setIsApiKeyValid(false);
+      return;
+    }
+    
+    // Save API key to localStorage
+    localStorage.setItem('chatApiKey', apiKey);
+    setHasApiKey(true);
+    setIsApiKeyValid(true);
+    toast({
+      title: "API Key Saved",
+      description: "Your OpenAI API key has been saved. You can now start chatting with the GPT-4o-mini model.",
+    });
   };
 
   const clearApiKey = () => {
     localStorage.removeItem('chatApiKey');
     setApiKey('');
     setHasApiKey(false);
+    setIsApiKeyValid(true);
     toast({
       title: "API Key Removed",
       description: "Your API key has been removed.",
@@ -148,7 +187,7 @@ const ChatInterface = () => {
           <div className="p-4 bg-deadpunch-dark-lighter border-b border-deadpunch-gray-dark flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <img 
-                src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+                src="/lovable-uploads/1bed301a-1af7-4ee5-9f14-78213e983de5.png" 
                 alt="DEADPUNCH" 
                 className="h-6 object-contain" 
               />
@@ -169,7 +208,7 @@ const ChatInterface = () => {
             <div className="p-4 bg-deadpunch-dark-lighter border-b border-deadpunch-gray-dark">
               <form onSubmit={handleApiKeySubmit} className="space-y-2">
                 <label htmlFor="api-key" className="block text-sm text-deadpunch-gray-light">
-                  Enter your API Key to start chatting
+                  Enter your OpenAI API Key to start chatting with GPT-4o-mini
                 </label>
                 <div className="flex space-x-2">
                   <Input
@@ -177,18 +216,24 @@ const ChatInterface = () => {
                     type="password"
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
-                    placeholder="Your API key"
-                    className="flex-1 bg-deadpunch-dark border-deadpunch-gray-dark"
+                    placeholder="Your OpenAI API key"
+                    className={`flex-1 bg-deadpunch-dark border-deadpunch-gray-dark ${!isApiKeyValid ? 'border-red-500' : ''}`}
                   />
                   <Button type="submit" variant="default" size="sm">
                     Save
                   </Button>
                 </div>
+                {!isApiKeyValid && (
+                  <p className="text-xs text-red-500 flex items-center mt-1">
+                    <AlertCircle className="h-3 w-3 mr-1" />
+                    Invalid API key format. Should start with sk-
+                  </p>
+                )}
               </form>
             </div>
           ) : (
             <div className="px-4 py-2 bg-deadpunch-dark-lighter border-b border-deadpunch-gray-dark flex justify-between items-center">
-              <span className="text-xs text-deadpunch-gray-light">API Key configured</span>
+              <span className="text-xs text-deadpunch-gray-light">Using OpenAI GPT-4o-mini</span>
               <Button 
                 variant="ghost" 
                 size="sm" 
