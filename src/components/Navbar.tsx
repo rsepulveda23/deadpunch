@@ -1,0 +1,85 @@
+
+import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
+
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+        isScrolled
+          ? 'py-2 bg-deadpunch-dark/90 backdrop-blur-md shadow-lg'
+          : 'py-4 bg-transparent'
+      }`}
+    >
+      <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
+        <a href="#" className="flex items-center">
+          <img 
+            src="/public/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+            alt="DEADPUNCH" 
+            className="h-10 md:h-12 object-contain transition-transform duration-300 hover:scale-105" 
+          />
+        </a>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-8">
+          <a href="#" className="text-white hover:text-deadpunch-red font-medium transition-colors duration-300">Home</a>
+          <a href="#features" className="text-white hover:text-deadpunch-red font-medium transition-colors duration-300">About</a>
+          <a href="#notify" className="btn-primary">Notify Me</a>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="md:hidden text-white hover:text-deadpunch-red focus:outline-none transition-colors duration-300"
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <div 
+        className={`md:hidden absolute w-full bg-deadpunch-dark-lighter backdrop-blur-md transition-all duration-500 ease-in-out ${
+          isMenuOpen ? 'max-h-60 py-4 border-b border-deadpunch-gray-dark opacity-100' : 'max-h-0 py-0 opacity-0 border-b-0'
+        } overflow-hidden`}
+      >
+        <div className="container mx-auto px-4 flex flex-col space-y-4">
+          <a 
+            href="#" 
+            className="text-white hover:text-deadpunch-red font-medium transition-colors duration-300 py-2"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Home
+          </a>
+          <a 
+            href="#features" 
+            className="text-white hover:text-deadpunch-red font-medium transition-colors duration-300 py-2"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            About
+          </a>
+          <a 
+            href="#notify" 
+            className="btn-primary text-center my-2"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Notify Me
+          </a>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;

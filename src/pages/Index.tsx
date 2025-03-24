@@ -1,13 +1,58 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useEffect } from 'react';
+import Navbar from '@/components/Navbar';
+import HeroSection from '@/components/HeroSection';
+import Features from '@/components/Features';
+import EmailForm from '@/components/EmailForm';
 
 const Index = () => {
+  useEffect(() => {
+    // Scroll reveal animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -100px 0px"
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    const revealElements = document.querySelectorAll('.animate-reveal');
+    revealElements.forEach(el => observer.observe(el));
+    
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Noise texture overlay */}
+      <div className="noise-overlay"></div>
+      
+      <Navbar />
+      <HeroSection />
+      <Features />
+      <EmailForm />
+      
+      <footer className="py-6 border-t border-deadpunch-dark-lighter">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-4 md:mb-0">
+            <img 
+              src="/public/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+              alt="DEADPUNCH" 
+              className="h-8 object-contain" 
+            />
+          </div>
+          <div className="text-deadpunch-gray-light text-sm">
+            &copy; {new Date().getFullYear()} DEADPUNCH. All rights reserved.
+          </div>
+        </div>
+      </footer>
+    </main>
   );
 };
 
