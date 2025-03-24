@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Mail, Loader2, CheckCircle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { saveEmailSubscription } from '@/lib/supabase';
 
 const EmailForm = () => {
   const [email, setEmail] = useState('');
@@ -23,26 +24,27 @@ const EmailForm = () => {
     
     setIsSubmitting(true);
     
-    // Simulate API call
     try {
-      // Here you would connect to Supabase 
-      // This is just simulating the request for now
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const result = await saveEmailSubscription(email);
       
-      setIsSuccess(true);
-      toast({
-        title: "Success!",
-        description: "You've been added to our notification list.",
-        variant: "default"
-      });
-      
-      // Reset the form after 2 seconds
-      setTimeout(() => {
-        setEmail('');
-        setIsSuccess(false);
-      }, 2000);
-      
+      if (result.success) {
+        setIsSuccess(true);
+        toast({
+          title: "Success!",
+          description: "You've been added to our notification list.",
+          variant: "default"
+        });
+        
+        // Reset the form after 2 seconds
+        setTimeout(() => {
+          setEmail('');
+          setIsSuccess(false);
+        }, 2000);
+      } else {
+        throw new Error('Failed to save subscription');
+      }
     } catch (error) {
+      console.error('Error in form submission:', error);
       toast({
         title: "Something went wrong",
         description: "There was an error submitting your email. Please try again.",
