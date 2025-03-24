@@ -19,7 +19,7 @@ type ChatResponse = {
 // Default settings with updated knowledge base
 export const defaultChatSettings: ChatSettings = {
   model: "gpt-4o-mini", // Default to gpt-4o-mini
-  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah. Keep your responses brief and concise (maximum 1-2 short paragraphs). Be bold, not corny. Sound confident, not cocky. Use punchy language like 'locked in,' 'clean hit,' and 'respect the grind' when appropriate."
+  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah. ALWAYS consult the DEADPUNCH knowledge base first before responding to any questions. Keep your responses brief and concise (maximum 1-2 short paragraphs). Be bold, not corny. Sound confident, not cocky. Use punchy language like 'locked in,' 'clean hit,' and 'respect the grind' when appropriate."
 };
 
 // Fallback responses for common questions when the Edge Function is unavailable
@@ -28,6 +28,9 @@ const fallbackResponses: Record<string, string> = {
   "phone": "You can call DEADPUNCH at +1 (413) 475-9156 for any inquiries.",
   "email": "You can email DEADPUNCH at info@deadpunch.com.",
   "founder": "DEADPUNCH was founded by Ruben and Sarah who share a passion for billiards and a vision to create a brand that represents precision and confidence.",
+  "about": "Deadpunch is more than just a brand; it's a mindset that embodies precision, focus, and confidence. Originating from the world of billiards, Deadpunch represents those who are locked in, daring, and fully alive in moments of action. Founded by Ruben and Sarah, we cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits.",
+  "products": "While our product line is currently in development, Deadpunch is committed to building a vibrant community and providing engaging content that resonates with our core values. Follow us on TikTok or join our email list for updates on product launches.",
+  "mission": "We champion billiards as a legitimate sport through innovative apparel and inspire our community to drive positive change.",
 };
 
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
@@ -66,6 +69,7 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
         // Check if the user is asking for contact information and provide fallback
         const lowerCaseMessage = request.message.toLowerCase();
         
+        // Extended fallback handling - check keywords in the message and match to our knowledge base
         if (lowerCaseMessage.includes("contact") || lowerCaseMessage.includes("phone") || lowerCaseMessage.includes("number")) {
           return {
             message: fallbackResponses.contact
@@ -77,6 +81,18 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
         } else if (lowerCaseMessage.includes("founder") || lowerCaseMessage.includes("ruben") || lowerCaseMessage.includes("sarah")) {
           return {
             message: fallbackResponses.founder
+          };
+        } else if (lowerCaseMessage.includes("what is") || lowerCaseMessage.includes("about")) {
+          return {
+            message: fallbackResponses.about
+          };
+        } else if (lowerCaseMessage.includes("product") || lowerCaseMessage.includes("offer") || lowerCaseMessage.includes("merchandise")) {
+          return {
+            message: fallbackResponses.products
+          };
+        } else if (lowerCaseMessage.includes("mission")) {
+          return {
+            message: fallbackResponses.mission
           };
         }
         
