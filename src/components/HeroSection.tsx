@@ -63,10 +63,10 @@ const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-4 z-10 flex flex-col items-center">
-        {/* Logo */}
+        {/* Logo - Made smaller by changing max-w-md to max-w-xs */}
         <div 
           ref={logoRef}
-          className="logo-container animate-reveal animate-float w-full max-w-md mb-12 md:mb-16"
+          className="logo-container animate-reveal animate-float w-full max-w-xs mb-12 md:mb-16"
         >
           <img
             src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png"
