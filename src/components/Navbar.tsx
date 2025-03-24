@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
-import { Menu, X, TikTok } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import TikTokIcon from './icons/TikTokIcon';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -41,7 +42,7 @@ const Navbar = () => {
             className="text-white hover:text-deadpunch-red transition-colors duration-300"
             aria-label="TikTok"
           >
-            <TikTok size={24} />
+            <TikTokIcon size={24} />
           </a>
           <a href="#notify" className="btn-primary animate-reveal delay-300">
             Notify Me
@@ -70,7 +71,7 @@ const Navbar = () => {
             rel="noopener noreferrer"
             className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300 py-2"
           >
-            <TikTok size={20} className="mr-2" />
+            <TikTokIcon size={20} className="mr-2" />
             <span>Follow on TikTok</span>
           </a>
           <a 

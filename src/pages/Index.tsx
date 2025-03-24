@@ -1,10 +1,10 @@
 
 import { useEffect } from 'react';
-import { TikTok } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import EmailForm from '@/components/EmailForm';
 import ChatInterface from '@/components/Chat/ChatInterface';
+import TikTokIcon from '@/components/icons/TikTokIcon';
 
 const Index = () => {
   useEffect(() => {
@@ -60,7 +60,7 @@ const Index = () => {
               className="text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
               aria-label="TikTok"
             >
-              <TikTok size={22} />
+              <TikTokIcon size={22} />
             </a>
           </div>
           
