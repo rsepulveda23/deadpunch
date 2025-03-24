@@ -120,10 +120,6 @@ const ChatInterface = () => {
             </Button>
           </div>
 
-          <div className="px-4 py-2 bg-deadpunch-dark-lighter border-b border-deadpunch-gray-dark">
-            <span className="text-xs text-deadpunch-gray-light">AI-powered by GPT-4o-mini</span>
-          </div>
-
           {/* Chat messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((message) => (
