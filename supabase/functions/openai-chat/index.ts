@@ -10,6 +10,40 @@ interface ChatMessage {
   systemPrompt: string;
 }
 
+// DEADPUNCH knowledge base
+const knowledgeBase = `
+DEADPUNCH is a revolutionary AI-powered combat sports platform that combines:
+
+1. Advanced Technology:
+   - Motion tracking sensors that capture and analyze fighter movements in real-time
+   - AI analysis algorithms that provide instant feedback on technique, power, and form
+   - Immersive visualization technology for training and spectator experiences
+
+2. Training Features:
+   - Personalized training programs for all skill levels (beginner to professional)
+   - Real-time feedback on punch technique, speed, power, and accuracy
+   - Performance analytics with detailed metrics and improvement tracking
+   - Virtual sparring partners with adjustable difficulty levels
+
+3. Competition Elements:
+   - Global leaderboards and ranking systems
+   - Virtual tournaments and competitions
+   - Match analysis and replay features with AI commentary
+   - Social features for connecting with other fighters and coaches
+
+4. Equipment:
+   - Smart gloves with embedded sensors
+   - Training pads and heavy bags with pressure sensors
+   - Mobile and web applications for tracking progress
+   - VR/AR integration for immersive training experiences
+
+5. Benefits:
+   - Injury prevention through proper technique analysis
+   - Accelerated skill development with targeted feedback
+   - Data-driven training optimization
+   - Remote coaching possibilities
+`;
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -34,8 +68,17 @@ Deno.serve(async (req) => {
 
     console.log(`Processing chat request with model: ${model}`)
 
-    // Default system prompt if none provided
-    const defaultSystemPrompt = "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful about this revolutionary AI-powered combat sports experience."
+    // Enhanced system prompt with knowledge base
+    const defaultSystemPrompt = `You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful about this revolutionary AI-powered combat sports experience.
+
+${knowledgeBase}
+
+When answering questions:
+1. Use the knowledge base provided above to give accurate information about DEADPUNCH
+2. Be enthusiastic about the technology and its benefits
+3. Keep responses concise and focused
+4. If asked something outside your knowledge base, acknowledge it and offer to help with what you do know about DEADPUNCH
+`;
 
     // Prepare messages for OpenAI
     const messages = [
