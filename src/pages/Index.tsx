@@ -7,23 +7,58 @@ import Navbar from "@/components/Navbar";
 
 const Index = () => {
   useEffect(() => {
-    // Force document title to be DEADPUNCH
+    // Immediately set document title
     document.title = "DEADPUNCH";
     
-    // Add a more aggressive approach to ensure title stays set
-    const observer = new MutationObserver(() => {
+    // Force title to be DEADPUNCH at regular intervals
+    const titleInterval = setInterval(() => {
       if (document.title !== "DEADPUNCH") {
         document.title = "DEADPUNCH";
+        console.log("Title corrected to DEADPUNCH");
       }
+    }, 100); // Check every 100ms
+    
+    // Create mutation observer to detect title changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        if (document.title !== "DEADPUNCH") {
+          document.title = "DEADPUNCH";
+          console.log("Title corrected via MutationObserver");
+        }
+      });
     });
     
-    observer.observe(document.querySelector('title'), { 
-      subtree: true, 
-      characterData: true, 
-      childList: true 
-    });
+    // Start observing the title element
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+      observer.observe(titleElement, { 
+        subtree: true, 
+        characterData: true, 
+        childList: true,
+        attributes: true
+      });
+    }
     
-    return () => observer.disconnect();
+    // Create a new function to forcefully update title
+    const forceUpdateTitle = () => {
+      document.title = "DEADPUNCH";
+    };
+    
+    // Apply title update on various window events
+    window.addEventListener("load", forceUpdateTitle);
+    window.addEventListener("focus", forceUpdateTitle);
+    window.addEventListener("blur", forceUpdateTitle);
+    window.addEventListener("visibilitychange", forceUpdateTitle);
+    
+    // Clean up all listeners and intervals on component unmount
+    return () => {
+      observer.disconnect();
+      clearInterval(titleInterval);
+      window.removeEventListener("load", forceUpdateTitle);
+      window.removeEventListener("focus", forceUpdateTitle);
+      window.removeEventListener("blur", forceUpdateTitle);
+      window.removeEventListener("visibilitychange", forceUpdateTitle);
+    };
   }, []);
 
   return (
