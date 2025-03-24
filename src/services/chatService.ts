@@ -4,7 +4,6 @@
 // Request type for chat messages
 type ChatRequest = {
   message: string;
-  apiKey: string;
 };
 
 // Response type from the API
@@ -24,6 +23,9 @@ type OpenAIRequest = {
   temperature?: number;
   max_tokens?: number;
 };
+
+// Your API key - in a real production app, this would be stored securely on a backend
+const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY_HERE"; // Replace with your actual API key
 
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
   try {
@@ -54,7 +56,7 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${request.apiKey}`
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify(openAIRequest)
     });
@@ -79,7 +81,7 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
     console.error("Error in chat service:", error);
     // Return a user-friendly error message
     return {
-      message: `Error: ${error instanceof Error ? error.message : "Failed to connect to AI service. Please check your API key and try again."}`
+      message: `Error: ${error instanceof Error ? error.message : "Failed to connect to AI service. Please try again later."}`
     };
   }
 };
