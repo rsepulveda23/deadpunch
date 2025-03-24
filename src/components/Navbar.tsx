@@ -60,7 +60,7 @@ const Navbar = () => {
             aria-label="TikTok"
           >
             <TikTokIcon size={40} />
-            <span className="ml-1 text-sm font-medium">Follow</span>
+            <span className="ml-1 text-sm font-medium">Follow Us</span>
           </a>
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
