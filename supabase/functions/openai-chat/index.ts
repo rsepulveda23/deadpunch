@@ -38,11 +38,16 @@ serve(async (req) => {
       throw new Error('Message is required')
     }
 
+    console.log(`Processing chat request with model: ${model}`)
+
+    // Default system prompt if none provided
+    const defaultSystemPrompt = "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful about this revolutionary AI-powered combat sports experience."
+
     // Prepare messages for OpenAI
     const messages = [
       {
         role: "system",
-        content: systemPrompt || "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful."
+        content: systemPrompt || defaultSystemPrompt
       },
       {
         role: "user",
@@ -68,11 +73,14 @@ serve(async (req) => {
     // Handle OpenAI API response
     if (!openAIResponse.ok) {
       const errorData = await openAIResponse.json()
+      console.error('OpenAI API error:', errorData)
       throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`)
     }
 
     const data = await openAIResponse.json()
     const aiResponseText = data.choices[0].message.content
+
+    console.log('Successfully received response from OpenAI')
 
     // Return successful response
     return new Response(

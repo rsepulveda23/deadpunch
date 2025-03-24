@@ -2,6 +2,7 @@
 // This file handles the integration with OpenAI API via Supabase
 
 import { supabase } from '@/lib/supabase';
+import { ChatSettings } from '@/types/chat';
 
 // Request type for chat messages
 type ChatRequest = {
@@ -13,6 +14,12 @@ type ChatRequest = {
 // Response type from the API
 type ChatResponse = {
   message: string;
+};
+
+// Default settings
+export const defaultChatSettings: ChatSettings = {
+  model: "gpt-4o-mini", // Set default to gpt-4o-mini
+  systemPrompt: "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful about this revolutionary AI-powered combat sports experience."
 };
 
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
@@ -28,9 +35,8 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
     }
 
     // Use provided model and systemPrompt or fall back to defaults
-    const model = request.model || "gpt-4o";
-    const systemPrompt = request.systemPrompt || 
-      "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful.";
+    const model = request.model || defaultChatSettings.model;
+    const systemPrompt = request.systemPrompt || defaultChatSettings.systemPrompt;
 
     // Call the Supabase Edge Function that will handle the OpenAI API request
     const { data, error } = await supabase.functions.invoke('openai-chat', {
@@ -44,6 +50,14 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
     // Check for errors
     if (error) {
       console.error("Supabase Edge Function error:", error);
+      
+      // For development/testing when Edge Function might not be deployed yet
+      if (error.message?.includes("Failed to send a request to the Edge Function")) {
+        return {
+          message: "The AI service is currently unavailable. Please make sure you've deployed the Edge Function and added your OpenAI API key to Supabase secrets."
+        };
+      }
+      
       throw new Error(`Supabase error: ${error.message || 'Unknown error'}`);
     }
 

@@ -1,29 +1,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, X, MessageSquare, Settings } from 'lucide-react';
+import { Send, X, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { sendChatMessage } from '@/services/chatService';
+import { sendChatMessage, defaultChatSettings } from '@/services/chatService';
 import { Message } from '@/types/chat';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown } from 'lucide-react';
 
 // Admin mode constant - set to false to hide the settings button for visitors
 const ADMIN_MODE = false; 
@@ -33,11 +15,6 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedModel, setSelectedModel] = useState('gpt-4o');
-  const [systemPrompt, setSystemPrompt] = useState(
-    "You are a helpful assistant for DEADPUNCH, a futuristic sports platform. Be concise, knowledgeable, and helpful."
-  );
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -82,11 +59,11 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      // Call the chat service with model and system prompt
+      // Call the chat service with model and system prompt from defaultChatSettings
       const response = await sendChatMessage({
         message: inputValue,
-        model: selectedModel,
-        systemPrompt: systemPrompt
+        model: defaultChatSettings.model,
+        systemPrompt: defaultChatSettings.systemPrompt
       });
       
       // Add AI response
@@ -110,19 +87,6 @@ const ChatInterface = () => {
     }
   };
 
-  const handleSettingsSave = () => {
-    setSettingsOpen(false);
-    toast({
-      title: "Settings Updated",
-      description: `Model: ${selectedModel} and custom prompt set.`,
-    });
-  };
-
-  const modelOptions = [
-    { label: 'GPT-4o', value: 'gpt-4o' },
-    { label: 'GPT-4o Mini', value: 'gpt-4o-mini' },
-  ];
-
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {/* Chat toggle button */}
@@ -145,84 +109,20 @@ const ChatInterface = () => {
           <div className="p-4 bg-deadpunch-dark-lighter border-b border-deadpunch-gray-dark flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <img 
-                src="/lovable-uploads/1bed301a-1af7-4ee5-9f14-78213e983de5.png" 
+                src="/lovable-uploads/4e57f636-100a-48d1-ae1e-dbfa44e28d6d.png" 
                 alt="DEADPUNCH" 
                 className="h-6 object-contain" 
               />
               <span className="font-display text-lg">CHAT</span>
             </div>
-            <div className="flex items-center space-x-1">
-              {ADMIN_MODE && (
-                <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
-                  <DialogTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      className="text-deadpunch-gray-light hover:text-white"
-                    >
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
-                    <DialogHeader>
-                      <DialogTitle>Chat Settings</DialogTitle>
-                      <DialogDescription className="text-deadpunch-gray-light">
-                        Customize your AI assistant's behavior
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="model">AI Model</Label>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full justify-between">
-                              {modelOptions.find(m => m.value === selectedModel)?.label || selectedModel}
-                              <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-full bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
-                            {modelOptions.map((option) => (
-                              <DropdownMenuItem 
-                                key={option.value} 
-                                onClick={() => setSelectedModel(option.value)}
-                              >
-                                {option.label}
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="system-prompt">System Prompt / Knowledge Base</Label>
-                        <Textarea
-                          id="system-prompt"
-                          className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark min-h-[100px]"
-                          placeholder="Describe how the AI should behave or provide domain knowledge"
-                          value={systemPrompt}
-                          onChange={(e) => setSystemPrompt(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button 
-                        className="bg-deadpunch-red hover:bg-deadpunch-red-hover" 
-                        onClick={handleSettingsSave}
-                      >
-                        Save Changes
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              )}
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={toggleChat}
-                className="text-deadpunch-gray-light hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleChat}
+              className="text-deadpunch-gray-light hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </div>
 
           {/* Chat messages */}
