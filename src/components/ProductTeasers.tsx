@@ -43,6 +43,10 @@ const ProductTeasers = () => {
           <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 animate-reveal">
             What's <span className="text-deadpunch-red">Coming</span>
           </h2>
+          {/* Added clear value proposition here */}
+          <p className="text-white text-xl md:text-2xl font-display font-medium mb-4 animate-reveal">
+            Precision-crafted gear built for pool players who live to win.
+          </p>
           <p className="text-deadpunch-gray-light text-lg animate-reveal delay-100 max-w-2xl mx-auto">
             Get a sneak peek at our first collection of premium gear and accessories coming soon.
           </p>
