@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shirt, ShoppingBag, Book } from 'lucide-react';
+import { Shirt, Book } from 'lucide-react';
 
 const ProductTeasers = () => {
   const products = [
@@ -10,7 +10,13 @@ const ProductTeasers = () => {
       description: "Stylish apparel for pool enthusiasts both in the game and everyday wear."
     },
     {
-      icon: <ShoppingBag className="h-12 w-12 text-deadpunch-red" />,
+      icon: (
+        <img 
+          src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
+          alt="Signature Hat" 
+          className="h-12 w-12 text-deadpunch-red"
+        />
+      ),
       title: "Signature Hats",
       description: "Limited edition headwear for both in and out of the pool hall."
     },
