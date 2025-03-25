@@ -70,7 +70,7 @@ const HeroSection = () => {
         >
           <img
             src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png"
-            alt="DEADPUNCH Logo"
+            alt="Deadpunch Logo"
             className="w-full h-auto"
           />
         </div>
@@ -90,7 +90,7 @@ const HeroSection = () => {
             <span className="block text-deadpunch-red text-3xl md:text-4xl lg:text-5xl">Get ready. The game is about to change.</span>
           </h1>
           <p className="text-deadpunch-gray-light text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-            Be the first to know. Sign up to receive exclusive updates on early access when DEADPUNCH launches.
+            Be the first to know. Sign up to receive exclusive updates on early access when Deadpunch launches.
           </p>
           <div className="flex justify-center items-center">
             <a href="#notify" className="btn-primary animate-reveal delay-300">

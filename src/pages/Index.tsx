@@ -51,7 +51,7 @@ const Index = () => {
           <div className="flex items-center mb-4 md:mb-0">
             <img 
               src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
-              alt="DEADPUNCH" 
+              alt="Deadpunch" 
               className="h-8 object-contain mr-4" 
             />
             
@@ -82,7 +82,7 @@ const Index = () => {
           
           <div className="flex flex-col items-center md:items-end">
             <div className="text-deadpunch-gray-light text-sm">
-              &copy; {new Date().getFullYear()} DEADPUNCH™. All rights reserved.
+              &copy; {new Date().getFullYear()} Deadpunch™. All rights reserved.
             </div>
           </div>
         </div>
