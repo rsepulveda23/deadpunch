@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, X, MessageSquare } from 'lucide-react';
+import { Send, X, MessageSquare, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -13,6 +13,7 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showHint, setShowHint] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -21,12 +22,22 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Auto-hide hint after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowHint(false);
+    }, 5000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
+    setShowHint(false);
     if (!isOpen && messages.length === 0) {
       // Add welcome message when opening an empty chat
       setMessages([
@@ -87,28 +98,34 @@ const ChatInterface = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Chat toggle button with popover */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button 
-            onClick={toggleChat} 
-            className="rounded-full h-14 w-14 shadow-lg hover:shadow-xl bg-deadpunch-red hover:bg-deadpunch-red-hover transition-all duration-300"
-            aria-label="Toggle chat"
-          >
-            {isOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <MessageSquare className="h-6 w-6" />
-            )}
-          </Button>
-        </PopoverTrigger>
-        {!isOpen && (
-          <PopoverContent side="top" align="end" className="bg-deadpunch-dark text-white border-deadpunch-gray-dark">
-            <div className="text-sm font-medium">Have questions about DEADPUNCH?</div>
-            <p className="text-xs text-deadpunch-gray-light mt-1">Click to chat with us!</p>
-          </PopoverContent>
+      {/* Chat indicator message - always visible when chat is closed */}
+      <div className={`absolute bottom-16 right-0 transform transition-all duration-300 ease-in-out ${isOpen ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100'}`}>
+        <div className="bg-deadpunch-dark text-white rounded-lg p-3 shadow-lg mb-2 max-w-[200px] border border-deadpunch-gray-dark">
+          <div className="flex items-center gap-2 mb-1">
+            <HelpCircle size={16} className="text-deadpunch-red" />
+            <span className="font-medium text-sm">Have questions?</span>
+          </div>
+          <p className="text-xs text-deadpunch-gray-light">Click to chat with us!</p>
+        </div>
+      </div>
+
+      {/* Chat toggle button */}
+      <Button 
+        onClick={toggleChat} 
+        className="rounded-full h-14 w-14 shadow-lg hover:shadow-xl bg-deadpunch-red hover:bg-deadpunch-red-hover transition-all duration-300 relative"
+        aria-label="Toggle chat"
+      >
+        {isOpen ? (
+          <X className="h-6 w-6" />
+        ) : (
+          <MessageSquare className="h-6 w-6" />
         )}
-      </Popover>
+        
+        {/* Notification dot */}
+        {showHint && !isOpen && (
+          <span className="absolute top-0 right-0 h-3 w-3 bg-white rounded-full animate-pulse"></span>
+        )}
+      </Button>
 
       {/* Chat window */}
       {isOpen && (
