@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
@@ -6,6 +7,7 @@ import ProductTeasers from '@/components/ProductTeasers';
 import EmailForm from '@/components/EmailForm';
 import ChatInterface from '@/components/Chat/ChatInterface';
 import TikTokIcon from '@/components/icons/TikTokIcon';
+import { Mail, Phone } from 'lucide-react';
 
 const Index = () => {
   useEffect(() => {
@@ -63,6 +65,18 @@ const Index = () => {
             >
               <TikTokIcon size={64} />
               <span className="ml-2 text-sm font-medium">Follow Us</span>
+            </a>
+          </div>
+          
+          {/* Contact info in the middle */}
+          <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0 text-deadpunch-gray-light">
+            <a href="mailto:contact@deadpunch.com" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
+              <Mail size={16} className="mr-2" />
+              <span className="text-sm">contact@deadpunch.com</span>
+            </a>
+            <a href="tel:+11234567890" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
+              <Phone size={16} className="mr-2" />
+              <span className="text-sm">+1 (123) 456-7890</span>
             </a>
           </div>
           
