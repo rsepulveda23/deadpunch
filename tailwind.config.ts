@@ -129,7 +129,7 @@ export default {
 				'float': 'float 6s ease-in-out infinite'
 			},
 			backgroundImage: {
-				'hero-pattern': 'linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.7)), url("/public/lovable-uploads/92c1d270-51fd-4c00-9eb5-98cbc13fb7a8.png")',
+				'hero-pattern': 'linear-gradient(to bottom, rgba(18, 18, 18, 0.3), rgba(18, 18, 18, 0.3)), url("/public/lovable-uploads/92c1d270-51fd-4c00-9eb5-98cbc13fb7a8.png")',
 				'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))',
 				'noise-texture': 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%\' height=\'100%\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
 			}

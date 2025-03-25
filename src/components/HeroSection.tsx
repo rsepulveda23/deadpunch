@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -55,10 +54,10 @@ const HeroSection = () => {
       ref={heroRef}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16 pb-8"
     >
-      {/* Background with subtle animation */}
+      {/* Background with improved visibility */}
       <div className="absolute inset-0 bg-deadpunch-dark">
-        <div className="absolute inset-0 bg-gradient-radial from-deadpunch-dark-lighter to-deadpunch-dark opacity-40"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-hero-pattern bg-cover bg-center opacity-40"></div>
+        <div className="absolute inset-0 bg-gradient-radial from-deadpunch-dark-lighter to-deadpunch-dark opacity-30"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-hero-pattern bg-cover bg-center opacity-70"></div>
         <div className="absolute inset-0 bg-noise-texture opacity-5"></div>
       </div>
 
