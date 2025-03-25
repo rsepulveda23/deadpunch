@@ -1,17 +1,17 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Boxing, Hat, Book } from 'lucide-react';
+import { Box, BookUser, Book } from 'lucide-react';
 
 const ProductTeasers = () => {
   const products = [
     {
-      icon: <Boxing className="h-12 w-12 text-deadpunch-red" />,
+      icon: <Box className="h-12 w-12 text-deadpunch-red" />,
       title: "Premium Gloves",
       description: "Pro-grade boxing gloves designed for elite performance and maximum protection."
     },
     {
-      icon: <Hat className="h-12 w-12 text-deadpunch-red" />,
+      icon: <BookUser className="h-12 w-12 text-deadpunch-red" />,
       title: "Signature Hats",
       description: "Limited edition headwear for both in and out of the ring."
     },
