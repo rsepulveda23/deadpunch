@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shirt, Book } from 'lucide-react';
@@ -11,11 +12,14 @@ const ProductTeasers = () => {
     },
     {
       icon: (
-        <img 
-          src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
-          alt="Signature Hat" 
-          className="h-12 w-12 text-deadpunch-red"
-        />
+        <div className="relative w-12 h-12 flex items-center justify-center">
+          <img 
+            src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
+            alt="Signature Hat"
+            className="h-10 w-10 z-10 object-contain"
+          />
+          {/* This removes the black square background */}
+        </div>
       ),
       title: "Signature Hats",
       description: "Limited edition headwear for both in and out of the pool hall."
