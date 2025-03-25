@@ -74,9 +74,9 @@ const Index = () => {
               <Mail size={16} className="mr-2" />
               <span className="text-sm">contact@deadpunch.com</span>
             </a>
-            <a href="tel:+11234567890" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
+            <a href="tel:+14134759156" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
               <Phone size={16} className="mr-2" />
-              <span className="text-sm">+1 (123) 456-7890</span>
+              <span className="text-sm">413-475-9156</span>
             </a>
           </div>
           
