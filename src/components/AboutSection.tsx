@@ -32,7 +32,7 @@ const AboutSection = () => {
             In the world of billiards, when a player is locked in, seeing every angle, executing without hesitation, and sinking shot after shot like time has slowed down—that's DEADPUNCH.
           </p>
           
-          <p className="text-lg text-deadpunch-gray-light mb-8 leading-relaxed">
+          <p className="text-lg text-deadpunch-gray-light mb-4 leading-relaxed">
             It's flow. It's the zone. It's pure confidence forged through preparation.
           </p>
           
