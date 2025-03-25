@@ -25,15 +25,15 @@ const AboutSection = () => {
           <h3 className="text-3xl font-display font-bold mb-8 text-center tracking-wide">ABOUT DEADPUNCH</h3>
           
           <p className="text-xl text-white mb-6 text-center leading-relaxed">
-            <span className="font-semibold">Deadpunch is more than a brand—it's a state of being.</span>
-          </p>
-          
-          <p className="text-lg text-deadpunch-gray-light mb-6 leading-relaxed">
-            In the world of billiards, when a player is locked in, seeing every angle, executing without hesitation, and sinking shot after shot like time has slowed down—that's Deadpunch.
+            <span className="font-semibold">Deadpunch isn't just a brand—it's the zone.</span>
           </p>
           
           <p className="text-lg text-deadpunch-gray-light mb-4 leading-relaxed">
-            It's flow. It's the zone. It's pure confidence forged through preparation.
+            It's the moment when everything slows down, every angle is clear, and every shot drops without hesitation. That's Deadpunch.
+          </p>
+          
+          <p className="text-lg text-deadpunch-gray-light mb-4 leading-relaxed">
+            It's flow. It's total focus. It's confidence forged through relentless preparation.
           </p>
           
           <p className="text-2xl text-deadpunch-red font-display text-center font-semibold mb-8 leading-relaxed">
