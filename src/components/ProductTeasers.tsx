@@ -1,17 +1,17 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { TShirt, Cap, Book } from 'lucide-react';
+import { Shirt, Hat, Book } from 'lucide-react';
 
 const ProductTeasers = () => {
   const products = [
     {
-      icon: <TShirt className="h-12 w-12 text-deadpunch-red" />,
+      icon: <Shirt className="h-12 w-12 text-deadpunch-red" />,
       title: "T-shirts & Hoodies",
       description: "Stylish apparel for pool enthusiasts both in the game and everyday wear."
     },
     {
-      icon: <Cap className="h-12 w-12 text-deadpunch-red" />,
+      icon: <Hat className="h-12 w-12 text-deadpunch-red" />,
       title: "Signature Hats",
       description: "Limited edition headwear for both in and out of the pool hall."
     },
