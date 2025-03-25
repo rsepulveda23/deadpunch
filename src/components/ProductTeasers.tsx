@@ -45,7 +45,7 @@ const ProductTeasers = () => {
           </h2>
           {/* Added clear value proposition here */}
           <p className="text-white text-xl md:text-2xl font-display font-medium mb-4 animate-reveal">
-            Precision-crafted gear built for pool players who live to win.
+            DEADPUNCH is the ultimate gear and mindset brand for competitive pool players.
           </p>
           <p className="text-deadpunch-gray-light text-lg animate-reveal delay-100 max-w-2xl mx-auto">
             Get a sneak peek at our first collection of premium gear and accessories coming soon.
