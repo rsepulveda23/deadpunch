@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { sendChatMessage, defaultChatSettings } from '@/services/chatService';
 import { Message } from '@/types/chat';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const ChatInterface = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -86,18 +87,28 @@ const ChatInterface = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Chat toggle button */}
-      <Button 
-        onClick={toggleChat} 
-        className="rounded-full h-14 w-14 shadow-lg hover:shadow-xl bg-deadpunch-red hover:bg-deadpunch-red-hover transition-all duration-300"
-        aria-label="Toggle chat"
-      >
-        {isOpen ? (
-          <X className="h-6 w-6" />
-        ) : (
-          <MessageSquare className="h-6 w-6" />
+      {/* Chat toggle button with popover */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button 
+            onClick={toggleChat} 
+            className="rounded-full h-14 w-14 shadow-lg hover:shadow-xl bg-deadpunch-red hover:bg-deadpunch-red-hover transition-all duration-300"
+            aria-label="Toggle chat"
+          >
+            {isOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <MessageSquare className="h-6 w-6" />
+            )}
+          </Button>
+        </PopoverTrigger>
+        {!isOpen && (
+          <PopoverContent side="top" align="end" className="bg-deadpunch-dark text-white border-deadpunch-gray-dark">
+            <div className="text-sm font-medium">Have questions about DEADPUNCH?</div>
+            <p className="text-xs text-deadpunch-gray-light mt-1">Click to chat with us!</p>
+          </PopoverContent>
         )}
-      </Button>
+      </Popover>
 
       {/* Chat window */}
       {isOpen && (
@@ -123,7 +134,7 @@ const ChatInterface = () => {
           </div>
 
           {/* Chat messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 scroll-area">
             {messages.map((message) => (
               <div
                 key={message.id}
