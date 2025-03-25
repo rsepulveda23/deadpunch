@@ -13,7 +13,10 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showHint, setShowHint] = useState(true);
+  const [showHint, setShowHint] = useState(() => {
+    // Check localStorage to see if hint has been dismissed
+    return localStorage.getItem('chatHintDismissed') !== 'true';
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -37,7 +40,13 @@ const ChatInterface = () => {
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
-    setShowHint(false);
+    
+    // If opening chat for the first time, mark hint as dismissed
+    if (!isOpen && showHint) {
+      setShowHint(false);
+      localStorage.setItem('chatHintDismissed', 'true');
+    }
+
     if (!isOpen && messages.length === 0) {
       // Add welcome message when opening an empty chat
       setMessages([
@@ -98,16 +107,18 @@ const ChatInterface = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Chat indicator message - always visible when chat is closed */}
-      <div className={`absolute bottom-16 right-0 transform transition-all duration-300 ease-in-out ${isOpen ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100'}`}>
-        <div className="bg-deadpunch-dark text-white rounded-lg p-3 shadow-lg mb-2 max-w-[200px] border border-deadpunch-gray-dark">
-          <div className="flex items-center gap-2 mb-1">
-            <HelpCircle size={16} className="text-deadpunch-red" />
-            <span className="font-medium text-sm">Have questions?</span>
+      {/* Chat indicator message - only shows if not previously dismissed */}
+      {showHint && !isOpen && (
+        <div className="absolute bottom-16 right-0 transform transition-all duration-300 ease-in-out">
+          <div className="bg-deadpunch-dark text-white rounded-lg p-3 shadow-lg mb-2 max-w-[200px] border border-deadpunch-gray-dark">
+            <div className="flex items-center gap-2 mb-1">
+              <HelpCircle size={16} className="text-deadpunch-red" />
+              <span className="font-medium text-sm">Have questions?</span>
+            </div>
+            <p className="text-xs text-deadpunch-gray-light">Click to chat with us!</p>
           </div>
-          <p className="text-xs text-deadpunch-gray-light">Click to chat with us!</p>
         </div>
-      </div>
+      )}
 
       {/* Chat toggle button */}
       <Button 
@@ -121,7 +132,7 @@ const ChatInterface = () => {
           <MessageSquare className="h-6 w-6" />
         )}
         
-        {/* Notification dot */}
+        {/* Notification dot - only shows if hint is visible */}
         {showHint && !isOpen && (
           <span className="absolute top-0 right-0 h-3 w-3 bg-white rounded-full animate-pulse"></span>
         )}
