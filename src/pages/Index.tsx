@@ -67,8 +67,13 @@ const Index = () => {
             </a>
           </div>
           
-          <div className="text-deadpunch-gray-light text-sm">
-            &copy; {new Date().getFullYear()} DEADPUNCH. All rights reserved.
+          <div className="flex flex-col items-center md:items-end">
+            <div className="text-deadpunch-gray-light text-sm mb-2">
+              &copy; {new Date().getFullYear()} DEADPUNCH. All rights reserved.
+            </div>
+            <div className="text-deadpunch-gray-light text-xs">
+              DEADPUNCH™ is a trademark with a pending application. All rights reserved.
+            </div>
           </div>
         </div>
       </footer>
