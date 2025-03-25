@@ -59,6 +59,8 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-deadpunch-dark">
         <div className="absolute inset-0 bg-gradient-radial from-deadpunch-dark-lighter to-deadpunch-dark opacity-40"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-hero-pattern bg-cover bg-center opacity-40"></div>
+        {/* This is the covering layer that we're adjusting */}
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="absolute inset-0 bg-noise-texture opacity-5"></div>
       </div>
 
