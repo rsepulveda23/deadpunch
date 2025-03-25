@@ -46,7 +46,7 @@ const ProductTeasers = () => {
             The ultimate gear and mindset brand for competitive pool players
           </p>
           <p className="text-deadpunch-gray-light text-lg animate-reveal delay-100 max-w-2xl mx-auto">
-            Get a sneak peek at our first collection of premium gear and accessories coming soon.
+            Preview our upcoming premium gear collection dropping soon.
           </p>
         </div>
 
