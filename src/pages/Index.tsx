@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
@@ -68,11 +67,8 @@ const Index = () => {
           </div>
           
           <div className="flex flex-col items-center md:items-end">
-            <div className="text-deadpunch-gray-light text-sm mb-2">
-              &copy; {new Date().getFullYear()} DEADPUNCH. All rights reserved.
-            </div>
-            <div className="text-deadpunch-gray-light text-xs">
-              DEADPUNCH™ is a trademark with a pending application. All rights reserved.
+            <div className="text-deadpunch-gray-light text-sm">
+              &copy; {new Date().getFullYear()} DEADPUNCH™. All rights reserved.
             </div>
           </div>
         </div>
