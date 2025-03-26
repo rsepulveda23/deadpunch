@@ -1,4 +1,3 @@
-
 // Follow this setup guide to integrate the Deno runtime into your application:
 // https://deno.land/manual/examples/deploy_node_server
 
@@ -194,6 +193,26 @@ Additional response guidelines:
       );
     }
 
+    // Add special handler for "what is deadpunch" type questions
+    if (
+      lowerCaseMessage.includes("what is deadpunch") || 
+      lowerCaseMessage.includes("what's deadpunch") || 
+      lowerCaseMessage.includes("tell me about deadpunch") ||
+      (lowerCaseMessage.includes("what") && lowerCaseMessage.includes("deadpunch") && lowerCaseMessage.length < 30)
+    ) {
+      return new Response(
+        JSON.stringify({ 
+          response: "Deadpunch is more than just a brand; it's a mindset that embodies precision, focus, and confidence in billiards. Founded by Ruben, Deadpunch represents those who are locked in, daring, and fully alive in moments of action. We're building a community that celebrates the mental game behind perfect play." 
+        }),
+        { 
+          headers: { 
+            ...corsHeaders,
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
+    }
+
     // Prepare messages for OpenAI in the required format
     const messages = [
       {
@@ -254,7 +273,7 @@ Additional response guidelines:
     return new Response(
       JSON.stringify({ 
         error: "An error occurred while processing your request",
-        response: "Sorry, I encountered an error. Please contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com."
+        response: "Sorry, I encountered an error. Please contact DEADPunch directly at +1 (413) 475-9156 or email info@deadpunch.com."
       }),
       { 
         status: 500,
