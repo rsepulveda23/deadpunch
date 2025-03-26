@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
+import { Link } from 'react-router-dom';
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -25,19 +26,34 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Categories data structure
+  // Categories data structure with URL paths
   const categories = [
     {
       name: "Men",
-      subcategories: ["Hats", "Hoodies & Jackets", "T-shirts", "Accessories"]
+      subcategories: [
+        { name: "Hats", path: "/men/hats" },
+        { name: "Hoodies & Jackets", path: "/men/hoodies-jackets" },
+        { name: "T-shirts", path: "/men/t-shirts" },
+        { name: "Accessories", path: "/men/accessories" }
+      ]
     },
     {
       name: "Women",
-      subcategories: ["Hats", "Hoodies & Jackets", "T-shirts", "Accessories"]
+      subcategories: [
+        { name: "Hats", path: "/women/hats" },
+        { name: "Hoodies & Jackets", path: "/women/hoodies-jackets" },
+        { name: "T-shirts", path: "/women/t-shirts" },
+        { name: "Accessories", path: "/women/accessories" }
+      ]
     },
     {
       name: "New Arrivals",
-      subcategories: ["Hats", "Hoodies & Jackets", "T-shirts", "Accessories"]
+      subcategories: [
+        { name: "Hats", path: "/new-arrivals/hats" },
+        { name: "Hoodies & Jackets", path: "/new-arrivals/hoodies-jackets" },
+        { name: "T-shirts", path: "/new-arrivals/t-shirts" },
+        { name: "Accessories", path: "/new-arrivals/accessories" }
+      ]
     }
   ];
 
@@ -51,13 +67,13 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <div className="flex-1 flex justify-start">
-          <a href="#" className="flex items-center">
+          <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
               alt="Deadpunch" 
               className="h-10 md:h-12 object-contain transition-transform duration-300 hover:scale-105" 
             />
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Menu - Centered */}
@@ -73,17 +89,17 @@ const Navbar = () => {
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
                       {category.subcategories.map((subcategory) => (
-                        <li key={subcategory} className="row-span-1">
+                        <li key={subcategory.name} className="row-span-1">
                           <NavigationMenuLink asChild>
-                            <a
-                              href="#"
+                            <Link
+                              to={subcategory.path}
                               className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-deadpunch-dark-lighter hover:text-deadpunch-red focus:bg-deadpunch-dark-lighter focus:text-accent-foreground"
                             >
-                              <div className="text-sm font-medium leading-none">{subcategory}</div>
+                              <div className="text-sm font-medium leading-none">{subcategory.name}</div>
                               <p className="line-clamp-2 text-sm leading-snug text-deadpunch-red mt-1">
                                 Coming Soon
                               </p>
-                            </a>
+                            </Link>
                           </NavigationMenuLink>
                         </li>
                       ))}
@@ -148,7 +164,7 @@ const Navbar = () => {
               <div 
                 className="flex justify-between items-center py-2 cursor-pointer"
                 onClick={() => {
-                  // Toggle specific category expansion (in a real implementation, we'd use state to track this)
+                  // Toggle specific category expansion
                   const content = document.getElementById(`mobile-${category.name.replace(/\s+/g, '-').toLowerCase()}`);
                   if (content) {
                     content.classList.toggle('hidden');
@@ -161,11 +177,11 @@ const Navbar = () => {
               
               <div id={`mobile-${category.name.replace(/\s+/g, '-').toLowerCase()}`} className="hidden pl-4 mt-2 space-y-2">
                 {category.subcategories.map((subcategory) => (
-                  <div key={subcategory} className="py-1">
-                    <a href="#" className="block text-white hover:text-deadpunch-red">
-                      <div>{subcategory}</div>
+                  <div key={subcategory.name} className="py-1">
+                    <Link to={subcategory.path} className="block text-white hover:text-deadpunch-red">
+                      <div>{subcategory.name}</div>
                       <p className="text-xs text-deadpunch-red">Coming Soon</p>
-                    </a>
+                    </Link>
                   </div>
                 ))}
               </div>
