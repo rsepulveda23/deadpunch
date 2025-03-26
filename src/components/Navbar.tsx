@@ -11,6 +11,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger
 } from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
@@ -124,9 +125,9 @@ const Navbar = () => {
               <TikTokIcon size={64} />
               <span className="ml-2 font-medium">Follow Us</span>
             </a>
-            <a href="#notify" className="btn-primary animate-reveal delay-300">
+            <Button variant="default" className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
               Notify Me
-            </a>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -141,12 +142,14 @@ const Navbar = () => {
               <TikTokIcon size={40} />
               <span className="ml-1 text-sm font-medium">Follow Us</span>
             </a>
-            <button 
+            <Button 
+              variant="ghost"
+              size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-white hover:text-deadpunch-red focus:outline-none transition-colors duration-300"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -188,13 +191,13 @@ const Navbar = () => {
             </div>
           ))}
           
-          <a 
-            href="#notify" 
-            className="btn-primary text-center my-2"
+          <Button 
+            variant="default" 
+            className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white w-full my-2"
             onClick={() => setIsMenuOpen(false)}
           >
             Notify Me
-          </a>
+          </Button>
         </div>
       </div>
     </nav>
