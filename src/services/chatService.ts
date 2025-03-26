@@ -1,28 +1,51 @@
 
-// This file handles the integration with OpenAI API via Supabase
+/**
+ * Chat Service
+ * 
+ * This file handles the integration with OpenAI API via Supabase Edge Functions.
+ * It provides the interface between the frontend chat components and the backend AI services.
+ */
 
 import { supabase } from '@/lib/supabase';
 import { ChatSettings } from '@/types/chat';
 
-// Request type for chat messages
+/**
+ * Request type for chat messages sent to the API
+ * @typedef {Object} ChatRequest
+ * @property {string} message - The user's input message
+ * @property {string} [model] - Optional AI model to use
+ * @property {string} [systemPrompt] - Optional system prompt to override default
+ */
 type ChatRequest = {
   message: string;
   model?: string;
   systemPrompt?: string;
 };
 
-// Response type from the API
+/**
+ * Response type from the chat API
+ * @typedef {Object} ChatResponse
+ * @property {string} message - The AI's response message
+ */
 type ChatResponse = {
   message: string;
 };
 
-// Default settings with updated knowledge base
+/**
+ * Default settings for the chat interface with preconfigured values
+ * These settings determine how the AI responds by default
+ * @constant
+ */
 export const defaultChatSettings: ChatSettings = {
-  model: "gpt-4o-mini", // Default to gpt-4o-mini
+  model: "gpt-4o-mini", // Default to gpt-4o-mini for balance of speed and quality
   systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah. YOU MUST ALWAYS consult the DEADPUNCH knowledge base FIRST before answering any questions. When asked for contact information, ALWAYS provide the EXACT contact details: Phone: +1 (413) 475-9156, Email: info@deadpunch.com, TikTok: @deadpunch.com. Never redirect users to a website or contact page. Keep responses brief and concise (maximum 1-2 short paragraphs). Be bold, not corny. Sound confident, not cocky."
 };
 
-// Enhanced fallback responses with exact contact information
+/**
+ * Fallback responses for common queries when Edge Function is unavailable
+ * Provides consistent answers for important information even when backend is down
+ * @constant
+ */
 const fallbackResponses: Record<string, string> = {
   "contact": "You can contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com. Our TikTok is @deadpunch.com.",
   "phone": "The DEADPUNCH phone number is +1 (413) 475-9156.",
@@ -34,11 +57,18 @@ const fallbackResponses: Record<string, string> = {
   "mission": "We champion billiards as a legitimate sport through innovative apparel and inspire our community to drive positive change.",
 };
 
+/**
+ * Main function to send a chat message to the AI
+ * Handles API communication, error states, and fallbacks
+ * 
+ * @param {ChatRequest} request - The chat request with user message and options
+ * @returns {Promise<ChatResponse>} Promise resolving to the AI's response
+ */
 export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
   try {
     console.log("Sending request to Supabase Edge Function...");
     
-    // Check if Supabase is configured
+    // Check if Supabase is configured correctly
     if (!supabase) {
       console.error("Supabase is not configured properly");
       return {
@@ -52,7 +82,7 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
 
     console.log(`Using model: ${model}`);
 
-    // Call the Supabase Edge Function that will handle the OpenAI API request
+    // Call the Supabase Edge Function that handles the OpenAI API request
     const { data, error } = await supabase.functions.invoke('openai-chat', {
       body: {
         message: request.message,
@@ -61,16 +91,17 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
       }
     });
 
-    // Check for errors
+    // Check for errors from Supabase Edge Function
     if (error) {
       console.error("Supabase Edge Function error:", error);
       
       // For development/testing when Edge Function might not be deployed yet
+      // Provides graceful fallback with useful responses
       if (error.message?.includes("Failed to send a request to the Edge Function")) {
         // Check if the user is asking for contact information and provide direct fallback
         const lowerCaseMessage = request.message.toLowerCase();
         
-        // Check for contact-related queries first as a priority
+        // First priority: Check for contact-related queries
         if (lowerCaseMessage.includes("contact") || lowerCaseMessage.includes("reach") || 
             lowerCaseMessage.includes("get in touch") || lowerCaseMessage.includes("talk to")) {
           return {
@@ -113,6 +144,7 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
           };
         }
         
+        // Generic maintenance message for all other queries
         return {
           message: "The AI chat service is currently undergoing maintenance. Please contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com. Our TikTok is @deadpunch.com."
         };
@@ -121,21 +153,22 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
       throw new Error(`Supabase error: ${error.message || 'Unknown error'}`);
     }
 
-    // If we get a successful response, return it
+    // Process successful response from the Edge Function
     if (data && data.response) {
       return {
         message: data.response
       };
     } else {
-      // If the response format is unexpected
+      // Handle unexpected response format
       console.error("Unexpected response format:", data);
       return {
         message: "I'm not sure about that. For immediate assistance, contact DEADPUNCH at +1 (413) 475-9156 or email info@deadpunch.com."
       };
     }
   } catch (error) {
+    // Handle any other errors that might occur
     console.error("Error in chat service:", error);
-    // Return a user-friendly error message with contact information
+    // Always return a user-friendly error message with contact information
     return {
       message: `Sorry, I encountered an error. Please contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com.`
     };

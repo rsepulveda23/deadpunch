@@ -4,13 +4,24 @@
 
 import { corsHeaders } from "../_shared/cors.ts";
 
+/**
+ * Type definition for chat message requests
+ * @interface ChatMessage
+ * @property {string} message - The user's input message
+ * @property {string} model - The OpenAI model to use (default: gpt-4o-mini)
+ * @property {string} systemPrompt - Custom system prompt to override default
+ */
 interface ChatMessage {
   message: string;
   model: string;
   systemPrompt: string;
 }
 
-// DEADPUNCH knowledge base
+/**
+ * DEADPUNCH Knowledge Base
+ * Contains all brand information, mission, values, and contact details
+ * This is used as the primary reference data for the AI assistant
+ */
 const knowledgeBase = `
 What is Deadpunch?
 
@@ -101,6 +112,12 @@ Deadpunch deeply understands the critical role mental focus plays in billiards a
 Our approach integrates these mental aspects with technical skills, recognizing that peak performance comes from the synergy between mental clarity and physical execution.
 `;
 
+/**
+ * Main server function that handles all incoming requests
+ * Uses Deno's built-in server functionality
+ * @param {Request} req - The incoming HTTP request
+ * @returns {Response} HTTP response with chat completion or error message
+ */
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -127,7 +144,11 @@ Deno.serve(async (req) => {
 
     console.log(`Processing chat request with model: ${model}`)
 
-    // Enhanced system prompt with stronger emphasis on knowledge base and contact info
+    /**
+     * Enhanced system prompt for the AI assistant
+     * Provides strong guidance on how to respond, prioritizing knowledge base info
+     * Always emphasizes exact contact information and brand messaging
+     */
     const defaultSystemPrompt = `You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah.
 
 CRITICAL INSTRUCTIONS: 
@@ -148,6 +169,7 @@ Additional response guidelines:
 `;
 
     // Check if the message is asking about contact information
+    // This is a special case handler to ensure contact info is always provided correctly
     const lowerCaseMessage = message.toLowerCase();
     if (
       lowerCaseMessage.includes("contact") || 
@@ -157,7 +179,8 @@ Additional response guidelines:
       lowerCaseMessage.includes("get in touch") ||
       lowerCaseMessage.includes("call")
     ) {
-      // Direct response for contact-related queries
+      // Direct response for contact-related queries without calling OpenAI
+      // This ensures consistent and immediate contact information delivery
       return new Response(
         JSON.stringify({ 
           response: "You can contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com. Our TikTok is @deadpunch.com." 
@@ -171,7 +194,7 @@ Additional response guidelines:
       );
     }
 
-    // Prepare messages for OpenAI
+    // Prepare messages for OpenAI in the required format
     const messages = [
       {
         role: "system",
@@ -183,7 +206,7 @@ Additional response guidelines:
       }
     ]
 
-    // Call OpenAI API
+    // Call OpenAI API with the formatted messages
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -198,7 +221,7 @@ Additional response guidelines:
       })
     })
 
-    // Handle OpenAI API response
+    // Handle OpenAI API response or errors
     if (!openAIResponse.ok) {
       const errorData = await openAIResponse.json()
       // Avoid logging potentially sensitive error details
@@ -206,12 +229,13 @@ Additional response guidelines:
       throw new Error(`OpenAI API error: ${openAIResponse.status}`)
     }
 
+    // Extract and format the AI's response
     const data = await openAIResponse.json()
     const aiResponseText = data.choices[0].message.content
 
     console.log('Successfully received response from OpenAI')
 
-    // Return successful response
+    // Return successful response to the client
     return new Response(
       JSON.stringify({ response: aiResponseText }),
       { 
@@ -226,6 +250,7 @@ Additional response guidelines:
     console.error('Error processing request type:', error.name)
     
     // Return error response with contact information but without detailed error info
+    // Always provide contact details even in error cases
     return new Response(
       JSON.stringify({ 
         error: "An error occurred while processing your request",

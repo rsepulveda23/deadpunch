@@ -1,4 +1,11 @@
 
+/**
+ * ChatInterface Component
+ * 
+ * A responsive, floating chat widget that provides AI assistance to users.
+ * Features a toggle button, chat window with message history, and loading states.
+ */
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, MessageSquare, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,23 +16,33 @@ import { Message } from '@/types/chat';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const ChatInterface = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  /**
+   * State management for the chat interface
+   */
+  const [isOpen, setIsOpen] = useState(false);                  // Controls chat window visibility
+  const [messages, setMessages] = useState<Message[]>([]);      // Stores chat message history
+  const [inputValue, setInputValue] = useState('');             // Current input field value
+  const [isLoading, setIsLoading] = useState(false);            // Loading state during API calls
   const [showHint, setShowHint] = useState(() => {
-    // Check localStorage to see if hint has been dismissed
+    // Check localStorage to see if hint has been dismissed before
     return localStorage.getItem('chatHintDismissed') !== 'true';
   });
+  
+  // Reference to the messages end for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  // Scroll to bottom when messages change
+  /**
+   * Auto-scroll to bottom when messages change
+   */
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // Auto-hide hint after 5 seconds
+  /**
+   * Auto-hide hint after 5 seconds
+   * Removes the hint bubble if user doesn't interact with it
+   */
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowHint(false);
@@ -34,10 +51,17 @@ const ChatInterface = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  /**
+   * Scrolls the chat window to the most recent message
+   */
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  /**
+   * Toggles the chat window open/closed
+   * Adds a welcome message when opening an empty chat
+   */
   const toggleChat = () => {
     setIsOpen(!isOpen);
     
@@ -47,8 +71,8 @@ const ChatInterface = () => {
       localStorage.setItem('chatHintDismissed', 'true');
     }
 
+    // Add welcome message when opening an empty chat
     if (!isOpen && messages.length === 0) {
-      // Add welcome message when opening an empty chat
       setMessages([
         {
           id: '1',
@@ -60,11 +84,17 @@ const ChatInterface = () => {
     }
   };
 
+  /**
+   * Handles the chat form submission
+   * Sends user message to API and displays the response
+   * 
+   * @param {React.FormEvent} e - The form submission event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading) return;
     
-    // Add user message
+    // Add user message to the chat
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputValue,
@@ -77,14 +107,14 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      // Call the chat service with default settings - GPT-4o Mini
+      // Call the chat service using default settings
       const response = await sendChatMessage({
         message: inputValue,
         model: defaultChatSettings.model,
         systemPrompt: defaultChatSettings.systemPrompt
       });
       
-      // Add AI response
+      // Add AI response to the chat
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: response.message,
@@ -94,6 +124,7 @@ const ChatInterface = () => {
       
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
+      // Show error toast if API call fails
       toast({
         title: "Error",
         description: "Failed to get a response. Please try again.",
@@ -138,10 +169,10 @@ const ChatInterface = () => {
         )}
       </Button>
 
-      {/* Chat window */}
+      {/* Chat window - only displayed when isOpen is true */}
       {isOpen && (
         <div className="absolute bottom-16 right-0 w-80 sm:w-96 h-[500px] bg-deadpunch-dark rounded-lg shadow-2xl flex flex-col border border-deadpunch-gray-dark overflow-hidden transition-all duration-300 ease-in-out">
-          {/* Chat header */}
+          {/* Chat header with brand logo and close button */}
           <div className="p-4 bg-deadpunch-dark-lighter border-b border-deadpunch-gray-dark flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <img 
@@ -161,8 +192,9 @@ const ChatInterface = () => {
             </Button>
           </div>
 
-          {/* Chat messages */}
+          {/* Chat messages area with scroll */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4 scroll-area">
+            {/* Map through and display all messages */}
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -182,6 +214,8 @@ const ChatInterface = () => {
                 </div>
               </div>
             ))}
+            
+            {/* Loading indicator - only shows when waiting for API response */}
             {isLoading && (
               <div className="flex justify-start">
                 <div className="max-w-[80%] rounded-lg p-3 bg-deadpunch-dark-lighter text-white">
@@ -193,10 +227,12 @@ const ChatInterface = () => {
                 </div>
               </div>
             )}
+            
+            {/* Invisible element for scroll reference */}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Chat input */}
+          {/* Chat input form */}
           <form onSubmit={handleSubmit} className="p-4 border-t border-deadpunch-gray-dark flex space-x-2">
             <Input
               type="text"
