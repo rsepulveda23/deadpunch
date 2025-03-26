@@ -14,16 +14,19 @@ export type Database = {
           created_at: string | null
           email: string
           id: string
+          metadata: Json | null
         }
         Insert: {
           created_at?: string | null
           email?: string
           id?: string
+          metadata?: Json | null
         }
         Update: {
           created_at?: string | null
           email?: string
           id?: string
+          metadata?: Json | null
         }
         Relationships: []
       }

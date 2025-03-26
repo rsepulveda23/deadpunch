@@ -46,7 +46,7 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
       .insert([{ 
         email, 
         created_at: new Date().toISOString(),
-        metadata: metadata
+        metadata 
       }]);
     
     if (error) {
