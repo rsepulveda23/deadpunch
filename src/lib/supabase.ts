@@ -21,8 +21,16 @@ export const supabase = isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
 
+// Interface for metadata in email subscriptions
+interface EmailSubscriptionMetadata {
+  source?: string;
+  category?: string;
+  subcategory?: string;
+  [key: string]: any;
+}
+
 // Specialized function for email subscriptions
-export const saveEmailSubscription = async (email: string) => {
+export const saveEmailSubscription = async (email: string, metadata: EmailSubscriptionMetadata = {}) => {
   // If Supabase is not configured, return a mock success for development
   if (!isSupabaseConfigured) {
     console.warn('Supabase not configured. Using mock response for email subscription.');
@@ -32,10 +40,14 @@ export const saveEmailSubscription = async (email: string) => {
   }
   
   try {
-    console.log('Saving email to Supabase table: deadpunch_email_capture');
+    console.log('Saving email to Supabase table: deadpunch_email_capture', { email, metadata });
     const { error, data } = await supabase!
       .from('deadpunch_email_capture')
-      .insert([{ email, created_at: new Date().toISOString() }]);
+      .insert([{ 
+        email, 
+        created_at: new Date().toISOString(),
+        metadata: metadata
+      }]);
     
     if (error) {
       console.error('Supabase error:', error);
