@@ -13,6 +13,11 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -115,16 +120,51 @@ const Navbar = () => {
         <div className="flex-1 flex justify-end">
           {/* TikTok and Notify Me button */}
           <div className="hidden md:flex items-center space-x-4">
-            <a 
-              href="https://www.tiktok.com/@deadpunch.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
-              aria-label="TikTok"
-            >
-              <TikTokIcon size={64} />
-              <span className="ml-2 font-medium">Follow Us</span>
-            </a>
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <a 
+                  href="https://www.tiktok.com/@deadpunch.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
+                  aria-label="TikTok"
+                >
+                  <TikTokIcon size={64} />
+                  <span className="ml-2 font-medium">Follow Us</span>
+                </a>
+              </HoverCardTrigger>
+              <HoverCardContent 
+                className="w-80 p-0 bg-deadpunch-dark-lighter border-deadpunch-gray-dark" 
+                sideOffset={12}
+              >
+                <div className="flex flex-col">
+                  <div className="relative aspect-video w-full overflow-hidden rounded-t-md">
+                    <img 
+                      src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
+                      alt="TikTok Page Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                      <TikTokIcon size={32} />
+                      <span className="text-white text-sm font-medium ml-2">@deadpunch.com</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h4 className="text-white font-medium mb-1">DEADPUNCH on TikTok</h4>
+                    <p className="text-deadpunch-gray-light text-sm mb-3">
+                      Check out our latest videos and updates on TikTok
+                    </p>
+                    <Button 
+                      variant="default" 
+                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover"
+                      onClick={() => window.open('https://www.tiktok.com/@deadpunch.com', '_blank')}
+                    >
+                      Visit our TikTok
+                    </Button>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
             <Button variant="default" className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
               Notify Me
             </Button>
@@ -132,16 +172,52 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-4">
-            <a 
-              href="https://www.tiktok.com/@deadpunch.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
-              aria-label="TikTok"
-            >
-              <TikTokIcon size={40} />
-              <span className="ml-1 text-sm font-medium">Follow Us</span>
-            </a>
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <a 
+                  href="https://www.tiktok.com/@deadpunch.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
+                  aria-label="TikTok"
+                >
+                  <TikTokIcon size={40} />
+                  <span className="ml-1 text-sm font-medium">Follow Us</span>
+                </a>
+              </HoverCardTrigger>
+              <HoverCardContent 
+                className="w-72 p-0 bg-deadpunch-dark-lighter border-deadpunch-gray-dark" 
+                sideOffset={12}
+              >
+                <div className="flex flex-col">
+                  <div className="relative aspect-video w-full overflow-hidden rounded-t-md">
+                    <img 
+                      src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
+                      alt="TikTok Page Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                      <TikTokIcon size={24} />
+                      <span className="text-white text-xs font-medium ml-1">@deadpunch.com</span>
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <h4 className="text-white text-sm font-medium mb-1">DEADPUNCH on TikTok</h4>
+                    <p className="text-deadpunch-gray-light text-xs mb-2">
+                      Check out our latest videos and updates
+                    </p>
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover"
+                      onClick={() => window.open('https://www.tiktok.com/@deadpunch.com', '_blank')}
+                    >
+                      Visit our TikTok
+                    </Button>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
             <Button 
               variant="ghost"
               size="icon"

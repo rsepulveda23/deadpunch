@@ -8,6 +8,12 @@ import EmailForm from '@/components/EmailForm';
 import ChatInterface from '@/components/Chat/ChatInterface';
 import TikTokIcon from '@/components/icons/TikTokIcon';
 import { Mail, Phone } from 'lucide-react';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   useEffect(() => {
@@ -56,16 +62,51 @@ const Index = () => {
             />
             
             {/* Social Media Links moved next to logo */}
-            <a 
-              href="https://www.tiktok.com/@deadpunch.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
-              aria-label="TikTok"
-            >
-              <TikTokIcon size={64} />
-              <span className="ml-2 text-sm font-medium">Follow Us</span>
-            </a>
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <a 
+                  href="https://www.tiktok.com/@deadpunch.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
+                  aria-label="TikTok"
+                >
+                  <TikTokIcon size={64} />
+                  <span className="ml-2 text-sm font-medium">Follow Us</span>
+                </a>
+              </HoverCardTrigger>
+              <HoverCardContent 
+                className="w-80 p-0 bg-deadpunch-dark-lighter border-deadpunch-gray-dark" 
+                sideOffset={12}
+              >
+                <div className="flex flex-col">
+                  <div className="relative aspect-video w-full overflow-hidden rounded-t-md">
+                    <img 
+                      src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
+                      alt="TikTok Page Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                      <TikTokIcon size={32} />
+                      <span className="text-white text-sm font-medium ml-2">@deadpunch.com</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h4 className="text-white font-medium mb-1">DEADPUNCH on TikTok</h4>
+                    <p className="text-deadpunch-gray-light text-sm mb-3">
+                      Check out our latest videos and updates on TikTok
+                    </p>
+                    <Button 
+                      variant="default" 
+                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover"
+                      onClick={() => window.open('https://www.tiktok.com/@deadpunch.com', '_blank')}
+                    >
+                      Visit our TikTok
+                    </Button>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           </div>
           
           {/* Contact info in the middle */}
