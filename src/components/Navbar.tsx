@@ -1,7 +1,16 @@
 
 import { useEffect, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
+import { 
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,6 +24,22 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Categories data structure
+  const categories = [
+    {
+      name: "Men",
+      subcategories: ["Hats", "Hoodies & Jackets", "T-shirts", "Accessories"]
+    },
+    {
+      name: "Women",
+      subcategories: ["Hats", "Hoodies & Jackets", "T-shirts", "Accessories"]
+    },
+    {
+      name: "New Arrivals",
+      subcategories: ["Hats", "Hoodies & Jackets", "T-shirts", "Accessories"]
+    }
+  ];
 
   return (
     <nav
@@ -34,7 +59,39 @@ const Navbar = () => {
         </a>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-4">
+          {/* Main Category Navigation */}
+          <NavigationMenu className="mr-4">
+            <NavigationMenuList>
+              {categories.map((category) => (
+                <NavigationMenuItem key={category.name}>
+                  <NavigationMenuTrigger className="text-white hover:text-deadpunch-red transition-colors duration-300 bg-transparent focus:bg-deadpunch-dark-lighter">
+                    {category.name}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
+                      {category.subcategories.map((subcategory) => (
+                        <li key={subcategory} className="row-span-1">
+                          <NavigationMenuLink asChild>
+                            <a
+                              href="#"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-deadpunch-dark-lighter hover:text-deadpunch-red focus:bg-deadpunch-dark-lighter focus:text-accent-foreground"
+                            >
+                              <div className="text-sm font-medium leading-none">{subcategory}</div>
+                              <p className="line-clamp-2 text-sm leading-snug text-deadpunch-red mt-1">
+                                Coming Soon
+                              </p>
+                            </a>
+                          </NavigationMenuLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+
           <a 
             href="https://www.tiktok.com/@deadpunch.com" 
             target="_blank" 
@@ -50,7 +107,7 @@ const Navbar = () => {
           </a>
         </div>
 
-        {/* Mobile TikTok Icon and Menu Button */}
+        {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center space-x-4">
           <a 
             href="https://www.tiktok.com/@deadpunch.com" 
@@ -74,10 +131,40 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div 
         className={`md:hidden absolute w-full bg-deadpunch-dark-lighter backdrop-blur-md transition-all duration-500 ease-in-out ${
-          isMenuOpen ? 'max-h-60 py-4 border-b border-deadpunch-gray-dark opacity-100' : 'max-h-0 py-0 opacity-0 border-b-0'
+          isMenuOpen ? 'max-h-screen py-4 border-b border-deadpunch-gray-dark opacity-100' : 'max-h-0 py-0 opacity-0 border-b-0'
         } overflow-hidden`}
       >
         <div className="container mx-auto px-4 flex flex-col space-y-4">
+          {/* Mobile Category Accordion */}
+          {categories.map((category) => (
+            <div key={category.name} className="border-b border-deadpunch-gray-dark pb-3">
+              <div 
+                className="flex justify-between items-center py-2 cursor-pointer"
+                onClick={() => {
+                  // Toggle specific category expansion (in a real implementation, we'd use state to track this)
+                  const content = document.getElementById(`mobile-${category.name.replace(/\s+/g, '-').toLowerCase()}`);
+                  if (content) {
+                    content.classList.toggle('hidden');
+                  }
+                }}
+              >
+                <span className="text-white font-medium">{category.name}</span>
+                <ChevronDown className="h-5 w-5 text-deadpunch-gray-light transition-transform" />
+              </div>
+              
+              <div id={`mobile-${category.name.replace(/\s+/g, '-').toLowerCase()}`} className="hidden pl-4 mt-2 space-y-2">
+                {category.subcategories.map((subcategory) => (
+                  <div key={subcategory} className="py-1">
+                    <a href="#" className="block text-white hover:text-deadpunch-red">
+                      <div>{subcategory}</div>
+                      <p className="text-xs text-deadpunch-red">Coming Soon</p>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          
           <a 
             href="#notify" 
             className="btn-primary text-center my-2"
