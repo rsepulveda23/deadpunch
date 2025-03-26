@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+
+import { useEffect, useState, useRef } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -17,10 +18,31 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger
+} from "@/components/ui/drawer";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // Store expanded subcategories
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const location = useLocation();
+
+  // Reset expanded categories when location changes
+  useEffect(() => {
+    setExpandedCategories([]);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +52,31 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Handle outside clicks to close the menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node) && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  // Toggle a category expansion state
+  const toggleCategory = (categoryName: string) => {
+    setExpandedCategories(prev => {
+      if (prev.includes(categoryName)) {
+        return prev.filter(cat => cat !== categoryName);
+      } else {
+        return [...prev, categoryName];
+      }
+    });
+  };
 
   const categories = [
     {
@@ -223,59 +270,75 @@ const Navbar = () => {
                 </div>
               </HoverCardContent>
             </HoverCard>
-            <Button 
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white hover:text-deadpunch-red focus:outline-none transition-colors duration-300"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div 
-        className={`md:hidden absolute w-full bg-deadpunch-dark-lighter backdrop-blur-md transition-all duration-500 ease-in-out ${
-          isMenuOpen ? 'max-h-screen py-4 border-b border-deadpunch-gray-dark opacity-100' : 'max-h-0 py-0 opacity-0 border-b-0'
-        } overflow-hidden`}
-      >
-        <div className="container mx-auto px-4 flex flex-col space-y-4">
-          {categories.map((category) => (
-            <div key={category.name} className="border-b border-deadpunch-gray-dark pb-3">
-              <div 
-                className="flex justify-between items-center py-2 cursor-pointer"
-                onClick={() => {
-                  const content = document.getElementById(`mobile-${category.name.replace(/\s+/g, '-').toLowerCase()}`);
-                  if (content) {
-                    content.classList.toggle('hidden');
-                  }
-                }}
+            {/* Use Sheet for better mobile menu experience */}
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+              <SheetTrigger asChild>
+                <Button 
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:text-deadpunch-red focus:outline-none transition-colors duration-300"
+                >
+                  {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </Button>
+              </SheetTrigger>
+              <SheetContent 
+                side="left" 
+                className="bg-deadpunch-dark border-deadpunch-gray-dark w-[300px] p-0 overflow-y-auto"
               >
-                <span className="text-white font-medium">{category.name}</span>
-                <ChevronDown className="h-5 w-5 text-deadpunch-gray-light transition-transform" />
-              </div>
-              
-              <div id={`mobile-${category.name.replace(/\s+/g, '-').toLowerCase()}`} className="hidden pl-4 mt-2 space-y-2">
-                {category.subcategories.map((subcategory) => (
-                  <div key={subcategory.name} className="py-1">
-                    <Link to={subcategory.path} className="block text-white hover:text-deadpunch-red">
-                      <div>{subcategory.name}</div>
-                      <p className="text-xs text-deadpunch-red">Coming Soon</p>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-          
-          <Button 
-            variant="default" 
-            className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white w-full my-2"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Notify Me
-          </Button>
+                <div className="p-4 border-b border-deadpunch-gray-dark">
+                  <img 
+                    src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+                    alt="Deadpunch" 
+                    className="h-8 object-contain mx-auto" 
+                  />
+                </div>
+                
+                <div className="p-4 space-y-4">
+                  {categories.map((category) => (
+                    <div key={category.name} className="border-b border-deadpunch-gray-dark pb-3">
+                      <div 
+                        className="flex justify-between items-center py-2 cursor-pointer"
+                        onClick={() => toggleCategory(category.name)}
+                      >
+                        <span className="text-white font-medium">{category.name}</span>
+                        <ChevronDown 
+                          className={`h-5 w-5 text-deadpunch-gray-light transition-transform ${
+                            expandedCategories.includes(category.name) ? 'rotate-180' : ''
+                          }`} 
+                        />
+                      </div>
+                      
+                      <div 
+                        className={`pl-4 mt-2 space-y-2 ${
+                          expandedCategories.includes(category.name) ? 'block' : 'hidden'
+                        }`}
+                      >
+                        {category.subcategories.map((subcategory) => (
+                          <div key={subcategory.name} className="py-1">
+                            <Link 
+                              to={subcategory.path} 
+                              className="block text-white hover:text-deadpunch-red"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              <div>{subcategory.name}</div>
+                              <p className="text-xs text-deadpunch-red">Coming Soon</p>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <Button 
+                    variant="default" 
+                    className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white w-full my-2"
+                  >
+                    Notify Me
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </nav>

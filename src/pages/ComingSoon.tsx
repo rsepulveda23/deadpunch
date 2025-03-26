@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
@@ -22,11 +22,19 @@ interface ComingSoonProps {
 }
 
 const ComingSoon = ({ category, subcategory }: ComingSoonProps) => {
+  // Add navigate for proper navigation handling
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  // Handle dialog closing without redirecting
+  const handleDialogChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    // Don't do anything else when dialog closes - this prevents page navigation
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +74,7 @@ const ComingSoon = ({ category, subcategory }: ComingSoonProps) => {
           });
         }
         
-        // Reset the form after 2 seconds
+        // Reset the form after 2 seconds but don't navigate away
         setTimeout(() => {
           setEmail('');
           setIsSuccess(false);
@@ -123,7 +131,8 @@ const ComingSoon = ({ category, subcategory }: ComingSoonProps) => {
                 </Link>
               </Button>
               
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              {/* Updated Dialog to use our custom handler */}
+              <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
                 <DialogTrigger asChild>
                   <Button>
                     Notify Me When Available
