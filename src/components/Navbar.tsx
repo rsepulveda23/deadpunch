@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
@@ -32,7 +31,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Categories data structure with URL paths
   const categories = [
     {
       name: "Men",
@@ -82,9 +80,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Menu - Centered */}
         <div className="hidden md:flex items-center justify-center flex-1">
-          {/* Main Category Navigation */}
           <NavigationMenu>
             <NavigationMenuList>
               {categories.map((category) => (
@@ -118,7 +114,6 @@ const Navbar = () => {
         </div>
 
         <div className="flex-1 flex justify-end">
-          {/* TikTok and Notify Me button */}
           <div className="hidden md:flex items-center space-x-4">
             <HoverCard>
               <HoverCardTrigger asChild>
@@ -140,9 +135,9 @@ const Navbar = () => {
                 <div className="flex flex-col">
                   <div className="relative aspect-video w-full overflow-hidden rounded-t-md">
                     <img 
-                      src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
-                      alt="TikTok Page Preview" 
-                      className="w-full h-full object-cover"
+                      src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+                      alt="Deadpunch TikTok" 
+                      className="w-full h-full object-contain bg-deadpunch-dark p-6"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
                       <TikTokIcon size={32} />
@@ -170,7 +165,6 @@ const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-4">
             <HoverCard>
               <HoverCardTrigger asChild>
@@ -192,9 +186,9 @@ const Navbar = () => {
                 <div className="flex flex-col">
                   <div className="relative aspect-video w-full overflow-hidden rounded-t-md">
                     <img 
-                      src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
-                      alt="TikTok Page Preview" 
-                      className="w-full h-full object-cover"
+                      src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+                      alt="Deadpunch TikTok" 
+                      className="w-full h-full object-contain bg-deadpunch-dark p-6"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
                       <TikTokIcon size={24} />
@@ -230,20 +224,17 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <div 
         className={`md:hidden absolute w-full bg-deadpunch-dark-lighter backdrop-blur-md transition-all duration-500 ease-in-out ${
           isMenuOpen ? 'max-h-screen py-4 border-b border-deadpunch-gray-dark opacity-100' : 'max-h-0 py-0 opacity-0 border-b-0'
         } overflow-hidden`}
       >
         <div className="container mx-auto px-4 flex flex-col space-y-4">
-          {/* Mobile Category Accordion */}
           {categories.map((category) => (
             <div key={category.name} className="border-b border-deadpunch-gray-dark pb-3">
               <div 
                 className="flex justify-between items-center py-2 cursor-pointer"
                 onClick={() => {
-                  // Toggle specific category expansion
                   const content = document.getElementById(`mobile-${category.name.replace(/\s+/g, '-').toLowerCase()}`);
                   if (content) {
                     content.classList.toggle('hidden');

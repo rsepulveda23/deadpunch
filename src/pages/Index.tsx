@@ -81,10 +81,11 @@ const Index = () => {
               >
                 <div className="flex flex-col">
                   <div className="relative aspect-video w-full overflow-hidden rounded-t-md">
+                    {/* Replace the image with the Deadpunch logo */}
                     <img 
-                      src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
-                      alt="TikTok Page Preview" 
-                      className="w-full h-full object-cover"
+                      src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+                      alt="Deadpunch TikTok" 
+                      className="w-full h-full object-contain bg-deadpunch-dark p-6"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
                       <TikTokIcon size={32} />
