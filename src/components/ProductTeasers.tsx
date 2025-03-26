@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shirt, Book } from 'lucide-react';
+import { Shirt, Book, Tags } from 'lucide-react';
 
 const ProductTeasers = () => {
   const products = [
@@ -27,6 +27,11 @@ const ProductTeasers = () => {
       icon: <Book className="h-12 w-12 text-deadpunch-red" />,
       title: "Training Journals",
       description: "Track your progress with our custom-designed training log books."
+    },
+    {
+      icon: <Tags className="h-12 w-12 text-deadpunch-red" />,
+      title: "Stickers & Decals",
+      description: "Personalize your journal, cue case, or gear with Deadpunch stickers."
     }
   ];
 
@@ -50,7 +55,7 @@ const ProductTeasers = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product, index) => (
             <div 
               key={index} 

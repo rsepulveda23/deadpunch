@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
@@ -39,7 +38,8 @@ const Navbar = () => {
         { name: "Hats", path: "/men/hats" },
         { name: "Hoodies & Jackets", path: "/men/hoodies-jackets" },
         { name: "T-shirts", path: "/men/t-shirts" },
-        { name: "Accessories", path: "/men/accessories" }
+        { name: "Accessories", path: "/men/accessories" },
+        { name: "Stickers", path: "/men/stickers" }
       ]
     },
     {
@@ -48,7 +48,8 @@ const Navbar = () => {
         { name: "Hats", path: "/women/hats" },
         { name: "Hoodies & Jackets", path: "/women/hoodies-jackets" },
         { name: "T-shirts", path: "/women/t-shirts" },
-        { name: "Accessories", path: "/women/accessories" }
+        { name: "Accessories", path: "/women/accessories" },
+        { name: "Stickers", path: "/women/stickers" }
       ]
     },
     {
@@ -57,7 +58,16 @@ const Navbar = () => {
         { name: "Hats", path: "/new-arrivals/hats" },
         { name: "Hoodies & Jackets", path: "/new-arrivals/hoodies-jackets" },
         { name: "T-shirts", path: "/new-arrivals/t-shirts" },
-        { name: "Accessories", path: "/new-arrivals/accessories" }
+        { name: "Accessories", path: "/new-arrivals/accessories" },
+        { name: "Stickers", path: "/new-arrivals/stickers" }
+      ]
+    },
+    {
+      name: "Training Tools",
+      subcategories: [
+        { name: "Journals", path: "/training-tools/journals" },
+        { name: "Stickers", path: "/training-tools/stickers" },
+        { name: "Accessories", path: "/training-tools/accessories" }
       ]
     }
   ];
