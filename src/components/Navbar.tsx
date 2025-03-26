@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
@@ -29,6 +28,7 @@ import {
   DrawerTrigger
 } from "@/components/ui/drawer";
 import { useIsMobile } from '@/hooks/use-mobile';
+import NotifyDialog from './NotifyDialog';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,6 +38,7 @@ const Navbar = () => {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const location = useLocation();
+  const [notifyDialogOpen, setNotifyDialogOpen] = useState(false);
 
   // Reset expanded categories when location changes
   useEffect(() => {
@@ -218,9 +219,13 @@ const Navbar = () => {
                 </div>
               </HoverCardContent>
             </HoverCard>
-            <Button variant="default" className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
-              Notify Me
-            </Button>
+            <NotifyDialog 
+              trigger={
+                <Button variant="default" className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
+                  Notify Me
+                </Button>
+              }
+            />
           </div>
 
           <div className="md:hidden flex items-center space-x-4">
@@ -270,7 +275,6 @@ const Navbar = () => {
                 </div>
               </HoverCardContent>
             </HoverCard>
-            {/* Use Sheet for better mobile menu experience */}
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
                 <Button 
@@ -332,6 +336,10 @@ const Navbar = () => {
                   <Button 
                     variant="default" 
                     className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white w-full my-2"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      setNotifyDialogOpen(true);
+                    }}
                   >
                     Notify Me
                   </Button>
@@ -341,6 +349,11 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      
+      <NotifyDialog 
+        open={notifyDialogOpen} 
+        onOpenChange={setNotifyDialogOpen}
+      />
     </nav>
   );
 };
