@@ -134,7 +134,7 @@ const Navbar = () => {
                 sideOffset={12}
               >
                 <div className="flex flex-col">
-                  <div className="w-full overflow-hidden">
+                  <div className="relative w-full aspect-[1/1] overflow-hidden">
                     <img 
                       src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
                       alt="Deadpunch TikTok" 
@@ -185,7 +185,7 @@ const Navbar = () => {
                 sideOffset={12}
               >
                 <div className="flex flex-col">
-                  <div className="w-full overflow-hidden">
+                  <div className="relative w-full aspect-[1/1] overflow-hidden">
                     <img 
                       src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
                       alt="Deadpunch TikTok" 
