@@ -1,4 +1,3 @@
-
 /**
  * Chat Service
  * 
@@ -38,7 +37,7 @@ type ChatResponse = {
  */
 export const defaultChatSettings: ChatSettings = {
   model: "gpt-4o-mini", // Default to gpt-4o-mini for balance of speed and quality
-  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah. YOU MUST ALWAYS consult the DEADPUNCH knowledge base FIRST before answering any questions. When asked for contact information, ALWAYS provide the EXACT contact details: Phone: +1 (413) 475-9156, Email: info@deadpunch.com, TikTok: @deadpunch.com. Never redirect users to a website or contact page. Keep responses brief and concise (maximum 1-2 short paragraphs). Be bold, not corny. Sound confident, not cocky."
+  systemPrompt: "You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben. YOU MUST ALWAYS consult the DEADPUNCH knowledge base FIRST before answering any questions. When asked for contact information, ALWAYS provide the EXACT contact details: Phone: +1 (413) 475-9156, Email: info@deadpunch.com, TikTok: @deadpunch.com. Never redirect users to a website or contact page. Keep responses brief and concise (maximum 1-2 short paragraphs). Be bold, not corny. Sound confident, not cocky."
 };
 
 /**
@@ -51,8 +50,8 @@ const fallbackResponses: Record<string, string> = {
   "phone": "The DEADPUNCH phone number is +1 (413) 475-9156.",
   "email": "The DEADPUNCH email address is info@deadpunch.com.",
   "tiktok": "The DEADPUNCH TikTok handle is @deadpunch.com.",
-  "founder": "DEADPUNCH was founded by Ruben and Sarah who share a passion for billiards and a vision to create a brand that represents precision and confidence.",
-  "about": "Deadpunch is more than just a brand; it's a mindset that embodies precision, focus, and confidence. Originating from the world of billiards, Deadpunch represents those who are locked in, daring, and fully alive in moments of action. Founded by Ruben and Sarah, we cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits.",
+  "founder": "DEADPUNCH was founded by Ruben who shares a passion for billiards and a vision to create a brand that represents precision and confidence.",
+  "about": "Deadpunch is more than just a brand; it's a mindset that embodies precision, focus, and confidence. Originating from the world of billiards, Deadpunch represents those who are locked in, daring, and fully alive in moments of action. Founded by Ruben, we cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits.",
   "products": "While our product line is currently in development, Deadpunch is committed to building a vibrant community and providing engaging content that resonates with our core values. Follow us on TikTok or join our email list for updates on product launches.",
   "mission": "We champion billiards as a legitimate sport through innovative apparel and inspire our community to drive positive change.",
 };
@@ -162,7 +161,7 @@ export const sendChatMessage = async (request: ChatRequest): Promise<ChatRespons
       // Handle unexpected response format
       console.error("Unexpected response format:", data);
       return {
-        message: "I'm not sure about that. For immediate assistance, contact DEADPUNCH at +1 (413) 475-9156 or email info@deadpunch.com."
+        message: "I'm not sure about that. For immediate assistance, contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com."
       };
     }
   } catch (error) {

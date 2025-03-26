@@ -25,7 +25,7 @@ interface ChatMessage {
 const knowledgeBase = `
 What is Deadpunch?
 
-Deadpunch is more than just a brand; it's a mindset that embodies precision, focus, and confidence. Originating from the world of billiards, Deadpunch represents those who are locked in, daring, and fully alive in moments of action. Founded by Ruben and Sarah, we cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits.
+Deadpunch is more than just a brand; it's a mindset that embodies precision, focus, and confidence. Originating from the world of billiards, Deadpunch represents those who are locked in, daring, and fully alive in moments of action. Founded by Ruben, we cater to players, creators, and entrepreneurs who proactively seize opportunities and strive for mastery in their pursuits.
 
 Mission Statement:
 We champion billiards as a legitimate sport through innovative apparel and inspire our community to drive positive change.
@@ -88,9 +88,9 @@ At Deadpunch, our communication embodies the following qualities:
 - Inspirational: We aim to motivate our community to pursue mastery and embrace challenges.
 - Community-Centric: Our language fosters a sense of belonging, emphasizing collaboration and shared passion.
 
-About the Founders:
+About the Founder:
 
-Ruben and Sarah founded DEADPUNCH with a shared passion for billiards and a vision to create a brand that represents precision and confidence. They bring their expertise and enthusiasm to every aspect of the business.
+Ruben founded DEADPUNCH with a passion for billiards and a vision to create a brand that represents precision and confidence. He brings his expertise and enthusiasm to every aspect of the business.
 
 Mental Side of Pool and Sports Performance:
 
@@ -149,7 +149,7 @@ Deno.serve(async (req) => {
      * Provides strong guidance on how to respond, prioritizing knowledge base info
      * Always emphasizes exact contact information and brand messaging
      */
-    const defaultSystemPrompt = `You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben and Sarah.
+    const defaultSystemPrompt = `You are a helpful assistant for DEADPUNCH, a billiards-focused brand founded by Ruben.
 
 CRITICAL INSTRUCTIONS: 
 1. ALWAYS check the knowledge base FIRST for information.
