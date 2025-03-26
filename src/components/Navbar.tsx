@@ -49,19 +49,21 @@ const Navbar = () => {
           : 'py-4 bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-        <a href="#" className="flex items-center">
-          <img 
-            src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
-            alt="Deadpunch" 
-            className="h-10 md:h-12 object-contain transition-transform duration-300 hover:scale-105" 
-          />
-        </a>
+      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
+        <div className="flex-1 flex justify-start">
+          <a href="#" className="flex items-center">
+            <img 
+              src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+              alt="Deadpunch" 
+              className="h-10 md:h-12 object-contain transition-transform duration-300 hover:scale-105" 
+            />
+          </a>
+        </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-4">
+        {/* Desktop Menu - Centered */}
+        <div className="hidden md:flex items-center justify-center flex-1">
           {/* Main Category Navigation */}
-          <NavigationMenu className="mr-4">
+          <NavigationMenu>
             <NavigationMenuList>
               {categories.map((category) => (
                 <NavigationMenuItem key={category.name}>
@@ -91,40 +93,45 @@ const Navbar = () => {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-
-          <a 
-            href="https://www.tiktok.com/@deadpunch.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
-            aria-label="TikTok"
-          >
-            <TikTokIcon size={64} />
-            <span className="ml-2 font-medium">Follow Us</span>
-          </a>
-          <a href="#notify" className="btn-primary animate-reveal delay-300">
-            Notify Me
-          </a>
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center space-x-4">
-          <a 
-            href="https://www.tiktok.com/@deadpunch.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
-            aria-label="TikTok"
-          >
-            <TikTokIcon size={40} />
-            <span className="ml-1 text-sm font-medium">Follow Us</span>
-          </a>
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-white hover:text-deadpunch-red focus:outline-none transition-colors duration-300"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+        <div className="flex-1 flex justify-end">
+          {/* TikTok and Notify Me button */}
+          <div className="hidden md:flex items-center space-x-4">
+            <a 
+              href="https://www.tiktok.com/@deadpunch.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
+              aria-label="TikTok"
+            >
+              <TikTokIcon size={64} />
+              <span className="ml-2 font-medium">Follow Us</span>
+            </a>
+            <a href="#notify" className="btn-primary animate-reveal delay-300">
+              Notify Me
+            </a>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center space-x-4">
+            <a 
+              href="https://www.tiktok.com/@deadpunch.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
+              aria-label="TikTok"
+            >
+              <TikTokIcon size={40} />
+              <span className="ml-1 text-sm font-medium">Follow Us</span>
+            </a>
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-white hover:text-deadpunch-red focus:outline-none transition-colors duration-300"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
