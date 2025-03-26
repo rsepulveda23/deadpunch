@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
+import { Button } from "@/components/ui/button";
 import { 
   Dialog,
   DialogContent,
@@ -112,21 +113,21 @@ const ComingSoon = ({ category, subcategory }: ComingSoonProps) => {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link 
-                to="/" 
-                className="flex items-center px-6 py-3 bg-transparent border border-deadpunch-red text-deadpunch-red rounded-md hover:bg-deadpunch-red hover:text-white transition-colors duration-300"
+              <Button 
+                variant="outline"
+                asChild
               >
-                <ArrowLeft className="mr-2" size={18} />
-                Back to Home
-              </Link>
+                <Link to="/">
+                  <ArrowLeft className="mr-2" size={18} />
+                  Back to Home
+                </Link>
+              </Button>
               
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                  <button 
-                    className="px-6 py-3 bg-deadpunch-red text-white rounded-md hover:bg-deadpunch-red/80 transition-colors duration-300"
-                  >
+                  <Button>
                     Notify Me When Available
-                  </button>
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark text-white">
                   <DialogHeader>
@@ -153,12 +154,12 @@ const ComingSoon = ({ category, subcategory }: ComingSoonProps) => {
                       />
                     </div>
                     
-                    <button
+                    <Button
                       type="submit"
-                      className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                      className={`w-full ${
                         isSuccess 
                           ? 'bg-green-600 hover:bg-green-700 text-white' 
-                          : 'bg-deadpunch-red hover:bg-deadpunch-red/80 text-white'
+                          : ''
                       }`}
                       disabled={isSubmitting || isSuccess}
                     >
@@ -175,7 +176,7 @@ const ComingSoon = ({ category, subcategory }: ComingSoonProps) => {
                       ) : (
                         'Notify Me'
                       )}
-                    </button>
+                    </Button>
                   </form>
                 </DialogContent>
               </Dialog>
