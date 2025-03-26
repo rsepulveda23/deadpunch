@@ -7,13 +7,14 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, X, MessageSquare, HelpCircle } from 'lucide-react';
+import { Send, X, MessageSquare, HelpCircle, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { sendChatMessage, defaultChatSettings } from '@/services/chatService';
 import { Message } from '@/types/chat';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { saveEmailSubscription } from '@/lib/supabase';
 
 const ChatInterface = () => {
   /**
@@ -26,6 +27,14 @@ const ChatInterface = () => {
   const [showHint, setShowHint] = useState(() => {
     // Check localStorage to see if hint has been dismissed before
     return localStorage.getItem('chatHintDismissed') !== 'true';
+  });
+  
+  // Email collection state
+  const [email, setEmail] = useState('');
+  const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
+  const [hasProvidedEmail, setHasProvidedEmail] = useState(() => {
+    // Check localStorage to see if user has already provided email
+    return localStorage.getItem('chatEmailProvided') === 'true';
   });
   
   // Reference to the messages end for auto-scrolling
@@ -73,14 +82,104 @@ const ChatInterface = () => {
 
     // Add welcome message when opening an empty chat
     if (!isOpen && messages.length === 0) {
-      setMessages([
-        {
-          id: '1',
-          content: 'Welcome to DEADPUNCH! How can I help you today?',
+      if (hasProvidedEmail) {
+        // Show regular welcome message if email was already provided
+        setMessages([
+          {
+            id: '1',
+            content: 'Welcome to DEADPUNCH! How can I help you today?',
+            isUser: false,
+            timestamp: new Date(),
+          },
+        ]);
+      } else {
+        // Show email request message if email not yet provided
+        setMessages([
+          {
+            id: '1',
+            content: 'Welcome to DEADPUNCH! To help us serve you better, please provide your email address before we start chatting.',
+            isUser: false,
+            timestamp: new Date(),
+          },
+        ]);
+      }
+    }
+  };
+
+  /**
+   * Handles email submission
+   * Saves the email to Supabase and transitions to regular chat
+   */
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes('@') || isEmailSubmitting) return;
+    
+    setIsEmailSubmitting(true);
+    
+    try {
+      // Add user message to the chat
+      const userEmailMessage: Message = {
+        id: Date.now().toString(),
+        content: email,
+        isUser: true,
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => [...prev, userEmailMessage]);
+      
+      // Save email to Supabase
+      const result = await saveEmailSubscription(email, { 
+        source: 'chat',
+        captureLocation: 'chat interface' 
+      });
+      
+      if (result.success) {
+        // Add confirmation message
+        const confirmationMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: 'Thank you for providing your email! How can I help you today?',
           isUser: false,
           timestamp: new Date(),
-        },
-      ]);
+        };
+        
+        setMessages(prev => [...prev, confirmationMessage]);
+        
+        // Mark as having provided email
+        setHasProvidedEmail(true);
+        localStorage.setItem('chatEmailProvided', 'true');
+        
+        // Show toast
+        toast({
+          title: "Email saved",
+          description: "Thanks for providing your email!",
+          variant: "default"
+        });
+      } else {
+        throw new Error('Failed to save email');
+      }
+    } catch (error) {
+      console.error('Error saving email:', error);
+      
+      // Add error message
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: 'Sorry, there was an issue saving your email. Please try again or proceed with your questions.',
+        isUser: false,
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+      
+      // Show error toast
+      toast({
+        title: "Error",
+        description: "Failed to save your email. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsEmailSubmitting(false);
+      setEmail('');
     }
   };
 
@@ -232,24 +331,62 @@ const ChatInterface = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Chat input form */}
-          <form onSubmit={handleSubmit} className="p-4 border-t border-deadpunch-gray-dark flex space-x-2">
-            <Input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Type your message..."
-              className="flex-1 bg-deadpunch-dark border-deadpunch-gray-dark focus:border-deadpunch-red"
-              disabled={isLoading}
-            />
-            <Button 
-              type="submit" 
-              disabled={isLoading}
-              className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
+          {/* Chat input form - changes based on whether email is needed */}
+          {!hasProvidedEmail ? (
+            <form onSubmit={handleEmailSubmit} className="p-4 border-t border-deadpunch-gray-dark flex flex-col space-y-2">
+              <div className="flex items-center text-deadpunch-gray-light text-sm mb-1">
+                <Mail className="h-4 w-4 mr-1" />
+                <span>Please provide your email to continue</span>
+              </div>
+              <div className="flex space-x-2">
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email address"
+                  className="flex-1 bg-deadpunch-dark border-deadpunch-gray-dark focus:border-deadpunch-red"
+                  disabled={isEmailSubmitting}
+                  required
+                />
+                <Button 
+                  type="submit" 
+                  disabled={isEmailSubmitting}
+                  className="bg-deadpunch-red hover:bg-deadpunch-red-hover whitespace-nowrap"
+                >
+                  {isEmailSubmitting ? (
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                      <div className="w-2 h-2 rounded-full bg-white animate-pulse delay-75"></div>
+                      <div className="w-2 h-2 rounded-full bg-white animate-pulse delay-150"></div>
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
+              </div>
+              <p className="text-xs text-deadpunch-gray-light mt-1">
+                We'll use this to keep you updated on DEADPUNCH products and updates.
+              </p>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="p-4 border-t border-deadpunch-gray-dark flex space-x-2">
+              <Input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1 bg-deadpunch-dark border-deadpunch-gray-dark focus:border-deadpunch-red"
+                disabled={isLoading}
+              />
+              <Button 
+                type="submit" 
+                disabled={isLoading}
+                className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
+          )}
         </div>
       )}
     </div>
