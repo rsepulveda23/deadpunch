@@ -111,6 +111,7 @@ Deno.serve(async (req) => {
     // Get OpenAI API key from environment variable
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
     if (!OPENAI_API_KEY) {
+      console.error('Missing OPENAI_API_KEY environment variable')
       throw new Error('OPENAI_API_KEY is not set in the environment variables')
     }
 
@@ -120,6 +121,7 @@ Deno.serve(async (req) => {
 
     // Validate required fields
     if (!message) {
+      console.error('Missing required field: message')
       throw new Error('Message is required')
     }
 
@@ -199,8 +201,9 @@ Additional response guidelines:
     // Handle OpenAI API response
     if (!openAIResponse.ok) {
       const errorData = await openAIResponse.json()
-      console.error('OpenAI API error:', errorData)
-      throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`)
+      // Avoid logging potentially sensitive error details
+      console.error('OpenAI API error status:', openAIResponse.status)
+      throw new Error(`OpenAI API error: ${openAIResponse.status}`)
     }
 
     const data = await openAIResponse.json()
@@ -219,12 +222,13 @@ Additional response guidelines:
       }
     )
   } catch (error) {
-    console.error('Error processing request:', error)
+    // Sanitize error logging - avoid logging the full error which might contain sensitive information
+    console.error('Error processing request type:', error.name)
     
-    // Return error response with contact information
+    // Return error response with contact information but without detailed error info
     return new Response(
       JSON.stringify({ 
-        error: error.message || 'An unexpected error occurred',
+        error: "An error occurred while processing your request",
         response: "Sorry, I encountered an error. Please contact DEADPUNCH directly at +1 (413) 475-9156 or email info@deadpunch.com."
       }),
       { 
