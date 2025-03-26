@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
@@ -129,11 +130,11 @@ const Navbar = () => {
                 </a>
               </HoverCardTrigger>
               <HoverCardContent 
-                className="w-80 p-0 bg-deadpunch-dark-lighter border-deadpunch-gray-dark" 
+                className="w-80 p-0 bg-deadpunch-dark-lighter border-deadpunch-gray-dark rounded-lg overflow-hidden" 
                 sideOffset={12}
               >
                 <div className="flex flex-col">
-                  <div className="relative aspect-video w-full overflow-hidden rounded-t-md">
+                  <div className="w-full overflow-hidden">
                     <img 
                       src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
                       alt="Deadpunch TikTok" 
@@ -180,11 +181,11 @@ const Navbar = () => {
                 </a>
               </HoverCardTrigger>
               <HoverCardContent 
-                className="w-72 p-0 bg-deadpunch-dark-lighter border-deadpunch-gray-dark" 
+                className="w-72 p-0 bg-deadpunch-dark-lighter border-deadpunch-gray-dark rounded-lg overflow-hidden" 
                 sideOffset={12}
               >
                 <div className="flex flex-col">
-                  <div className="relative aspect-video w-full overflow-hidden rounded-t-md">
+                  <div className="w-full overflow-hidden">
                     <img 
                       src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
                       alt="Deadpunch TikTok" 
