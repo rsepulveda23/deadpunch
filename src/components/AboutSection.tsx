@@ -51,7 +51,7 @@ const AboutSection = () => {
             </div>
             <h3 className="text-xl font-display font-bold mb-4 text-center pt-6">OUR VISION</h3>
             <p className="text-deadpunch-gray-light text-center">
-              To elevate the sport of billiards by inspiring a new generation of focused, fearless competitors—players who thrive under pressure and play with purpose.
+              To ignite the next generation of elite billiards athletes—fearless competitors who dominate pressure, master precision, and relentlessly pursue victory.
             </p>
           </div>
           
@@ -61,7 +61,7 @@ const AboutSection = () => {
             </div>
             <h3 className="text-xl font-display font-bold mb-4 text-center pt-6">OUR MISSION</h3>
             <p className="text-deadpunch-gray-light text-center">
-              To empower players through elite performance gear, mindset-driven content, and a brand devoted to the pursuit of perfection in every shot.
+              Empowering billiards athletes through elite gear, mindset mastery, and a relentless pursuit of excellence—equipping every player to deliver their best shot under pressure.
             </p>
           </div>
           
@@ -71,7 +71,7 @@ const AboutSection = () => {
             </div>
             <h3 className="text-xl font-display font-bold mb-4 text-center pt-6">OUR ENERGY</h3>
             <p className="text-deadpunch-gray-light text-center">
-              That's the energy we live for, play for, and bleed for—and the standard we stand for.
+              We live for the intensity, the adrenaline rush when everything's on the line—the fearless confidence of taking the winning shot. This is the spirit we embody, the standard we uphold, and the energy that fuels our every move.
             </p>
           </div>
         </div>
