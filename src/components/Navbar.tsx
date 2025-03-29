@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
@@ -28,8 +27,15 @@ import {
   DrawerContent,
   DrawerTrigger
 } from "@/components/ui/drawer";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useIsMobile } from '@/hooks/use-mobile';
 import NotifyDialog from './NotifyDialog';
+import { supabase } from '@/integrations/supabase/client';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,6 +46,9 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const [notifyDialogOpen, setNotifyDialogOpen] = useState(false);
+
+  // Add new state for auth
+  const [user, setUser] = useState(null);
 
   // Reset expanded categories when location changes
   useEffect(() => {
@@ -79,6 +88,25 @@ const Navbar = () => {
       }
     });
   };
+
+  // Check auth status on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+
+    checkAuth();
+
+    // Subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user || null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const categories = [
     {
@@ -170,14 +198,45 @@ const Navbar = () => {
                 </NavigationMenuItem>
               ))}
               
-              {/* Add Blog NavigationMenuItem */}
+              {/* Update Blog NavigationMenuItem with HoverCard */}
               <NavigationMenuItem>
-                <Link 
-                  to="/blog" 
-                  className="inline-flex h-10 w-max items-center justify-center rounded-full bg-transparent px-5 py-2 text-sm font-medium text-white transition-colors hover:text-deadpunch-red hover:bg-deadpunch-dark-lighter"
-                >
-                  Blog
-                </Link>
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Link 
+                      to="/blog" 
+                      className="inline-flex h-10 w-max items-center justify-center rounded-full bg-transparent px-5 py-2 text-sm font-medium text-white transition-colors hover:text-deadpunch-red hover:bg-deadpunch-dark-lighter"
+                    >
+                      Blog
+                    </Link>
+                  </HoverCardTrigger>
+                  <HoverCardContent 
+                    className="w-64 p-4 bg-deadpunch-dark-lighter border-deadpunch-gray-dark rounded-lg" 
+                    sideOffset={12}
+                  >
+                    <div className="flex flex-col space-y-3">
+                      <h4 className="font-medium">DEADPUNCH Blog</h4>
+                      <p className="text-sm text-deadpunch-gray-light">
+                        Billiards strategy, mental game mastery, and insider tips
+                      </p>
+                      <div className="flex flex-col space-y-2 mt-2">
+                        <Link 
+                          to="/blog" 
+                          className="text-sm hover:text-deadpunch-red transition-colors"
+                        >
+                          View All Posts
+                        </Link>
+                        {user && (
+                          <Link 
+                            to="/blog-admin" 
+                            className="text-sm hover:text-deadpunch-red transition-colors"
+                          >
+                            Admin Dashboard
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
@@ -237,8 +296,36 @@ const Navbar = () => {
                 </Button>
               }
             />
+            
+            {/* Add auth button */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="border-deadpunch-gray-dark">
+                    Account
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
+                  <DropdownMenuItem 
+                    className="cursor-pointer hover:text-deadpunch-red"
+                    onClick={() => supabase.auth.signOut()}
+                  >
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button 
+                variant="outline" 
+                className="border-deadpunch-gray-dark"
+                onClick={() => navigate('/login')}
+              >
+                Sign In
+              </Button>
+            )}
           </div>
 
+          {/* ... keep existing code (mobile menu) */}
           <div className="md:hidden flex items-center space-x-4">
             <HoverCard>
               <HoverCardTrigger asChild>
@@ -344,16 +431,73 @@ const Navbar = () => {
                     </div>
                   ))}
                   
-                  {/* Add Blog link to mobile menu */}
+                  {/* Update Blog link to include admin link if user is logged in */}
                   <div className="border-b border-deadpunch-gray-dark pb-3">
-                    <Link 
-                      to="/blog"
-                      className="block py-2 text-white font-medium hover:text-deadpunch-red"
-                      onClick={() => setIsMenuOpen(false)}
+                    <div 
+                      className="flex justify-between items-center py-2 cursor-pointer"
+                      onClick={() => toggleCategory('blog')}
                     >
-                      Blog
-                    </Link>
+                      <span className="text-white font-medium">Blog</span>
+                      <ChevronDown 
+                        className={`h-5 w-5 text-deadpunch-gray-light transition-transform ${
+                          expandedCategories.includes('blog') ? 'rotate-180' : ''
+                        }`} 
+                      />
+                    </div>
+                    
+                    <div 
+                      className={`pl-4 mt-2 space-y-2 ${
+                        expandedCategories.includes('blog') ? 'block' : 'hidden'
+                      }`}
+                    >
+                      <div className="py-1">
+                        <Link 
+                          to="/blog" 
+                          className="block text-white hover:text-deadpunch-red"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          View All Posts
+                        </Link>
+                      </div>
+                      
+                      {user && (
+                        <div className="py-1">
+                          <Link 
+                            to="/blog-admin" 
+                            className="block text-white hover:text-deadpunch-red"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            Admin Dashboard
+                          </Link>
+                        </div>
+                      )}
+                    </div>
                   </div>
+                  
+                  {/* Add auth buttons to mobile menu */}
+                  {user ? (
+                    <Button 
+                      variant="default" 
+                      className="bg-deadpunch-dark-lighter hover:bg-deadpunch-dark-lighter/80 text-white w-full my-2"
+                      onClick={() => {
+                        supabase.auth.signOut();
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      Sign Out
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="default" 
+                      className="bg-deadpunch-dark-lighter hover:bg-deadpunch-dark-lighter/80 text-white w-full my-2"
+                      onClick={() => {
+                        navigate('/login');
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      Sign In
+                    </Button>
+                  )}
                   
                   <Button 
                     variant="default" 

@@ -9,6 +9,8 @@ import NotFound from "./pages/NotFound";
 import ComingSoon from "./pages/ComingSoon";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import BlogAdmin from "./pages/BlogAdmin";
+import Login from "./pages/Login";
 
 // Create a QueryClient instance
 const queryClient = new QueryClient();
@@ -52,6 +54,8 @@ const App = () => (
           {/* Blog routes */}
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/blog-admin" element={<BlogAdmin />} />
+          <Route path="/login" element={<Login />} />
           
           {/* Dynamic category routes */}
           {categoryRoutes.map((route) => (
