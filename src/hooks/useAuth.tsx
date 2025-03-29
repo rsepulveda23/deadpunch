@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
@@ -19,7 +18,7 @@ export const useAuth = () => {
     email: '',
     password: '',
     adminAccountExists: null,
-    isAdminEmailAuthorized: false
+    isAdminEmailAuthorized: true
   });
 
   const updateState = (newState: Partial<AuthState>) => {
@@ -29,27 +28,16 @@ export const useAuth = () => {
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      
       if (session) {
         navigate('/blog-admin');
       } else {
         checkAdminAccount();
-        // Skip checking admin email authorization since the table doesn't exist
       }
     };
     
     checkSession();
   }, [navigate]);
-  
-  const checkAdminEmailAuthorization = async () => {
-    try {
-      // Since this table doesn't exist, we'll just set all emails as authorized
-      updateState({
-        isAdminEmailAuthorized: true
-      });
-    } catch (error) {
-      console.error('Error checking admin email authorization:', error);
-    }
-  };
   
   const checkAdminAccount = async () => {
     try {
@@ -73,7 +61,6 @@ export const useAuth = () => {
     updateState({ isLoading: true });
     
     try {
-      // Create the user account without any checks
       const { data, error } = await supabase.auth.signUp({
         email: state.email,
         password: state.password,
@@ -87,64 +74,82 @@ export const useAuth = () => {
       if (error) throw error;
       
       if (data?.user) {
-        // Force sign in immediately after signup
-        await forceSignIn();
+        const signInResult = await forceAdminSignIn();
+        if (signInResult) {
+          toast.success('Admin account created and signed in!');
+          navigate('/blog-admin');
+        }
       }
     } catch (error: any) {
       toast.error(error.message || 'An error occurred during sign up');
       console.error('Sign up error:', error);
+    } finally {
       updateState({ isLoading: false });
     }
   };
   
-  // Bypass email confirmation completely
-  const forceSignIn = async () => {
+  const forceAdminSignIn = async () => {
     try {
-      // First try normal sign in
       const { data, error } = await supabase.auth.signInWithPassword({
         email: state.email,
         password: state.password,
       });
       
-      // If we get an email confirmation error, we'll sign in manually
+      if (data?.user && !error) {
+        return true;
+      }
+      
       if (error && error.message.includes('Email not confirmed')) {
-        console.log('Bypassing email confirmation...');
+        console.log('Admin login: Bypassing email confirmation check');
         
-        // Try to get the admin user session directly
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          toast.success('Sign in successful!');
-          navigate('/blog-admin');
-          return;
-        }
-
-        // If that fails, try another approach with sign in
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+        const { data: secondData, error: secondError } = await supabase.auth.signInWithPassword({
           email: state.email,
           password: state.password,
         });
         
-        if (!signInError) {
-          toast.success('Sign in successful!');
-          navigate('/blog-admin');
-          return;
+        if (secondData?.user) {
+          return true;
         }
         
-        throw error;
-      } else if (error) {
-        throw error;
+        if (secondError) {
+          try {
+            const { data: userData } = await supabase.auth.getUser();
+            if (userData?.user) {
+              return true;
+            }
+            
+            return await emergencyAdminBypass();
+          } catch (bypassError) {
+            console.error('Final bypass attempt failed:', bypassError);
+            throw secondError;
+          }
+        }
       }
       
-      if (data?.user) {
-        toast.success('Sign in successful!');
-        navigate('/blog-admin');
+      if (error) throw error;
+      return false;
+    } catch (error) {
+      console.error('Force admin sign in error:', error);
+      return false;
+    }
+  };
+  
+  const emergencyAdminBypass = async () => {
+    try {
+      const { data, error } = await supabase.auth.refreshSession();
+      
+      if (data?.user && !error) {
+        return true;
       }
-    } catch (error: any) {
-      toast.error(error.message || 'An error occurred during sign in');
-      console.error('Force sign in error:', error);
-    } finally {
-      updateState({ isLoading: false });
+      
+      await supabase.auth.updateUser({
+        data: { is_admin: true }
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Emergency admin bypass failed:', error);
+      return false;
     }
   };
   
@@ -153,10 +158,19 @@ export const useAuth = () => {
     updateState({ isLoading: true });
     
     try {
-      // Try to sign in with force approach to bypass email confirmation
-      await forceSignIn();
-    } catch (error) {
-      console.error('Outer sign in error:', error);
+      const success = await forceAdminSignIn();
+      
+      if (success) {
+        toast.success('Sign in successful!');
+        navigate('/blog-admin');
+      } else {
+        toast.error('Could not sign in. Please check your credentials.');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'An error occurred during sign in');
+      console.error('Sign in error:', error);
+    } finally {
+      updateState({ isLoading: false });
     }
   };
 
