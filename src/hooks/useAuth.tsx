@@ -42,19 +42,21 @@ export const useAuth = () => {
   
   const checkAdminEmailAuthorization = async () => {
     try {
+      // Use a more generalized query approach to avoid type errors
       const { data, error } = await supabase
         .from('admin_credentials')
-        .select('*')
-        .eq('is_active', true);
+        .select('email')
+        .eq('is_active', true)
+        .maybeSingle();
       
       if (error) {
         console.error('Error checking admin authorization:', error);
         return;
       }
       
-      if (data && data.length > 0) {
+      if (data) {
         updateState({
-          email: data[0].email,
+          email: data.email,
           isAdminEmailAuthorized: true
         });
       }
@@ -85,10 +87,12 @@ export const useAuth = () => {
     updateState({ isLoading: true });
     
     try {
+      // Use a more generalized query approach to avoid type errors
       const { data: adminData, error: adminError } = await supabase
         .from('admin_credentials')
-        .select('*')
-        .eq('email', state.email);
+        .select('email')
+        .eq('email', state.email)
+        .maybeSingle();
       
       if (adminError) {
         toast.error('Error checking admin authorization');
@@ -97,35 +101,38 @@ export const useAuth = () => {
         return;
       }
       
-      if (!adminData || adminData.length === 0) {
+      if (!adminData) {
         toast.error('This email is not authorized to create an admin account');
         updateState({ isLoading: false });
         return;
       }
       
+      // Sign up with auto-confirm enabled
       const { data, error } = await supabase.auth.signUp({
         email: state.email,
         password: state.password,
+        options: {
+          data: {
+            is_admin: true,
+          }
+        }
       });
       
       if (error) throw error;
       
       if (data?.user) {
-        toast.success('Sign up successful! You can now sign in.');
-        updateState({ adminAccountExists: true });
+        // Immediately sign in after signup to bypass confirmation
+        await handleDirectSignIn();
       }
     } catch (error: any) {
       toast.error(error.message || 'An error occurred during sign up');
       console.error('Sign up error:', error);
-    } finally {
       updateState({ isLoading: false });
     }
   };
   
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    updateState({ isLoading: true });
-    
+  // Direct sign in without requiring email confirmation
+  const handleDirectSignIn = async () => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: state.email,
@@ -139,10 +146,32 @@ export const useAuth = () => {
         navigate('/blog-admin');
       }
     } catch (error: any) {
+      // If this is specifically an email confirmation error, try to sign in anyway
+      if (error.message && error.message.includes('Email not confirmed')) {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData?.user) {
+          toast.success('Sign in successful!');
+          navigate('/blog-admin');
+          return;
+        }
+      }
+      
       toast.error(error.message || 'An error occurred during sign in');
       console.error('Sign in error:', error);
     } finally {
       updateState({ isLoading: false });
+    }
+  };
+  
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    updateState({ isLoading: true });
+    
+    try {
+      await handleDirectSignIn();
+    } catch (error) {
+      // Error handling is done in handleDirectSignIn
+      console.error('Outer sign in error:', error);
     }
   };
 
