@@ -62,6 +62,7 @@ const fetchBlogPosts = async () => {
 // Function to check if a user is logged in with admin privileges
 const checkAdminAuth = async () => {
   const { data: { session } } = await supabase.auth.getSession();
+  console.log("Checking auth in BlogAdmin, session:", session?.user ? "User logged in" : "No user logged in");
   return !!session?.user; // In a real app, you'd check for admin role here
 };
 
@@ -89,11 +90,28 @@ const BlogAdmin = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<BlogPost | null>(null);
 
-  // Check auth status on load
+  // Check auth status on load and set up listener for auth changes
   useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log("Auth state changed in BlogAdmin:", event);
+        if (session) {
+          console.log("User authenticated in BlogAdmin");
+          setIsAuthenticated(true);
+          setIsCheckingAuth(false);
+        } else {
+          console.log("User not authenticated in BlogAdmin");
+          setIsAuthenticated(false);
+          setIsCheckingAuth(false);
+        }
+      }
+    );
+
     const checkAuth = async () => {
       try {
         const isAdmin = await checkAdminAuth();
+        console.log("Admin check result:", isAdmin);
         setIsAuthenticated(isAdmin);
       } catch (error) {
         console.error('Auth check error:', error);
@@ -104,14 +122,16 @@ const BlogAdmin = () => {
     };
 
     checkAuth();
+
+    return () => subscription.unsubscribe();
   }, []);
 
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!isCheckingAuth && !isAuthenticated) {
-      // Redirect to login page when we build one
+      console.log("User not authenticated, redirecting to login");
       toast.error('You must be logged in to access the admin dashboard');
-      navigate('/blog');
+      navigate('/login');
     }
   }, [isCheckingAuth, isAuthenticated, navigate]);
 
@@ -305,7 +325,14 @@ const BlogAdmin = () => {
             
             <Separator className="mb-6 bg-deadpunch-dark-lighter" />
             
-            {isLoading ? (
+            {isCheckingAuth ? (
+              <div className="flex justify-center py-10">
+                <div className="animate-pulse flex flex-col items-center">
+                  <div className="h-8 w-64 bg-deadpunch-dark-lighter rounded mb-4"></div>
+                  <div className="h-4 w-48 bg-deadpunch-dark-lighter rounded"></div>
+                </div>
+              </div>
+            ) : isLoading ? (
               <div className="flex justify-center py-10">
                 <div className="animate-pulse flex flex-col items-center">
                   <div className="h-8 w-64 bg-deadpunch-dark-lighter rounded mb-4"></div>

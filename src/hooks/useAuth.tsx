@@ -27,27 +27,31 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
+    // Set up auth state listener first
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log("Auth state changed:", event);
+        if (session) {
+          console.log("Session detected in auth state change, redirecting to blog admin");
+          // Add a small delay to ensure the session is properly set
+          setTimeout(() => {
+            navigate('/blog-admin');
+          }, 100);
+        }
+      }
+    );
+    
+    // Then check for existing session
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session) {
-        console.log("User is already logged in, redirecting to blog admin");
+        console.log("Active session found on load, redirecting to blog admin");
         navigate('/blog-admin');
       } else {
         checkAdminAccount();
       }
     };
-    
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log("Auth state changed:", event);
-        if (session) {
-          console.log("Session detected, redirecting to blog admin");
-          navigate('/blog-admin');
-        }
-      }
-    );
     
     checkSession();
     

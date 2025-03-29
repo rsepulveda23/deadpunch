@@ -96,7 +96,7 @@ const Login = () => {
             <Separator className="my-6 bg-deadpunch-dark-lighter" />
             
             <p className="text-center text-sm text-deadpunch-gray-light">
-              After signing in, you'll be able to create and manage blog posts.
+              After signing in, you'll be redirected to the blog admin dashboard where you can create and manage posts.
             </p>
           </div>
         </div>
