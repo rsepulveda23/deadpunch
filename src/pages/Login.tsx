@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,16 +17,13 @@ const Login = () => {
   const [adminAccountExists, setAdminAccountExists] = useState<boolean | null>(null);
   const [isAdminEmailAuthorized, setIsAdminEmailAuthorized] = useState(false);
   
-  // Check if user is already logged in
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         navigate('/blog-admin');
       } else {
-        // Check if the admin account exists
         checkAdminAccount();
-        // Check if the user's email is in the authorized admin list
         checkAdminEmailAuthorization();
       }
     };
@@ -35,13 +31,11 @@ const Login = () => {
     checkSession();
   }, [navigate]);
   
-  // Check if the user's email is in the authorized admin list
   const checkAdminEmailAuthorization = async () => {
     try {
-      // Check if the email is in the admin_credentials table
       const { data, error } = await supabase
         .from('admin_credentials')
-        .select('email')
+        .select('*')
         .eq('is_active', true);
       
       if (error) {
@@ -50,7 +44,6 @@ const Login = () => {
       }
       
       if (data && data.length > 0) {
-        // Pre-fill the email field with the first authorized admin email
         setEmail(data[0].email);
         setIsAdminEmailAuthorized(true);
       }
@@ -59,10 +52,8 @@ const Login = () => {
     }
   };
   
-  // Check if the admin account exists
   const checkAdminAccount = async () => {
     try {
-      // Just check if any users exist in the system
       const { count, error } = await supabase
         .from('blog_posts')
         .select('*', { count: 'exact', head: true });
@@ -72,7 +63,6 @@ const Login = () => {
         return;
       }
       
-      // If there's content, we assume the admin account exists
       setAdminAccountExists(count && count > 0);
     } catch (error) {
       console.error('Error checking admin account:', error);
@@ -84,28 +74,24 @@ const Login = () => {
     setIsLoading(true);
     
     try {
-      // Check if the email is authorized in admin_credentials
       const { data: adminData, error: adminError } = await supabase
         .from('admin_credentials')
         .select('*')
-        .eq('email', email)
-        .single();
+        .eq('email', email);
       
-      if (adminError && adminError.code !== 'PGRST116') {
-        // PGRST116 is "no rows returned" which is expected if the email is not authorized
+      if (adminError) {
         toast.error('Error checking admin authorization');
         console.error('Admin authorization check error:', adminError);
         setIsLoading(false);
         return;
       }
       
-      if (!adminData) {
+      if (!adminData || adminData.length === 0) {
         toast.error('This email is not authorized to create an admin account');
         setIsLoading(false);
         return;
       }
       
-      // Proceed with sign up if the email is authorized
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
