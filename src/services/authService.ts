@@ -1,6 +1,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
+import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 export const checkAdminAccount = async () => {
   try {
@@ -60,8 +61,10 @@ export const getSession = async () => {
   return await supabase.auth.getSession();
 };
 
-export const setupAuthListener = () => {
+export const setupAuthListener = (options = {}) => {
+  // Fix: Don't return an object from the callback, just process the event
   return supabase.auth.onAuthStateChange((event, session) => {
-    return { event, session };
+    // Callback should not return anything (void)
+    console.log("Auth state change:", event, session);
   });
 };

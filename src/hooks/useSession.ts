@@ -9,7 +9,8 @@ export const useSession = () => {
 
   useEffect(() => {
     // Set up auth state listener first
-    const { data: { subscription } } = setupAuthListener();
+    // Make sure to pass empty object as the callback options argument
+    const { data: { subscription } } = setupAuthListener({});
     
     subscription.callback((event, session) => {
       console.log("Auth state changed:", event);

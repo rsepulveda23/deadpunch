@@ -5,7 +5,8 @@ import { useSession } from '@/hooks/useSession';
 import { useSignIn } from '@/hooks/useSignIn';
 import { useSignUp } from '@/hooks/useSignUp';
 
-export { AuthState } from '@/types/auth';
+// Use "export type" instead of just "export" for types when isolatedModules is enabled
+export type { AuthState } from '@/types/auth';
 
 export const useAuth = (): UseAuthReturn => {
   const [state, setState] = useState<AuthState>({
