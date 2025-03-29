@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useRef } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
@@ -168,6 +169,16 @@ const Navbar = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               ))}
+              
+              {/* Add Blog NavigationMenuItem */}
+              <NavigationMenuItem>
+                <Link 
+                  to="/blog" 
+                  className="inline-flex h-10 w-max items-center justify-center rounded-full bg-transparent px-5 py-2 text-sm font-medium text-white transition-colors hover:text-deadpunch-red hover:bg-deadpunch-dark-lighter"
+                >
+                  Blog
+                </Link>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -332,6 +343,17 @@ const Navbar = () => {
                       </div>
                     </div>
                   ))}
+                  
+                  {/* Add Blog link to mobile menu */}
+                  <div className="border-b border-deadpunch-gray-dark pb-3">
+                    <Link 
+                      to="/blog"
+                      className="block py-2 text-white font-medium hover:text-deadpunch-red"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Blog
+                    </Link>
+                  </div>
                   
                   <Button 
                     variant="default" 

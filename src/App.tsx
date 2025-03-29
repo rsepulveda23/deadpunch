@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ComingSoon from "./pages/ComingSoon";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 // Create a QueryClient instance
 const queryClient = new QueryClient();
@@ -46,6 +48,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          
+          {/* Blog routes */}
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           
           {/* Dynamic category routes */}
           {categoryRoutes.map((route) => (
