@@ -1,139 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+
+import React from 'react';
 import Navbar from '@/components/Navbar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { toast } from 'sonner';
+import SignInForm from '@/components/auth/SignInForm';
+import SignUpForm from '@/components/auth/SignUpForm';
+import { useAuth } from '@/hooks/useAuth';
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [adminAccountExists, setAdminAccountExists] = useState<boolean | null>(null);
-  const [isAdminEmailAuthorized, setIsAdminEmailAuthorized] = useState(false);
-  
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate('/blog-admin');
-      } else {
-        checkAdminAccount();
-        checkAdminEmailAuthorization();
-      }
-    };
-    
-    checkSession();
-  }, [navigate]);
-  
-  const checkAdminEmailAuthorization = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('admin_credentials')
-        .select('*')
-        .eq('is_active', true);
-      
-      if (error) {
-        console.error('Error checking admin authorization:', error);
-        return;
-      }
-      
-      if (data && data.length > 0) {
-        setEmail(data[0].email);
-        setIsAdminEmailAuthorized(true);
-      }
-    } catch (error) {
-      console.error('Error checking admin email authorization:', error);
-    }
-  };
-  
-  const checkAdminAccount = async () => {
-    try {
-      const { count, error } = await supabase
-        .from('blog_posts')
-        .select('*', { count: 'exact', head: true });
-      
-      if (error) {
-        console.error('Error checking if content exists:', error);
-        return;
-      }
-      
-      setAdminAccountExists(count && count > 0);
-    } catch (error) {
-      console.error('Error checking admin account:', error);
-    }
-  };
-  
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      const { data: adminData, error: adminError } = await supabase
-        .from('admin_credentials')
-        .select('*')
-        .eq('email', email);
-      
-      if (adminError) {
-        toast.error('Error checking admin authorization');
-        console.error('Admin authorization check error:', adminError);
-        setIsLoading(false);
-        return;
-      }
-      
-      if (!adminData || adminData.length === 0) {
-        toast.error('This email is not authorized to create an admin account');
-        setIsLoading(false);
-        return;
-      }
-      
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      
-      if (error) throw error;
-      
-      if (data?.user) {
-        toast.success('Sign up successful! You can now sign in.');
-        setAdminAccountExists(true);
-      }
-    } catch (error: any) {
-      toast.error(error.message || 'An error occurred during sign up');
-      console.error('Sign up error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (error) throw error;
-      
-      if (data?.user) {
-        toast.success('Sign in successful!');
-        navigate('/blog-admin');
-      }
-    } catch (error: any) {
-      toast.error(error.message || 'An error occurred during sign in');
-      console.error('Sign in error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { 
+    isLoading, 
+    email, 
+    password, 
+    adminAccountExists, 
+    isAdminEmailAuthorized,
+    setEmail,
+    setPassword,
+    handleSignIn,
+    handleSignUp
+  } = useAuth();
   
   return (
     <main className="relative min-h-screen overflow-hidden">
@@ -169,85 +54,26 @@ const Login = () => {
               </TabsList>
               
               <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
-                    <Input 
-                      id="signin-email" 
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
-                      className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark"
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-password">Password</Label>
-                    <Input 
-                      id="signin-password" 
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark"
-                      required
-                    />
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover mt-6"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Signing In...' : 'Sign In'}
-                  </Button>
-                </form>
+                <SignInForm
+                  email={email}
+                  password={password}
+                  isLoading={isLoading}
+                  setEmail={setEmail}
+                  setPassword={setPassword}
+                  handleSignIn={handleSignIn}
+                />
               </TabsContent>
               
               <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input 
-                      id="signup-email" 
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
-                      className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark"
-                      required
-                      readOnly={isAdminEmailAuthorized}
-                    />
-                    {isAdminEmailAuthorized && (
-                      <p className="text-xs text-deadpunch-gray-light">This email is pre-authorized</p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input 
-                      id="signup-password" 
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark"
-                      required
-                      minLength={6}
-                    />
-                    <p className="text-xs text-deadpunch-gray-light">Password must be at least 6 characters</p>
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover mt-6"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Signing Up...' : 'Sign Up'}
-                  </Button>
-                </form>
+                <SignUpForm
+                  email={email}
+                  password={password}
+                  isLoading={isLoading}
+                  isAdminEmailAuthorized={isAdminEmailAuthorized}
+                  setEmail={setEmail}
+                  setPassword={setPassword}
+                  handleSignUp={handleSignUp}
+                />
               </TabsContent>
             </Tabs>
             
