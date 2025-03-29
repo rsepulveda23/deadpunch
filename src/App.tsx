@@ -47,6 +47,12 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           
+          {/* Redirect blog routes to home */}
+          <Route path="/blog" element={<Navigate to="/" replace />} />
+          <Route path="/blog/*" element={<Navigate to="/" replace />} />
+          <Route path="/blog-admin" element={<Navigate to="/" replace />} />
+          <Route path="/login" element={<Navigate to="/" replace />} />
+          
           {/* Dynamic category routes */}
           {categoryRoutes.map((route) => (
             <Route 
