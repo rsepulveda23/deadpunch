@@ -16,6 +16,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [adminAccountExists, setAdminAccountExists] = useState<boolean | null>(null);
+  const [isAdminEmailAuthorized, setIsAdminEmailAuthorized] = useState(false);
   
   // Check if user is already logged in
   useEffect(() => {
@@ -26,11 +27,37 @@ const Login = () => {
       } else {
         // Check if the admin account exists
         checkAdminAccount();
+        // Check if the user's email is in the authorized admin list
+        checkAdminEmailAuthorization();
       }
     };
     
     checkSession();
   }, [navigate]);
+  
+  // Check if the user's email is in the authorized admin list
+  const checkAdminEmailAuthorization = async () => {
+    try {
+      // Check if the email is in the admin_credentials table
+      const { data, error } = await supabase
+        .from('admin_credentials')
+        .select('email')
+        .eq('is_active', true);
+      
+      if (error) {
+        console.error('Error checking admin authorization:', error);
+        return;
+      }
+      
+      if (data && data.length > 0) {
+        // Pre-fill the email field with the first authorized admin email
+        setEmail(data[0].email);
+        setIsAdminEmailAuthorized(true);
+      }
+    } catch (error) {
+      console.error('Error checking admin email authorization:', error);
+    }
+  };
   
   // Check if the admin account exists
   const checkAdminAccount = async () => {
@@ -57,6 +84,28 @@ const Login = () => {
     setIsLoading(true);
     
     try {
+      // Check if the email is authorized in admin_credentials
+      const { data: adminData, error: adminError } = await supabase
+        .from('admin_credentials')
+        .select('*')
+        .eq('email', email)
+        .single();
+      
+      if (adminError && adminError.code !== 'PGRST116') {
+        // PGRST116 is "no rows returned" which is expected if the email is not authorized
+        toast.error('Error checking admin authorization');
+        console.error('Admin authorization check error:', adminError);
+        setIsLoading(false);
+        return;
+      }
+      
+      if (!adminData) {
+        toast.error('This email is not authorized to create an admin account');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Proceed with sign up if the email is authorized
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -119,6 +168,14 @@ const Login = () => {
               </div>
             )}
             
+            {isAdminEmailAuthorized && (
+              <div className="bg-green-800/30 p-4 rounded-lg mb-6">
+                <p className="text-green-200 text-sm">
+                  Your admin email has been pre-filled as it's authorized in the system.
+                </p>
+              </div>
+            )}
+            
             <Tabs defaultValue={adminAccountExists === false ? "signup" : "signin"} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="signin">Sign In</TabsTrigger>
@@ -175,7 +232,11 @@ const Login = () => {
                       placeholder="your@email.com"
                       className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark"
                       required
+                      readOnly={isAdminEmailAuthorized}
                     />
+                    {isAdminEmailAuthorized && (
+                      <p className="text-xs text-deadpunch-gray-light">This email is pre-authorized</p>
+                    )}
                   </div>
                   
                   <div className="space-y-2">
