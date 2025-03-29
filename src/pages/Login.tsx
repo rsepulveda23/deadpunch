@@ -13,8 +13,8 @@ import { toast } from 'sonner';
 const Login = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('ruben@deadpunch.com');
+  const [password, setPassword] = useState('Support2024/2025!');
   
   // Check if user is already logged in
   useEffect(() => {
@@ -28,7 +28,7 @@ const Login = () => {
     checkSession();
   }, [navigate]);
   
-  const handleSignUp = async (e) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
@@ -43,10 +43,10 @@ const Login = () => {
       if (data?.user) {
         toast.success('Sign up successful! You can now sign in.');
         // Clear the form
-        setEmail('');
-        setPassword('');
+        setEmail('ruben@deadpunch.com');
+        setPassword('Support2024/2025!');
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message || 'An error occurred during sign up');
       console.error('Sign up error:', error);
     } finally {
@@ -54,7 +54,7 @@ const Login = () => {
     }
   };
   
-  const handleSignIn = async (e) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
@@ -70,7 +70,7 @@ const Login = () => {
         toast.success('Sign in successful!');
         navigate('/blog-admin');
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message || 'An error occurred during sign in');
       console.error('Sign in error:', error);
     } finally {

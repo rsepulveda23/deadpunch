@@ -32,7 +32,13 @@ if (!isSupabaseConfigured) {
  * Returns null if credentials are missing
  */
 export const supabase = isSupabaseConfigured 
-  ? createClient(supabaseUrl, supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        storage: localStorage,
+        persistSession: true,
+        autoRefreshToken: true,
+      }
+    })
   : null;
 
 /**
