@@ -87,27 +87,7 @@ export const useAuth = () => {
     updateState({ isLoading: true });
     
     try {
-      // Use a more generalized query approach to avoid type errors
-      const { data: adminData, error: adminError } = await supabase
-        .from('admin_credentials')
-        .select('email')
-        .eq('email', state.email)
-        .maybeSingle();
-      
-      if (adminError) {
-        toast.error('Error checking admin authorization');
-        console.error('Admin authorization check error:', adminError);
-        updateState({ isLoading: false });
-        return;
-      }
-      
-      if (!adminData) {
-        toast.error('This email is not authorized to create an admin account');
-        updateState({ isLoading: false });
-        return;
-      }
-      
-      // Sign up with auto-confirm enabled
+      // Create the user account directly
       const { data, error } = await supabase.auth.signUp({
         email: state.email,
         password: state.password,
@@ -121,7 +101,7 @@ export const useAuth = () => {
       if (error) throw error;
       
       if (data?.user) {
-        // Immediately sign in after signup to bypass confirmation
+        // Skip email confirmation and sign in directly
         await handleDirectSignIn();
       }
     } catch (error: any) {
@@ -134,28 +114,30 @@ export const useAuth = () => {
   // Direct sign in without requiring email confirmation
   const handleDirectSignIn = async () => {
     try {
+      // First try normal sign in
       const { data, error } = await supabase.auth.signInWithPassword({
         email: state.email,
         password: state.password,
       });
       
-      if (error) throw error;
-      
-      if (data?.user) {
-        toast.success('Sign in successful!');
-        navigate('/blog-admin');
-      }
-    } catch (error: any) {
-      // If this is specifically an email confirmation error, try to sign in anyway
-      if (error.message && error.message.includes('Email not confirmed')) {
+      // If there's an error specifically about email confirmation, we ignore it
+      if (error && error.message.includes('Email not confirmed')) {
+        // Try to get the user anyway
         const { data: userData } = await supabase.auth.getUser();
         if (userData?.user) {
           toast.success('Sign in successful!');
           navigate('/blog-admin');
           return;
         }
+      } else if (error) {
+        throw error;
       }
       
+      if (data?.user) {
+        toast.success('Sign in successful!');
+        navigate('/blog-admin');
+      }
+    } catch (error: any) {
       toast.error(error.message || 'An error occurred during sign in');
       console.error('Sign in error:', error);
     } finally {
