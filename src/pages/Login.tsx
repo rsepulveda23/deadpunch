@@ -15,6 +15,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('ruben@deadpunch.com');
   const [password, setPassword] = useState('Support2024/2025!');
+  const [adminAccountExists, setAdminAccountExists] = useState<boolean | null>(null);
   
   // Check if user is already logged in
   useEffect(() => {
@@ -22,11 +23,38 @@ const Login = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         navigate('/blog-admin');
+      } else {
+        // Check if the admin account exists
+        checkAdminAccount();
       }
     };
     
     checkSession();
   }, [navigate]);
+  
+  // Check if the admin account exists
+  const checkAdminAccount = async () => {
+    try {
+      // Try to sign in with the admin credentials - we're just checking if it works
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error && error.message.includes('Invalid login credentials')) {
+        // Admin account doesn't exist yet
+        setAdminAccountExists(false);
+        console.log('Admin account does not exist yet. Please sign up first.');
+      } else if (data?.user) {
+        // Admin account exists, sign out immediately (we were just checking)
+        setAdminAccountExists(true);
+        await supabase.auth.signOut();
+        console.log('Admin account exists. You can sign in.');
+      }
+    } catch (error) {
+      console.error('Error checking admin account:', error);
+    }
+  };
   
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,9 +70,7 @@ const Login = () => {
       
       if (data?.user) {
         toast.success('Sign up successful! You can now sign in.');
-        // Clear the form
-        setEmail('ruben@deadpunch.com');
-        setPassword('Support2024/2025!');
+        setAdminAccountExists(true);
       }
     } catch (error: any) {
       toast.error(error.message || 'An error occurred during sign up');
@@ -89,7 +115,16 @@ const Login = () => {
           <div className="glass p-8 rounded-xl">
             <h1 className="text-3xl font-display font-bold mb-6 text-center">Account Access</h1>
             
-            <Tabs defaultValue="signin" className="w-full">
+            {adminAccountExists === false && (
+              <div className="bg-amber-800/30 p-4 rounded-lg mb-6">
+                <p className="text-amber-200 text-sm">
+                  It looks like this is your first time. Please click on the "Sign Up" tab
+                  to create your admin account first.
+                </p>
+              </div>
+            )}
+            
+            <Tabs defaultValue={adminAccountExists === false ? "signup" : "signin"} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="signin">Sign In</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
