@@ -13,8 +13,8 @@ import { toast } from 'sonner';
 const Login = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('ruben@deadpunch.com');
-  const [password, setPassword] = useState('Support2024/2025!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [adminAccountExists, setAdminAccountExists] = useState<boolean | null>(null);
   
   // Check if user is already logged in
@@ -35,22 +35,18 @@ const Login = () => {
   // Check if the admin account exists
   const checkAdminAccount = async () => {
     try {
-      // Try to sign in with the admin credentials - we're just checking if it works
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // Just check if any users exist in the system
+      const { count, error } = await supabase
+        .from('blog_posts')
+        .select('*', { count: 'exact', head: true });
       
-      if (error && error.message.includes('Invalid login credentials')) {
-        // Admin account doesn't exist yet
-        setAdminAccountExists(false);
-        console.log('Admin account does not exist yet. Please sign up first.');
-      } else if (data?.user) {
-        // Admin account exists, sign out immediately (we were just checking)
-        setAdminAccountExists(true);
-        await supabase.auth.signOut();
-        console.log('Admin account exists. You can sign in.');
+      if (error) {
+        console.error('Error checking if content exists:', error);
+        return;
       }
+      
+      // If there's content, we assume the admin account exists
+      setAdminAccountExists(count && count > 0);
     } catch (error) {
       console.error('Error checking admin account:', error);
     }
@@ -118,8 +114,7 @@ const Login = () => {
             {adminAccountExists === false && (
               <div className="bg-amber-800/30 p-4 rounded-lg mb-6">
                 <p className="text-amber-200 text-sm">
-                  It looks like this is your first time. Please click on the "Sign Up" tab
-                  to create your admin account first.
+                  It looks like this is your first time. Please create your admin account.
                 </p>
               </div>
             )}
