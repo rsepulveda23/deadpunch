@@ -8,6 +8,7 @@ import SignUpForm from '@/components/auth/SignUpForm';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,10 +27,17 @@ const Login = () => {
   // Check if user is already logged in on component mount
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        console.log("User is already logged in, redirecting to blog admin");
-        navigate('/blog-admin');
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          console.log("User is already logged in, redirecting to blog admin");
+          toast.success('Welcome back! Redirecting to admin dashboard...');
+          navigate('/blog-admin');
+        } else {
+          console.log("No active session found");
+        }
+      } catch (error) {
+        console.error("Error checking session:", error);
       }
     };
     

@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Calendar, Edit, Trash, Plus, ArrowLeft } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -92,6 +91,8 @@ const BlogAdmin = () => {
 
   // Check auth status on load and set up listener for auth changes
   useEffect(() => {
+    console.log("BlogAdmin component mounted, checking auth...");
+    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -104,18 +105,28 @@ const BlogAdmin = () => {
           console.log("User not authenticated in BlogAdmin");
           setIsAuthenticated(false);
           setIsCheckingAuth(false);
+          navigate('/login');
         }
       }
     );
 
     const checkAuth = async () => {
       try {
-        const isAdmin = await checkAdminAuth();
+        const { data: { session } } = await supabase.auth.getSession();
+        const isAdmin = !!session?.user;
         console.log("Admin check result:", isAdmin);
-        setIsAuthenticated(isAdmin);
+        
+        if (isAdmin) {
+          setIsAuthenticated(true);
+        } else {
+          console.log("User not authenticated, redirecting to login");
+          toast.error('You must be logged in to access the admin dashboard');
+          navigate('/login');
+        }
       } catch (error) {
         console.error('Auth check error:', error);
         setIsAuthenticated(false);
+        navigate('/login');
       } finally {
         setIsCheckingAuth(false);
       }
@@ -124,16 +135,7 @@ const BlogAdmin = () => {
     checkAuth();
 
     return () => subscription.unsubscribe();
-  }, []);
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!isCheckingAuth && !isAuthenticated) {
-      console.log("User not authenticated, redirecting to login");
-      toast.error('You must be logged in to access the admin dashboard');
-      navigate('/login');
-    }
-  }, [isCheckingAuth, isAuthenticated, navigate]);
+  }, [navigate]);
 
   // Fetch blog posts
   const { data: blogPosts, isLoading, error } = useQuery({
@@ -291,6 +293,27 @@ const BlogAdmin = () => {
     }
   };
 
+  if (isCheckingAuth) {
+    return (
+      <main className="relative min-h-screen">
+        <div className="noise-overlay"></div>
+        <Navbar />
+        <section className="pt-32 pb-20 md:py-32">
+          <div className="container mx-auto px-4 text-center">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="h-8 w-64 bg-deadpunch-dark-lighter rounded mb-4"></div>
+              <div className="h-4 w-48 bg-deadpunch-dark-lighter rounded"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null; // Will redirect via useEffect
+  }
+
   return (
     <main className="relative min-h-screen">
       <div className="noise-overlay"></div>
@@ -325,14 +348,7 @@ const BlogAdmin = () => {
             
             <Separator className="mb-6 bg-deadpunch-dark-lighter" />
             
-            {isCheckingAuth ? (
-              <div className="flex justify-center py-10">
-                <div className="animate-pulse flex flex-col items-center">
-                  <div className="h-8 w-64 bg-deadpunch-dark-lighter rounded mb-4"></div>
-                  <div className="h-4 w-48 bg-deadpunch-dark-lighter rounded"></div>
-                </div>
-              </div>
-            ) : isLoading ? (
+            {isLoading ? (
               <div className="flex justify-center py-10">
                 <div className="animate-pulse flex flex-col items-center">
                   <div className="h-8 w-64 bg-deadpunch-dark-lighter rounded mb-4"></div>
