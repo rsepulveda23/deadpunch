@@ -91,7 +91,8 @@ export const useAuth = () => {
         options: {
           data: {
             is_admin: true,
-          }
+          },
+          emailRedirectTo: window.location.origin + '/blog-admin'
         }
       });
       
@@ -101,32 +102,29 @@ export const useAuth = () => {
         toast.success('Admin account created! Signing you in...');
         
         // Force sign in after signup
-        setTimeout(async () => {
-          try {
-            // Attempt to sign in directly
-            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-              email: state.email,
-              password: state.password,
-            });
-            
-            if (signInError) {
-              console.log("Sign in error after signup:", signInError);
-              toast.error("Please sign in with your new credentials");
-              updateState({ isLoading: false });
-              return;
-            }
-            
-            if (signInData?.user) {
-              console.log("Successfully signed in after signup");
-              toast.success('Signed in successfully! Redirecting to admin dashboard...');
-              navigate('/blog-admin');
-            }
-          } catch (signInAttemptError) {
-            console.error("Error in sign in attempt:", signInAttemptError);
-            toast.error("Please try signing in manually");
+        try {
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email: state.email,
+            password: state.password,
+          });
+          
+          if (signInError) {
+            console.log("Sign in error after signup:", signInError);
+            toast.error(signInError.message || "Please sign in with your new credentials");
             updateState({ isLoading: false });
+            return;
           }
-        }, 1000);
+          
+          if (signInData?.user) {
+            console.log("Successfully signed in after signup");
+            toast.success('Signed in successfully! Redirecting to admin dashboard...');
+            navigate('/blog-admin');
+          }
+        } catch (signInAttemptError) {
+          console.error("Error in sign in attempt:", signInAttemptError);
+          toast.error("Please try signing in manually");
+          updateState({ isLoading: false });
+        }
       }
     } catch (error: any) {
       toast.error(error.message || 'An error occurred during sign up');
@@ -148,18 +146,16 @@ export const useAuth = () => {
       });
       
       if (error) {
-        // Handle email confirmation error
+        // Try to handle email confirmation error gracefully
         if (error.message.includes('Email not confirmed')) {
-          console.log('Email not confirmed error, trying to sign in anyway');
+          console.log('Email not confirmed error, trying to bypass...');
           
-          // Try to bypass email confirmation since this is a simple admin app
+          // For blog admin purposes, we'll just tell the user to try again
+          toast.warning('Email verification is required. Please check your email or contact support.');
+          
+          // Try to auto-verify for development purposes
           try {
-            // Update user to confirm email, though this might not work from client side
-            await supabase.auth.updateUser({
-              data: { email_confirmed: true }
-            });
-            
-            // Try signing in again
+            // Attempt another sign in - sometimes it works on second try if email confirmation is disabled
             const { data: secondAttempt, error: secondError } = await supabase.auth.signInWithPassword({
               email: state.email,
               password: state.password,
@@ -175,7 +171,7 @@ export const useAuth = () => {
               return;
             }
           } catch (bypassError) {
-            console.error('Error during email confirmation bypass:', bypassError);
+            console.error('Error during second attempt:', bypassError);
             throw error; // Throw original error if bypass fails
           }
         } else {
