@@ -31,6 +31,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
+// Define types for blog posts
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  featured_image?: string;
+  created_at: string;
+  updated_at: string;
+  published_at?: string;
+}
+
 // Function to fetch blog posts from Supabase
 const fetchBlogPosts = async () => {
   const { data, error } = await supabase
@@ -57,8 +70,14 @@ const BlogAdmin = () => {
   const queryClient = useQueryClient();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const [editingPost, setEditingPost] = useState(null);
-  const [newPost, setNewPost] = useState({
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [newPost, setNewPost] = useState<{
+    title: string;
+    slug: string;
+    excerpt: string;
+    content: string;
+    featured_image: string;
+  }>({
     title: '',
     slug: '',
     excerpt: '',
@@ -68,7 +87,7 @@ const BlogAdmin = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [postToDelete, setPostToDelete] = useState(null);
+  const [postToDelete, setPostToDelete] = useState<BlogPost | null>(null);
 
   // Check auth status on load
   useEffect(() => {
@@ -105,7 +124,7 @@ const BlogAdmin = () => {
 
   // Mutation for creating a new blog post
   const createPostMutation = useMutation({
-    mutationFn: async (newPostData) => {
+    mutationFn: async (newPostData: typeof newPost) => {
       const { data, error } = await supabase
         .from('blog_posts')
         .insert([{
@@ -140,14 +159,14 @@ const BlogAdmin = () => {
 
   // Mutation for updating a blog post
   const updatePostMutation = useMutation({
-    mutationFn: async (updatedPost) => {
+    mutationFn: async (updatedPost: BlogPost) => {
       const { data, error } = await supabase
         .from('blog_posts')
         .update({
           ...updatedPost,
           updated_at: new Date().toISOString()
         })
-        .eq('id', editingPost.id)
+        .eq('id', updatedPost.id)
         .select();
       
       if (error) throw error;
@@ -169,7 +188,7 @@ const BlogAdmin = () => {
 
   // Mutation for deleting a blog post
   const deletePostMutation = useMutation({
-    mutationFn: async (postId) => {
+    mutationFn: async (postId: string) => {
       const { error } = await supabase
         .from('blog_posts')
         .delete()
@@ -192,15 +211,17 @@ const BlogAdmin = () => {
   });
 
   // Handle post creation
-  const handleCreatePost = (e) => {
+  const handleCreatePost = (e: React.FormEvent) => {
     e.preventDefault();
     createPostMutation.mutate(newPost);
   };
 
   // Handle post update
-  const handleUpdatePost = (e) => {
+  const handleUpdatePost = (e: React.FormEvent) => {
     e.preventDefault();
-    updatePostMutation.mutate(editingPost);
+    if (editingPost) {
+      updatePostMutation.mutate(editingPost);
+    }
   };
 
   // Handle post deletion
@@ -211,19 +232,19 @@ const BlogAdmin = () => {
   };
 
   // Open edit dialog with post data
-  const openEditDialog = (post) => {
+  const openEditDialog = (post: BlogPost) => {
     setEditingPost({ ...post });
     setIsEditDialogOpen(true);
   };
 
   // Open delete confirmation dialog
-  const openDeleteDialog = (post) => {
+  const openDeleteDialog = (post: BlogPost) => {
     setPostToDelete(post);
     setIsDeleteDialogOpen(true);
   };
 
   // Generate slug from title
-  const generateSlug = (title) => {
+  const generateSlug = (title: string): string => {
     return title
       .toLowerCase()
       .replace(/[^\w\s]/gi, '')
@@ -231,7 +252,7 @@ const BlogAdmin = () => {
   };
 
   // Handle title change in new post form
-  const handleTitleChange = (e, isNewPost = true) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>, isNewPost = true) => {
     const title = e.target.value;
     if (isNewPost) {
       setNewPost({
@@ -240,11 +261,13 @@ const BlogAdmin = () => {
         slug: generateSlug(title)
       });
     } else {
-      setEditingPost({
-        ...editingPost,
-        title,
-        slug: generateSlug(title)
-      });
+      if (editingPost) {
+        setEditingPost({
+          ...editingPost,
+          title,
+          slug: generateSlug(title)
+        });
+      }
     }
   };
 
@@ -306,7 +329,7 @@ const BlogAdmin = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {blogPosts?.map((post) => (
+                    {blogPosts?.map((post: BlogPost) => (
                       <TableRow key={post.id}>
                         <TableCell className="font-medium">{post.title}</TableCell>
                         <TableCell>{post.slug}</TableCell>

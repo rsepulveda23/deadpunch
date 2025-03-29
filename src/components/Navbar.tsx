@@ -1,7 +1,8 @@
+
 import { useEffect, useState, useRef } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -45,6 +46,7 @@ const Navbar = () => {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const location = useLocation();
+  const navigate = useNavigate(); // Add useNavigate hook
   const [notifyDialogOpen, setNotifyDialogOpen] = useState(false);
 
   // Add new state for auth
@@ -325,7 +327,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* ... keep existing code (mobile menu) */}
+          {/* Mobile menu section */}
           <div className="md:hidden flex items-center space-x-4">
             <HoverCard>
               <HoverCardTrigger asChild>
