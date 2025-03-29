@@ -9,10 +9,8 @@ export const useSession = () => {
 
   useEffect(() => {
     // Set up auth state listener first
-    // Make sure to pass empty object as the callback options argument
-    const { data: { subscription } } = setupAuthListener({});
-    
-    subscription.callback((event, session) => {
+    // Make sure to pass the callback function as the first argument and empty object as the second
+    const { data: { subscription } } = setupAuthListener((event, session) => {
       console.log("Auth state changed:", event);
       if (event === 'SIGNED_IN' && session) {
         console.log("User signed in successfully, redirecting to blog admin");
@@ -21,7 +19,7 @@ export const useSession = () => {
           navigate('/blog-admin');
         }, 100);
       }
-    });
+    }, {});
     
     // Then check for existing session
     const checkSession = async () => {

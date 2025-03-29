@@ -23,29 +23,21 @@ export const useSignIn = (
       if (error) {
         // Try to handle email confirmation error gracefully
         if (error.message.includes('Email not confirmed')) {
-          console.log('Email not confirmed error, trying to bypass...');
+          console.log('Email not confirmed error, showing instructions to user');
           
-          // For blog admin purposes, we'll just tell the user to try again
-          toast.warning('Email verification is required. Please check your email or contact support.');
+          toast.warning(
+            'Email verification is required. For development, you can disable this requirement in the Supabase Dashboard under Authentication > Email.',
+            { duration: 6000 }
+          );
           
-          // Try to auto-verify for development purposes
-          try {
-            // Attempt another sign in - sometimes it works on second try if email confirmation is disabled
-            const { data: secondAttempt, error: secondError } = await signInWithPassword(email, password);
-            
-            if (secondError) {
-              throw secondError;
-            }
-            
-            if (secondAttempt?.user) {
-              toast.success('Signed in successfully!');
-              navigate('/blog-admin');
-              return;
-            }
-          } catch (bypassError) {
-            console.error('Error during second attempt:', bypassError);
-            throw error; // Throw original error if bypass fails
-          }
+          // Give specific instructions
+          toast.info(
+            'To disable email confirmation: Go to Supabase Dashboard > Authentication > Providers > Email, and uncheck "Confirm email"', 
+            { duration: 10000 }
+          );
+
+          setLoading(false);
+          return;
         } else {
           throw error;
         }
