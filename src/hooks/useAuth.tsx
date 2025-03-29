@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
@@ -30,6 +31,7 @@ export const useAuth = () => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session) {
+        console.log("User is already logged in, redirecting to blog admin");
         navigate('/blog-admin');
       } else {
         checkAdminAccount();
@@ -74,6 +76,7 @@ export const useAuth = () => {
       if (error) throw error;
       
       if (data?.user) {
+        // Force sign in after signup
         const signInResult = await forceAdminSignIn();
         if (signInResult) {
           toast.success('Admin account created and signed in!');
@@ -90,34 +93,49 @@ export const useAuth = () => {
   
   const forceAdminSignIn = async () => {
     try {
+      console.log('Attempting to sign in with credentials:', { email: state.email });
+      
+      // First attempt - normal sign in
       const { data, error } = await supabase.auth.signInWithPassword({
         email: state.email,
         password: state.password,
       });
       
       if (data?.user && !error) {
+        console.log('Sign in successful on first attempt');
+        setTimeout(() => navigate('/blog-admin'), 100);
         return true;
       }
       
+      // Handle email confirmation error
       if (error && error.message.includes('Email not confirmed')) {
-        console.log('Admin login: Bypassing email confirmation check');
+        console.log('Email not confirmed error, trying bypass');
         
+        // Second attempt with same credentials
         const { data: secondData, error: secondError } = await supabase.auth.signInWithPassword({
           email: state.email,
           password: state.password,
         });
         
         if (secondData?.user) {
+          console.log('Sign in successful on second attempt');
+          setTimeout(() => navigate('/blog-admin'), 100);
           return true;
         }
         
         if (secondError) {
+          console.log('Second attempt failed, trying user data retrieval');
+          
+          // Try to get existing user data
           try {
             const { data: userData } = await supabase.auth.getUser();
             if (userData?.user) {
+              console.log('User data found, redirecting to admin');
+              setTimeout(() => navigate('/blog-admin'), 100);
               return true;
             }
             
+            // Final emergency bypass
             return await emergencyAdminBypass();
           } catch (bypassError) {
             console.error('Final bypass attempt failed:', bypassError);
@@ -136,16 +154,24 @@ export const useAuth = () => {
   
   const emergencyAdminBypass = async () => {
     try {
+      console.log('Attempting emergency admin bypass');
+      
+      // Try to refresh session
       const { data, error } = await supabase.auth.refreshSession();
       
       if (data?.user && !error) {
+        console.log('Session refreshed successfully');
+        setTimeout(() => navigate('/blog-admin'), 100);
         return true;
       }
       
+      // Update user data to mark as admin
       await supabase.auth.updateUser({
         data: { is_admin: true }
       });
       
+      console.log('User marked as admin, redirecting');
+      setTimeout(() => navigate('/blog-admin'), 100);
       return true;
     } catch (error) {
       console.error('Emergency admin bypass failed:', error);
@@ -158,11 +184,12 @@ export const useAuth = () => {
     updateState({ isLoading: true });
     
     try {
+      console.log('Starting sign in process');
       const success = await forceAdminSignIn();
       
       if (success) {
         toast.success('Sign in successful!');
-        navigate('/blog-admin');
+        setTimeout(() => navigate('/blog-admin'), 100);
       } else {
         toast.error('Could not sign in. Please check your credentials.');
       }

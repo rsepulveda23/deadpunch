@@ -29,12 +29,12 @@ const Login = () => {
       <section className="pt-32 pb-20 md:py-40 flex items-center justify-center">
         <div className="w-full max-w-md px-4">
           <div className="glass p-8 rounded-xl">
-            <h1 className="text-3xl font-display font-bold mb-6 text-center">Account Access</h1>
+            <h1 className="text-3xl font-display font-bold mb-6 text-center">Blog Admin Access</h1>
             
             {adminAccountExists === false && (
               <div className="bg-amber-800/30 p-4 rounded-lg mb-6">
                 <p className="text-amber-200 text-sm">
-                  It looks like this is your first time. Please create your admin account.
+                  It looks like this is your first time. Please create your admin account to manage blog posts.
                 </p>
               </div>
             )}
@@ -42,7 +42,7 @@ const Login = () => {
             {isAdminEmailAuthorized && (
               <div className="bg-green-800/30 p-4 rounded-lg mb-6">
                 <p className="text-green-200 text-sm">
-                  Your admin email has been pre-filled as it's authorized in the system.
+                  Sign in to access the blog admin dashboard where you can create and manage posts.
                 </p>
               </div>
             )}
@@ -80,7 +80,7 @@ const Login = () => {
             <Separator className="my-6 bg-deadpunch-dark-lighter" />
             
             <p className="text-center text-sm text-deadpunch-gray-light">
-              Admin access is restricted to authorized users only.
+              After signing in, you'll be able to create and manage blog posts.
             </p>
           </div>
         </div>
