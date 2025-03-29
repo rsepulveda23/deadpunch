@@ -1,13 +1,16 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import SignInForm from '@/components/auth/SignInForm';
 import SignUpForm from '@/components/auth/SignUpForm';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/lib/supabase';
 
 const Login = () => {
+  const navigate = useNavigate();
   const { 
     isLoading, 
     email, 
@@ -19,6 +22,19 @@ const Login = () => {
     handleSignIn,
     handleSignUp
   } = useAuth();
+  
+  // Check if user is already logged in on component mount
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        console.log("User is already logged in, redirecting to blog admin");
+        navigate('/blog-admin');
+      }
+    };
+    
+    checkSession();
+  }, [navigate]);
   
   return (
     <main className="relative min-h-screen overflow-hidden">
