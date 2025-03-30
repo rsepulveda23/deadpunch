@@ -10,12 +10,12 @@ interface FeatureCardProps {
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, delay }) => (
-  <div className={`glass p-6 rounded-lg animate-reveal ${delay} border-l-2 border-white/10 hover:border-white/30 transition-all duration-300`}>
-    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-deadpunch-red/10 text-deadpunch-red mb-4 border border-white/5">
+  <div className={`glass p-6 rounded-lg animate-reveal ${delay} border-l-2 border-white/10 hover:border-white/50 hover:ring-2 hover:ring-white/20 transition-all duration-300 group`}>
+    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-deadpunch-red/10 text-deadpunch-red mb-4 border border-white/5 group-hover:border-white/30 group-hover:shadow-[0_0_10px_rgba(255,255,255,0.1)] transition-all duration-300">
       {icon}
     </div>
-    <h3 className="text-xl font-display font-semibold mb-2 text-white">{title}</h3>
-    <p className="text-deadpunch-gray-light">{description}</p>
+    <h3 className="text-xl font-display font-semibold mb-2 text-white group-hover:text-white transition-colors duration-300">{title}</h3>
+    <p className="text-deadpunch-gray-light group-hover:text-white/80 transition-colors duration-300">{description}</p>
   </div>
 );
 
@@ -46,7 +46,7 @@ const Features = () => {
     <section id="features" className="relative">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm">
+          <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm hover:border-white/20 transition-all duration-300">
             <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
               The DEADPUNCH Advantage
             </p>

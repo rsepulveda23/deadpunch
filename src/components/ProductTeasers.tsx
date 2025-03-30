@@ -6,7 +6,7 @@ import { Shirt, Book, Tags } from 'lucide-react';
 const ProductTeasers = () => {
   const products = [
     {
-      icon: <Shirt className="h-12 w-12 text-deadpunch-red" />,
+      icon: <Shirt className="h-12 w-12 text-deadpunch-red group-hover:text-white transition-colors duration-300" />,
       title: "T-shirts & Hoodies",
       description: "Stylish apparel for pool enthusiasts both in the game and everyday wear."
     },
@@ -16,7 +16,7 @@ const ProductTeasers = () => {
           <img 
             src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
             alt="Signature Hat"
-            className="h-10 w-10 z-10 object-contain"
+            className="h-10 w-10 z-10 object-contain group-hover:scale-110 transition-transform duration-300"
           />
         </div>
       ),
@@ -24,12 +24,12 @@ const ProductTeasers = () => {
       description: "Limited edition headwear for both in and out of the pool hall."
     },
     {
-      icon: <Book className="h-12 w-12 text-deadpunch-red" />,
+      icon: <Book className="h-12 w-12 text-deadpunch-red group-hover:text-white transition-colors duration-300" />,
       title: "Training Journals",
       description: "Track your progress with our custom-designed training log books."
     },
     {
-      icon: <Tags className="h-12 w-12 text-deadpunch-red" />,
+      icon: <Tags className="h-12 w-12 text-deadpunch-red group-hover:text-white transition-colors duration-300" />,
       title: "Stickers & Decals",
       description: "Personalize your journal, cue case, or gear with Deadpunch stickers."
     }
@@ -44,7 +44,7 @@ const ProductTeasers = () => {
       
       <div className="container mx-auto px-4 relative">
         <div className="text-center mb-16">
-          <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm">
+          <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm hover:border-white/20 transition-all duration-300">
             <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
               Deadpunch Drops
             </p>
@@ -60,7 +60,7 @@ const ProductTeasers = () => {
           </p>
           
           {/* White accent divider */}
-          <div className="w-16 h-px bg-white/30 mx-auto mt-8"></div>
+          <div className="w-16 h-px bg-white/30 mx-auto mt-8 hover:bg-white/50 transition-colors duration-300"></div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -69,13 +69,13 @@ const ProductTeasers = () => {
               key={index} 
               className={`animate-reveal transform transition-all duration-500 delay-${index * 100}`}
             >
-              <Card className="bg-deadpunch-dark-lighter border-deadpunch-dark-lightest hover:border-white/20 transition-all duration-300 h-full group">
+              <Card className="bg-deadpunch-dark-lighter border-deadpunch-dark-lightest hover:border-white/40 hover:ring-2 hover:ring-white/20 transition-all duration-300 h-full group">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-deadpunch-red/10 mb-6 mt-2 ring-2 ring-white/5 group-hover:ring-white/20 transition-all duration-300">
+                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-deadpunch-red/10 mb-6 mt-2 ring-2 ring-white/5 group-hover:ring-white/40 group-hover:bg-deadpunch-red/20 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]">
                     {product.icon}
                   </div>
-                  <h3 className="text-xl font-display font-semibold mb-3 text-white group-hover:text-white/90 transition-colors duration-300">{product.title}</h3>
-                  <p className="text-deadpunch-gray-light">{product.description}</p>
+                  <h3 className="text-xl font-display font-semibold mb-3 text-white group-hover:text-white group-hover:drop-shadow-[0_0_2px_rgba(255,255,255,0.5)] transition-all duration-300">{product.title}</h3>
+                  <p className="text-deadpunch-gray-light group-hover:text-white/80 transition-colors duration-300">{product.description}</p>
                 </CardContent>
               </Card>
             </div>
@@ -84,8 +84,8 @@ const ProductTeasers = () => {
         
         {/* White accent at bottom */}
         <div className="w-full flex justify-center mt-16">
-          <div className="relative w-40 h-0.5">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+          <div className="relative w-40 h-0.5 group hover:w-52 transition-all duration-500">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:via-white/70 transition-colors duration-300"></div>
           </div>
         </div>
       </div>
