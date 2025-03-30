@@ -10,11 +10,11 @@ interface FeatureCardProps {
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, delay }) => (
-  <div className={`glass p-6 rounded-lg animate-reveal ${delay}`}>
-    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-deadpunch-red/10 text-deadpunch-red mb-4">
+  <div className={`glass p-6 rounded-lg animate-reveal ${delay} border-l-2 border-white/10 hover:border-white/30 transition-all duration-300`}>
+    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-deadpunch-red/10 text-deadpunch-red mb-4 border border-white/5">
       {icon}
     </div>
-    <h3 className="text-xl font-display font-semibold mb-2">{title}</h3>
+    <h3 className="text-xl font-display font-semibold mb-2 text-white">{title}</h3>
     <p className="text-deadpunch-gray-light">{description}</p>
   </div>
 );
@@ -60,7 +60,10 @@ const Features = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          {/* White accent line */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-px h-12 bg-gradient-to-b from-white/0 via-white/40 to-white/0"></div>
+          
           <FeatureCard
             title="Elite Performance"
             description="Engineered for athletes who demand nothing but the absolute best from their gear and themselves."
@@ -85,6 +88,9 @@ const Features = () => {
             icon={<Trophy size={24} />}
             delay="delay-400"
           />
+          
+          {/* White accent line */}
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-px h-12 bg-gradient-to-b from-white/0 via-white/40 to-white/0"></div>
         </div>
       </div>
     </section>

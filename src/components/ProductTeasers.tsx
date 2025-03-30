@@ -36,8 +36,13 @@ const ProductTeasers = () => {
   ];
 
   return (
-    <section id="products" className="py-16 bg-gradient-to-b from-deadpunch-dark to-deadpunch-dark-lighter">
-      <div className="container mx-auto px-4">
+    <section id="products" className="py-16 bg-gradient-to-b from-deadpunch-dark to-deadpunch-dark-lighter relative overflow-hidden">
+      {/* White circular accent */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full border border-white/10 opacity-40"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-16 rounded-full border border-white/20 opacity-60"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full border border-white/30 opacity-80"></div>
+      
+      <div className="container mx-auto px-4 relative">
         <div className="text-center mb-16">
           <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm">
             <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
@@ -53,6 +58,9 @@ const ProductTeasers = () => {
           <p className="text-deadpunch-gray-light text-lg animate-reveal delay-100 max-w-2xl mx-auto">
             Preview our upcoming premium gear collection dropping soon.
           </p>
+          
+          {/* White accent divider */}
+          <div className="w-16 h-px bg-white/30 mx-auto mt-8"></div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -61,17 +69,24 @@ const ProductTeasers = () => {
               key={index} 
               className={`animate-reveal transform transition-all duration-500 delay-${index * 100}`}
             >
-              <Card className="bg-deadpunch-dark-lighter border-deadpunch-dark-lightest hover:border-deadpunch-red/30 transition-all duration-300 h-full">
+              <Card className="bg-deadpunch-dark-lighter border-deadpunch-dark-lightest hover:border-white/20 transition-all duration-300 h-full group">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-deadpunch-red/10 mb-6 mt-2">
+                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-deadpunch-red/10 mb-6 mt-2 ring-2 ring-white/5 group-hover:ring-white/20 transition-all duration-300">
                     {product.icon}
                   </div>
-                  <h3 className="text-xl font-display font-semibold mb-3 text-white">{product.title}</h3>
+                  <h3 className="text-xl font-display font-semibold mb-3 text-white group-hover:text-white/90 transition-colors duration-300">{product.title}</h3>
                   <p className="text-deadpunch-gray-light">{product.description}</p>
                 </CardContent>
               </Card>
             </div>
           ))}
+        </div>
+        
+        {/* White accent at bottom */}
+        <div className="w-full flex justify-center mt-16">
+          <div className="relative w-40 h-0.5">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+          </div>
         </div>
       </div>
     </section>
