@@ -47,8 +47,15 @@ export const PoolBall = ({ number }: PoolBallProps) => {
       {/* Number display - consistent for all balls */}
       <div className="z-10 relative flex items-center justify-center">
         {striped ? (
-          // For striped balls: number directly on the stripe
-          <span className="font-bold text-sm md:text-base">{number}</span>
+          // For striped balls: white circle on top of stripe
+          <div className="w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center">
+            <span className={cn(
+              "font-bold text-sm md:text-base",
+              ballColors[number].includes("text-black") ? "text-black" : "text-black"
+            )}>
+              {number}
+            </span>
+          </div>
         ) : (
           // For solid balls: number in white circle
           <div className="w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center">
