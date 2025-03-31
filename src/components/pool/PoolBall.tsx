@@ -37,17 +37,22 @@ export const PoolBall = ({ number }: PoolBallProps) => {
       "relative overflow-hidden",
       ballColors[number]
     )}>
+      {/* Striped ball design */}
       {striped && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="bg-white w-full h-1/3 absolute"></div>
         </div>
       )}
-      <span className={cn(
-        "z-10 text-sm md:text-base font-bold",
-        striped ? "relative z-20" : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center"
+      
+      {/* Number display */}
+      <div className={cn(
+        "z-10 text-sm md:text-base font-bold flex items-center justify-center",
+        striped 
+          ? "relative z-20" 
+          : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full"
       )}>
         {number}
-      </span>
+      </div>
     </div>
   );
 };
