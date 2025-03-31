@@ -30,25 +30,25 @@ export const generateRack = (gameType: GameType): number[] => {
   } else if (gameType === "10-ball") {
     // In 10-ball:
     // 1 at the front (apex)
-    // 10 in the center
+    // 10 in the center (middle of third row)
     // Remaining balls (2-9) placed randomly
     
     const availableBalls = [2, 3, 4, 5, 6, 7, 8, 9];
     // Shuffle the available balls for randomization
     const shuffledBalls = availableBalls.sort(() => Math.random() - 0.5);
     
-    // Create the rack with fixed positions (1 at apex, 10 in center)
+    // Create the rack with fixed positions (1 at apex, 10 in center of third row)
     const finalRack = [
-      1,                  // Apex
+      1,                  // First row (apex)
       shuffledBalls[0],   // Second row - left
       shuffledBalls[1],   // Second row - right
       shuffledBalls[2],   // Third row - left
       10,                 // Third row - middle (ALWAYS ball 10)
       shuffledBalls[3],   // Third row - right
-      shuffledBalls[4],   // Third row - right
-      shuffledBalls[5],   // Fourth row - left
-      shuffledBalls[6],   // Fourth row - middle-left
-      shuffledBalls[7],   // Fourth row - middle-right/right
+      shuffledBalls[4],   // Fourth row - left
+      shuffledBalls[5],   // Fourth row - middle-left
+      shuffledBalls[6],   // Fourth row - middle-right
+      shuffledBalls[7],   // Fourth row - right
     ];
     
     return finalRack;
@@ -108,7 +108,7 @@ export const getGameRules = (gameType: GameType): string => {
   if (gameType === "9-ball") {
     return "Ball 1 (yellow) at the apex, ball 9 (striped yellow) in the center, others randomly placed in a diamond formation.";
   } else if (gameType === "10-ball") {
-    return "Ball 1 (yellow) at the apex, ball 10 (striped blue) in the center, others randomly placed in the triangle.";
+    return "Ball 1 (yellow) at the apex, ball 10 (striped blue) in the center of the third row with a proper triangle formation: 1 ball in first row, 2 in second, 3 in third, and 4 in the fourth row.";
   } else {
     return "Ball 8 (black) in the center of the second row, with a mix of solids and stripes. One solid and one stripe must be placed at the back corners.";
   }
