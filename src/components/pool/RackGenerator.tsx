@@ -13,26 +13,18 @@ export const RackGenerator = () => {
   const [gameType, setGameType] = useState<GameType>("9-ball");
   const [rack, setRack] = useState<number[]>([]);
   
-  // Reset rack when game type changes
   useEffect(() => {
     setRack([]);
   }, [gameType]);
 
-  // Generate rack based on game type
   const generateRack = () => {
     if (gameType === "9-ball") {
-      // 9-ball: ball 1 at the front, ball 9 in center
       const rackArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
       
-      // First, remove 1 and 9 from the available balls
       const availableBalls = [2, 3, 4, 5, 6, 7, 8];
       
-      // Shuffle available balls
       const shuffledBalls = availableBalls.sort(() => Math.random() - 0.5);
       
-      // Place 1 at the top (first position)
-      // Place shuffled balls in positions 2-8
-      // Insert 9 in the center (position 5)
       const finalRack = [
         1,                    // Top of the diamond - first ball
         shuffledBalls[0],     // Second row - left
@@ -48,16 +40,10 @@ export const RackGenerator = () => {
       setRack(finalRack);
       
     } else if (gameType === "10-ball") {
-      // 10-ball: ball 1 at the front, ball 10 in center
-      
-      // First, remove 1 and 10 from the available balls
       const availableBalls = [2, 3, 4, 5, 6, 7, 8, 9];
       
-      // Shuffle available balls
       const shuffledBalls = availableBalls.sort(() => Math.random() - 0.5);
       
-      // Place balls in a 10-ball rack pattern (4 rows triangle)
-      // 1 at the top, 10 in the center
       const finalRack = [
         1,                    // Top of the diamond - first ball
         shuffledBalls[0],     // Second row - left
@@ -74,26 +60,17 @@ export const RackGenerator = () => {
       setRack(finalRack);
       
     } else if (gameType === "8-ball") {
-      // 8-ball: 1-7 solids & 9-15 stripes mixed, 8 in center
-      
-      // Create arrays for solids and stripes
       const solids = [1, 2, 3, 4, 5, 6, 7];
       const stripes = [9, 10, 11, 12, 13, 14, 15];
       
-      // Shuffle solid and stripe arrays
       const shuffledSolids = [...solids].sort(() => Math.random() - 0.5);
       const shuffledStripes = [...stripes].sort(() => Math.random() - 0.5);
       
-      // Ensure we have one solid and one stripe at the back corners
       const firstCorner = Math.random() > 0.5 ? shuffledSolids.pop()! : shuffledStripes.pop()!;
       const secondCorner = firstCorner <= 8 ? shuffledStripes.pop()! : shuffledSolids.pop()!;
       
-      // Combine remaining balls, excluding 8 ball and corner balls
       const remainingBalls = [...shuffledSolids, ...shuffledStripes].sort(() => Math.random() - 0.5);
       
-      // Create the rack with proper 8-ball rules
-      // 15-ball triangle with 8-ball in the center
-      // First solid on one back corner, first stripe on other back corner
       const finalRack = [
         remainingBalls[0],     // Front (apex) - can be any ball, but typically 1
         remainingBalls[1],     // Second row - left
@@ -116,11 +93,10 @@ export const RackGenerator = () => {
     }
   };
 
-  // Get the rack layout based on game type
   const getRackLayout = () => {
     if (gameType === "9-ball") {
       return `
-        grid-cols-5 gap-[-15px] max-w-[120px] 
+        grid-cols-5 gap-[-20px] max-w-[100px] 
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2 
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -133,7 +109,7 @@ export const RackGenerator = () => {
       `;
     } else if (gameType === "10-ball") {
       return `
-        grid-cols-5 gap-[-15px] max-w-[120px]
+        grid-cols-5 gap-[-20px] max-w-[100px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -147,7 +123,7 @@ export const RackGenerator = () => {
       `;
     } else {
       return `
-        grid-cols-5 gap-[-15px] max-w-[120px]
+        grid-cols-5 gap-[-20px] max-w-[100px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -223,7 +199,7 @@ export const RackGenerator = () => {
         )}>
           {rack.length > 0 ? (
             <div className={cn(
-              "grid relative", 
+              "grid relative transform scale-125 md:scale-150", 
               getRackLayout(),
               "animate-fade-in"
             )}>
