@@ -49,10 +49,12 @@ export const PoolBall = ({ number, sizeClass = "w-10 h-10 md:w-11 md:h-11" }: Po
 
   // Adjust the number circle size based on the overall ball size
   const getNumberCircleSize = () => {
-    if (sizeClass.includes("w-8")) {
-      return "w-5 h-5 md:w-6 md:h-6"; // Smaller number circle for smaller balls
+    if (sizeClass.includes("w-12")) {
+      return "w-7 h-7 md:w-8 md:h-8"; // Larger number circle for larger balls
+    } else if (sizeClass.includes("w-11")) {
+      return "w-6 h-6 md:w-7 md:h-7"; // Medium number circle
     }
-    return "w-6 h-6 md:w-7 md:h-7"; // Default number circle size
+    return "w-6 h-6 md:w-6 md:h-6"; // Default number circle size
   };
 
   return (
