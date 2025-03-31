@@ -37,6 +37,15 @@ export const Scoreboard = ({
     }
   };
 
+  // Handle focus on input field to clear the value
+  const handleInputFocus = (player: "player1" | "player2") => {
+    if (player === "player1" && player1.name === "Player 1") {
+      setPlayer1({ ...player1, name: "" });
+    } else if (player === "player2" && player2.name === "Player 2") {
+      setPlayer2({ ...player2, name: "" });
+    }
+  };
+
   return (
     <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark hover:border-white/30 transition-all duration-300">
       <CardHeader>
@@ -55,7 +64,9 @@ export const Scoreboard = ({
               id="player1Name"
               value={player1.name}
               onChange={(e) => setPlayer1({ ...player1, name: e.target.value })}
+              onFocus={() => handleInputFocus("player1")}
               className="input-field"
+              placeholder="Enter name"
             />
           </div>
           <div className="space-y-2">
@@ -64,7 +75,9 @@ export const Scoreboard = ({
               id="player2Name"
               value={player2.name}
               onChange={(e) => setPlayer2({ ...player2, name: e.target.value })}
+              onFocus={() => handleInputFocus("player2")}
               className="input-field"
+              placeholder="Enter name"
             />
           </div>
         </div>
@@ -90,7 +103,7 @@ export const Scoreboard = ({
             "glass border-2 border-white/10 hover:border-white/30 transition-all duration-300",
             player1.score >= raceValue ? "bg-deadpunch-red/20 animate-pulse-glow" : ""
           )}>
-            <h3 className="text-xl font-semibold mb-1 truncate">{player1.name}</h3>
+            <h3 className="text-xl font-semibold mb-1 truncate">{player1.name || "Player 1"}</h3>
             <div className="text-4xl font-display font-bold mb-3 flex justify-center">
               {player1.score}
               {player1.score >= raceValue && (
@@ -122,7 +135,7 @@ export const Scoreboard = ({
             "glass border-2 border-white/10 hover:border-white/30 transition-all duration-300",
             player2.score >= raceValue ? "bg-deadpunch-red/20 animate-pulse-glow" : ""
           )}>
-            <h3 className="text-xl font-semibold mb-1 truncate">{player2.name}</h3>
+            <h3 className="text-xl font-semibold mb-1 truncate">{player2.name || "Player 2"}</h3>
             <div className="text-4xl font-display font-bold mb-3 flex justify-center">
               {player2.score}
               {player2.score >= raceValue && (

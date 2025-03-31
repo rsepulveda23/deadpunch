@@ -96,20 +96,20 @@ export const RackGenerator = () => {
       // 15-ball triangle with 8-ball in the center
       // First solid on one back corner, first stripe on other back corner
       const finalRack = [
-        1,                     // Front (apex) - can be any ball, but typically 1
-        remainingBalls[0],     // Second row - left
-        remainingBalls[1],     // Second row - right
-        remainingBalls[2],     // Third row - left
+        remainingBalls[0],     // Front (apex) - can be any ball, but typically 1
+        remainingBalls[1],     // Second row - left
+        remainingBalls[2],     // Second row - right
+        remainingBalls[3],     // Third row - left
         8,                     // Third row - middle (ALWAYS 8 ball)
-        remainingBalls[3],     // Third row - right
-        remainingBalls[4],     // Fourth row - left
-        remainingBalls[5],     // Fourth row - middle-left
-        remainingBalls[6],     // Fourth row - middle-right
-        remainingBalls[7],     // Fourth row - right
-        remainingBalls[8],     // Fifth row - left
-        remainingBalls[9],     // Fifth row - middle-left
-        remainingBalls[10],    // Fifth row - middle
-        remainingBalls[11],    // Fifth row - middle-right
+        remainingBalls[4],     // Third row - right
+        remainingBalls[5],     // Fourth row - left
+        remainingBalls[6],     // Fourth row - middle-left
+        remainingBalls[7],     // Fourth row - middle-right
+        remainingBalls[8],     // Fourth row - right
+        remainingBalls[9],     // Fifth row - left
+        remainingBalls[10],    // Fifth row - middle-left
+        remainingBalls[11],    // Fifth row - middle
+        remainingBalls[12],    // Fifth row - middle-right
         firstCorner,           // Fifth row - right corner (solid or stripe)
       ];
       
@@ -121,7 +121,7 @@ export const RackGenerator = () => {
   const getRackLayout = () => {
     if (gameType === "9-ball") {
       return `
-        grid-cols-5 gap-0 max-w-[210px]
+        grid-cols-5 gap-[-8px] max-w-[170px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2 
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -134,7 +134,7 @@ export const RackGenerator = () => {
       `;
     } else if (gameType === "10-ball") {
       return `
-        grid-cols-5 gap-0 max-w-[210px]
+        grid-cols-5 gap-[-8px] max-w-[170px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -148,7 +148,7 @@ export const RackGenerator = () => {
       `;
     } else {
       return `
-        grid-cols-5 gap-0 max-w-[210px]
+        grid-cols-5 gap-[-8px] max-w-[170px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
