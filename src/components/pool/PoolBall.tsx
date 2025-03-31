@@ -1,72 +1,71 @@
 
 import { cn } from "@/lib/utils";
 
-// Ball colors based on standard pool ball colors
+/**
+ * Color mapping for standard pool balls
+ * - Solid balls: 1-8
+ * - Striped balls: 9-15 (match colors with their solid counterparts)
+ * - 8 ball is black (special)
+ */
 const ballColors: Record<number, string> = {
   1: "bg-yellow-400 text-black", // Yellow
-  2: "bg-blue-600 text-white", // Blue
-  3: "bg-red-600 text-white", // Red
+  2: "bg-blue-600 text-white",   // Blue
+  3: "bg-red-600 text-white",    // Red
   4: "bg-purple-700 text-white", // Purple
   5: "bg-orange-600 text-white", // Orange
-  6: "bg-green-700 text-white", // Green
-  7: "bg-red-900 text-white", // Maroon/Burgundy
-  8: "bg-black text-white", // Black
+  6: "bg-green-700 text-white",  // Green
+  7: "bg-red-900 text-white",    // Maroon/Burgundy
+  8: "bg-black text-white",      // Black
   9: "bg-yellow-400 text-black", // Yellow with stripe (same as 1)
-  10: "bg-blue-600 text-white", // Blue with stripe (same as 2)
-  11: "bg-red-600 text-white", // Red with stripe (same as 3)
+  10: "bg-blue-600 text-white",  // Blue with stripe (same as 2)
+  11: "bg-red-600 text-white",   // Red with stripe (same as 3)
   12: "bg-purple-700 text-white", // Purple with stripe (same as 4)
   13: "bg-orange-600 text-white", // Orange with stripe (same as 5)
-  14: "bg-green-700 text-white", // Green with stripe (same as 6)
-  15: "bg-red-900 text-white", // Maroon/Burgundy with stripe (same as 7)
+  14: "bg-green-700 text-white",  // Green with stripe (same as 6)
+  15: "bg-red-900 text-white",    // Maroon/Burgundy with stripe (same as 7)
 };
 
 interface PoolBallProps {
+  /** The number on the pool ball (1-15) */
   number: number;
 }
 
-// Determine if a ball is striped
+/**
+ * Determines if a ball is striped based on its number
+ * In standard pool, balls 9-15 are striped variants of 1-7
+ */
 const isStriped = (number: number) => number >= 9 && number <= 15;
 
+/**
+ * PoolBall Component
+ * 
+ * Renders a pool ball with the appropriate color, pattern (solid/striped),
+ * and number according to standard pool ball conventions.
+ */
 export const PoolBall = ({ number }: PoolBallProps) => {
   const striped = isStriped(number);
 
   return (
     <div className={cn(
-      "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center font-bold",
+      "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center",
       "border border-white/20 shadow-lg",
       "relative overflow-hidden",
       ballColors[number]
     )}>
-      {/* Striped ball design */}
+      {/* Stripe pattern for balls 9-15 */}
       {striped && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="bg-white w-full h-1/3 absolute"></div>
         </div>
       )}
       
-      {/* Number display - consistent for all balls */}
+      {/* Number display - consistent circular white background for all balls */}
       <div className="z-10 relative flex items-center justify-center">
-        {striped ? (
-          // For striped balls: white circle on top of stripe
-          <div className="w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center">
-            <span className={cn(
-              "font-bold text-sm md:text-base",
-              ballColors[number].includes("text-black") ? "text-black" : "text-black"
-            )}>
-              {number}
-            </span>
-          </div>
-        ) : (
-          // For solid balls: number in white circle
-          <div className="w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center">
-            <span className={cn(
-              "font-bold text-sm md:text-base",
-              ballColors[number].includes("text-black") ? "text-black" : "text-black"
-            )}>
-              {number}
-            </span>
-          </div>
-        )}
+        <div className="w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center">
+          <span className="font-bold text-sm md:text-base text-black">
+            {number}
+          </span>
+        </div>
       </div>
     </div>
   );
