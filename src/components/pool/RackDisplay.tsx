@@ -25,7 +25,7 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
       `;
     } else if (gameType === "10-ball") {
       return `
-        grid-cols-5 gap-[-8px] max-w-[80px]
+        grid-cols-5 gap-2 max-w-[180px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -39,7 +39,7 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
       `;
     } else {
       return `
-        grid-cols-5 gap-[-8px] max-w-[80px]
+        grid-cols-5 gap-2 max-w-[240px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -54,7 +54,7 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
         [&>*:nth-child(12)]:col-start-1 [&>*:nth-child(12)]:col-end-2 [&>*:nth-child(12)]:row-start-5
         [&>*:nth-child(13)]:col-start-2 [&>*:nth-child(13)]:col-end-3 [&>*:nth-child(13)]:row-start-5
         [&>*:nth-child(14)]:col-start-3 [&>*:nth-child(14)]:col-end-4 [&>*:nth-child(14)]:row-start-5
-        [&>*:nth-child(14)]:col-start-4 [&>*:nth-child(14)]:col-end-5 [&>*:nth-child(14)]:row-start-5
+        [&>*:nth-child(15)]:col-start-4 [&>*:nth-child(15)]:col-end-5 [&>*:nth-child(15)]:row-start-5
         [&>*:nth-child(15)]:col-start-5 [&>*:nth-child(15)]:col-end-6 [&>*:nth-child(15)]:row-start-5
       `;
     }
