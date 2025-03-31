@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Button } from "@/components/ui/button";
@@ -152,7 +151,7 @@ const PoolTools = () => {
   const getRackLayout = () => {
     if (gameType === "9-ball") {
       return `
-        grid-cols-5 gap-0.5 max-w-[240px]
+        grid-cols-5 gap-0 max-w-[210px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2 
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -165,7 +164,7 @@ const PoolTools = () => {
       `;
     } else if (gameType === "10-ball") {
       return `
-        grid-cols-5 gap-0.5 max-w-[240px]
+        grid-cols-5 gap-0 max-w-[210px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -179,7 +178,7 @@ const PoolTools = () => {
       `;
     } else {
       return `
-        grid-cols-5 gap-0.5 max-w-[240px]
+        grid-cols-5 gap-0 max-w-[210px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -214,7 +213,7 @@ const PoolTools = () => {
 
     return (
       <div className={cn(
-        "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-sm md:text-base transition-all",
+        "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center font-bold text-sm md:text-base",
         "border border-white/10 shadow-lg",
         "relative overflow-hidden",
         ballColors[number]
@@ -226,7 +225,7 @@ const PoolTools = () => {
         )}
         <div className={cn(
           "z-10 flex items-center justify-center",
-          striped ? "w-full h-full" : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full"
+          striped ? "w-full h-full" : "w-5 h-5 md:w-6 md:h-6 bg-white rounded-full"
         )}>
           {number}
         </div>
