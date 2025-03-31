@@ -41,8 +41,12 @@ const isStriped = (number: number) => number >= 9 && number <= 15;
 /**
  * PoolBall Component
  * 
- * Renders a pool ball with the appropriate color, pattern (solid/striped),
- * and number according to standard pool ball conventions.
+ * Renders a visual representation of a pool ball with the appropriate:
+ * - Color based on standard pool ball colors
+ * - Pattern (solid or striped) based on ball number
+ * - Number displayed in a white circle for readability
+ * 
+ * Size can be controlled via the sizeClass prop for different game types.
  */
 export const PoolBall = ({ number, sizeClass = "w-10 h-10 md:w-11 md:h-11" }: PoolBallProps) => {
   const striped = isStriped(number);

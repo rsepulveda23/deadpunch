@@ -2,134 +2,119 @@
 import { GameType } from './GameTypeSelector';
 
 /**
- * Shuffles an array using the Fisher-Yates algorithm
- * @param array The array to shuffle
- * @returns A new shuffled array
- */
-const shuffleArray = <T>(array: T[]): T[] => {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-};
-
-/**
- * Generates a randomized rack layout based on the specified game type
- * @param gameType The type of pool game (9-ball, 10-ball, or 8-ball)
- * @returns Array of pool ball numbers in their rack positions
+ * Generates a randomized rack of pool balls based on game type
+ * 
+ * @param gameType - The type of pool game (8-ball, 9-ball, or 10-ball)
+ * @returns An array of ball numbers in their rack positions
  */
 export const generateRack = (gameType: GameType): number[] => {
+  let balls: number[] = [];
+  let availableBalls: number[] = [];
+
+  // Define available balls and rack size based on game type
   if (gameType === "9-ball") {
-    // In 9-ball, the specific positions are:
-    // 1 at the front (apex)
-    // 9 in the middle
-    // The rest (2-8) are placed randomly around these fixed positions
-    
-    const remainingBalls = [2, 3, 4, 5, 6, 7, 8];
-    // Shuffle the remaining balls for randomization
-    const shuffledBalls = shuffleArray(remainingBalls);
-    
-    // Create the rack with the fixed positions (1 at apex, 9 in middle)
-    const finalRack = [
-      1,  // Top of the diamond - first ball (always 1)
-      shuffledBalls[0],  // Second row - left
-      shuffledBalls[1],  // Second row - right
-      shuffledBalls[2],  // Third row - left
-      9,  // Third row - middle (ALWAYS ball 9)
-      shuffledBalls[3],  // Third row - right
-      shuffledBalls[4],  // Fourth row - left
-      shuffledBalls[5],  // Fourth row - right
-      shuffledBalls[6]   // Fifth row - bottom
-    ];
-    
-    return finalRack;
-    
+    availableBalls = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   } else if (gameType === "10-ball") {
-    // In 10-ball:
-    // 1 at the front (apex)
-    // 10 in the center (middle of third row)
-    // Remaining balls (2-9) placed randomly
-    
-    const availableBalls = [2, 3, 4, 5, 6, 7, 8, 9];
-    // Shuffle the available balls for randomization
-    const shuffledBalls = shuffleArray(availableBalls);
-    
-    // Create the rack with fixed positions (1 at apex, 10 in center of third row)
-    const finalRack = [
-      1,                  // First row (apex)
-      shuffledBalls[0],   // Second row - left
-      shuffledBalls[1],   // Second row - right
-      shuffledBalls[2],   // Third row - left
-      10,                 // Third row - middle (ALWAYS ball 10)
-      shuffledBalls[3],   // Third row - right
-      shuffledBalls[4],   // Fourth row - left
-      shuffledBalls[5],   // Fourth row - middle-left
-      shuffledBalls[6],   // Fourth row - middle-right
-      shuffledBalls[7],   // Fourth row - right
-    ];
-    
-    return finalRack;
-    
-  } else if (gameType === "8-ball") {
-    // In 8-ball:
-    // Ball 1 (yellow) must be at the apex according to standard rules
-    // 8-ball must be in the center of the third row
-    // A mix of solids (1-7) and stripes (9-15)
-    // One solid and one stripe must be at the back corners
-    
-    // For solids, we exclude 1 (apex) and 8 (center)
-    const solids = [2, 3, 4, 5, 6, 7];
-    const stripes = [9, 10, 11, 12, 13, 14, 15];
-    
-    // Shuffle the solids and stripes arrays
-    const shuffledSolids = shuffleArray(solids);
-    const shuffledStripes = shuffleArray(stripes);
-    
-    // One solid and one stripe must be at the back corners (positions 11 and 15)
-    const cornerSolid = shuffledSolids.shift()!;
-    const cornerStripe = shuffledStripes.shift()!;
-    
-    // Combine and shuffle the remaining balls
-    const remainingBalls = shuffleArray([...shuffledSolids, ...shuffledStripes]);
-    
-    // Create the full rack with the fixed positions (5 rows triangle)
-    const finalRack = [
-      1,                  // First row (apex) - ALWAYS ball 1 (yellow)
-      remainingBalls[0],  // Second row - left
-      remainingBalls[1],  // Second row - right
-      remainingBalls[2],  // Third row - left
-      8,                  // Third row - middle (ALWAYS 8 ball)
-      remainingBalls[3],  // Third row - right
-      remainingBalls[4],  // Fourth row - left
-      remainingBalls[5],  // Fourth row - middle-left
-      remainingBalls[6],  // Fourth row - middle-right
-      remainingBalls[7],  // Fourth row - right
-      cornerSolid,        // Fifth row - left
-      remainingBalls[8],  // Fifth row - left-center
-      remainingBalls[9],  // Fifth row - middle
-      remainingBalls[10], // Fifth row - right-center
-      cornerStripe,       // Fifth row - right
-    ];
-    
-    return finalRack;
+    availableBalls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  } else { // 8-ball
+    // For 8-ball, we use all 15 balls
+    availableBalls = Array.from({ length: 15 }, (_, i) => i + 1);
   }
-  
-  return [];
+
+  // Handle special ball requirements for different game types
+  if (gameType === "9-ball") {
+    // In 9-ball, the 1 ball must be at the apex (front) and 9 ball in the center
+    const oneIndex = availableBalls.indexOf(1);
+    availableBalls.splice(oneIndex, 1);
+    
+    const nineIndex = availableBalls.indexOf(9);
+    availableBalls.splice(nineIndex, 1);
+    
+    balls.push(1); // 1 ball at the apex
+    
+    // Randomize remaining balls
+    shuffleArray(availableBalls);
+    
+    // Insert 9 ball in the center (position 4 in a 9-ball rack)
+    const centerPosition = 4;
+    balls = [
+      ...balls,
+      ...availableBalls.slice(0, centerPosition),
+      9,
+      ...availableBalls.slice(centerPosition)
+    ];
+  } else if (gameType === "10-ball") {
+    // In 10-ball, the 1 ball must be at the apex (front) and 10 ball in the center
+    const oneIndex = availableBalls.indexOf(1);
+    availableBalls.splice(oneIndex, 1);
+    
+    const tenIndex = availableBalls.indexOf(10);
+    availableBalls.splice(tenIndex, 1);
+    
+    balls.push(1); // 1 ball at the apex
+    
+    // Randomize remaining balls
+    shuffleArray(availableBalls);
+    
+    // Insert 10 ball in the center (position 4 in a 10-ball rack)
+    const centerPosition = 4;
+    balls = [
+      ...balls,
+      ...availableBalls.slice(0, centerPosition),
+      10,
+      ...availableBalls.slice(centerPosition)
+    ];
+  } else { // 8-ball
+    // In 8-ball, the 8 ball must be in the center
+    const eightIndex = availableBalls.indexOf(8);
+    availableBalls.splice(eightIndex, 1);
+    
+    // Randomize remaining balls
+    shuffleArray(availableBalls);
+    
+    // Create outer rack with random balls
+    const outerRack = availableBalls;
+    
+    // Insert 8 ball in the center (position 4 in the 3rd row)
+    const firstRowCount = 1;
+    const secondRowCount = 2;
+    const thirdRowCount = 3;
+    const centerPosition = firstRowCount + secondRowCount + Math.floor(thirdRowCount / 2);
+    
+    balls = [
+      ...outerRack.slice(0, centerPosition),
+      8,
+      ...outerRack.slice(centerPosition)
+    ];
+  }
+
+  return balls;
 };
 
 /**
- * Returns game-specific rules as a string description
- * @param gameType The type of pool game
- * @returns A string describing the rack setup rules
+ * Gets rule information for a specific pool game type
+ * 
+ * @param gameType - The type of pool game (8-ball, 9-ball, or 10-ball) 
+ * @returns A string containing the rules description
  */
 export const getGameRules = (gameType: GameType): string => {
   if (gameType === "9-ball") {
-    return "Ball 1 (yellow) at the apex, ball 9 (striped yellow) in the center, others randomly placed in a diamond formation.";
+    return "Target the lowest numbered ball first. Pocketing the 9-ball at any legal time wins the game. Diamond formation with 1-ball at the apex.";
   } else if (gameType === "10-ball") {
-    return "Ball 1 (yellow) at the apex, ball 10 (striped blue) in the center of the third row with a proper triangle formation: 1 ball in first row, 2 in second, 3 in third, and 4 in the fourth row.";
-  } else {
-    return "A proper triangle with 5 rows: Ball 1 (yellow) always at the apex, the 8-ball (black) in the center of the third row, with a mix of solids and stripes. One solid and one stripe must be placed at the back corners.";
+    return "Call pocket and call safety rules. The 10-ball must be pocketed in the called pocket. Triangle formation with 1-ball at the apex.";
+  } else { // 8-ball
+    return "Rack consists of 7 solid, 7 striped, and the 8-ball. The 8-ball must be pocketed in the called pocket after clearing your group.";
+  }
+};
+
+/**
+ * Fisher-Yates shuffle algorithm for randomizing arrays in-place
+ * 
+ * @param array - The array to be shuffled
+ */
+const shuffleArray = (array: number[]): void => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
 };

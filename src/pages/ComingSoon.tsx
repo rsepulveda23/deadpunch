@@ -1,26 +1,25 @@
 
 import React, { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import Navbar from '@/components/Navbar';
-import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { saveEmailSubscription } from '@/lib/supabase';
 import { Button } from "@/components/ui/button";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { NotificationDialog } from '@/components/coming-soon/NotificationDialog';
 
 interface ComingSoonProps {
   category?: string;
   subcategory?: string;
 }
 
+/**
+ * ComingSoon Page
+ * 
+ * A placeholder page for upcoming products, features, or sections of the app.
+ * Allows users to sign up for notifications when the content becomes available.
+ * 
+ * @param {string} [category] - Optional category name, falls back to URL param
+ * @param {string} [subcategory] - Optional subcategory name, falls back to URL param
+ */
 const ComingSoon = ({ category: propCategory, subcategory: propSubcategory }: ComingSoonProps = {}) => {
   // Extract route parameters
   const params = useParams();
@@ -29,78 +28,8 @@ const ComingSoon = ({ category: propCategory, subcategory: propSubcategory }: Co
   const category = propCategory || params.category || 'Product';
   const subcategory = propSubcategory || params.tool || params.category || 'Feature';
   
-  // Add navigate for proper navigation handling
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  // State for dialog control
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { toast } = useToast();
-
-  // Handle dialog closing without redirecting
-  const handleDialogChange = (open: boolean) => {
-    setIsDialogOpen(open);
-    // Don't do anything else when dialog closes - this prevents page navigation
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !email.includes('@')) {
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    try {
-      const result = await saveEmailSubscription(email, {
-        category, 
-        subcategory,
-        source: 'coming_soon_page'
-      });
-      
-      if (result.success) {
-        setIsSuccess(true);
-        
-        if (result.mock) {
-          toast({
-            title: "Development Mode",
-            description: "Email saved in development mode. Connect Supabase to enable database storage.",
-            variant: "default"
-          });
-        } else {
-          toast({
-            title: "Success!",
-            description: "You've been added to our notification list.",
-            variant: "default"
-          });
-        }
-        
-        // Reset the form after 2 seconds but don't navigate away
-        setTimeout(() => {
-          setEmail('');
-          setIsSuccess(false);
-          setIsDialogOpen(false);
-        }, 2000);
-      } else {
-        throw new Error('Failed to save subscription');
-      }
-    } catch (error) {
-      console.error('Error in form submission:', error);
-      toast({
-        title: "Something went wrong",
-        description: "There was an error submitting your email. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-deadpunch-dark flex flex-col">
@@ -138,64 +67,13 @@ const ComingSoon = ({ category: propCategory, subcategory: propSubcategory }: Co
                 </Link>
               </Button>
               
-              {/* Updated Dialog to use our custom handler */}
-              <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
-                <DialogTrigger asChild>
-                  <Button>
-                    Notify Me When Available
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark text-white">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-white">Get Notified</DialogTitle>
-                    <DialogDescription className="text-deadpunch-gray-light">
-                      We'll let you know when {category} {subcategory} become available.
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="text-sm font-medium text-deadpunch-gray-light">
-                        Email address
-                      </label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Your email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-                        disabled={isSubmitting || isSuccess}
-                        required
-                      />
-                    </div>
-                    
-                    <Button
-                      type="submit"
-                      className={`w-full ${
-                        isSuccess 
-                          ? 'bg-green-600 hover:bg-green-700 text-white' 
-                          : ''
-                      }`}
-                      disabled={isSubmitting || isSuccess}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="animate-spin" size={18} />
-                          <span>Submitting...</span>
-                        </>
-                      ) : isSuccess ? (
-                        <>
-                          <CheckCircle size={18} />
-                          <span>Subscribed!</span>
-                        </>
-                      ) : (
-                        'Notify Me'
-                      )}
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              {/* Notification dialog with extracted component */}
+              <NotificationDialog 
+                category={category}
+                subcategory={subcategory}
+                isOpen={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+              />
             </div>
           </div>
         </div>

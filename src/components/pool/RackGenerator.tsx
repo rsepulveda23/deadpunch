@@ -11,7 +11,8 @@ import { generateRack, getGameRules } from './rackGeneratorUtils';
  * RackGenerator Component
  * 
  * A tool for generating randomized rack layouts for different pool games.
- * Allows users to select game type and generate valid rack configurations.
+ * Allows users to select game type (8-ball, 9-ball, 10-ball) and generate
+ * valid rack configurations that follow tournament rack rules.
  */
 export const RackGenerator = () => {
   // State for the current game type and rack configuration
@@ -26,6 +27,8 @@ export const RackGenerator = () => {
 
   /**
    * Generates a new randomized rack layout based on the selected game type
+   * This ensures different balls are placed in different positions each time
+   * while respecting the rules for each game type.
    */
   const generateRackLayout = () => {
     const newRack = generateRack(gameType);

@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { PlayerScore } from './player/PlayerScore';
 import { RaceToSelector } from './race/RaceToSelector';
 import { toast } from 'sonner';
+import { useScoreboardStorage } from './hooks/useScoreboardStorage';
 
 interface Player {
   name: string;
@@ -19,15 +20,6 @@ interface ScoreboardProps {
   initialPlayer2?: Player;
   initialRaceValue?: number;
 }
-
-interface ScoreboardState {
-  player1: Player;
-  player2: Player;
-  raceValue: number;
-  lastUpdated: string;
-}
-
-const STORAGE_KEY = 'deadpunch-pool-scoreboard';
 
 /**
  * Scoreboard Component
@@ -41,51 +33,17 @@ export const Scoreboard = ({
   initialPlayer2 = { name: "Player 2", score: 0 },
   initialRaceValue = 9
 }: ScoreboardProps) => {
-  // Initialize state from localStorage or defaults
-  const [player1, setPlayer1] = useState<Player>(initialPlayer1);
-  const [player2, setPlayer2] = useState<Player>(initialPlayer2);
-  const [raceValue, setRaceValue] = useState(initialRaceValue);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  // Load saved state from localStorage on component mount
-  useEffect(() => {
-    try {
-      const savedState = localStorage.getItem(STORAGE_KEY);
-      if (savedState) {
-        const parsedState = JSON.parse(savedState) as ScoreboardState;
-        setPlayer1(parsedState.player1);
-        setPlayer2(parsedState.player2);
-        setRaceValue(parsedState.raceValue);
-        
-        // Show toast notification about restored state
-        const lastUpdated = new Date(parsedState.lastUpdated);
-        const timeAgo = getTimeAgo(lastUpdated);
-        toast.info(`Scoreboard restored from ${timeAgo}`);
-      }
-    } catch (error) {
-      console.error("Error loading scoreboard data:", error);
-    } finally {
-      setIsLoaded(true);
-    }
-  }, []);
-
-  // Save state to localStorage whenever it changes
-  useEffect(() => {
-    if (!isLoaded) return; // Skip initial render to prevent overwriting with defaults
-
-    const stateToSave: ScoreboardState = {
-      player1,
-      player2,
-      raceValue,
-      lastUpdated: new Date().toISOString()
-    };
-
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
-    } catch (error) {
-      console.error("Error saving scoreboard data:", error);
-    }
-  }, [player1, player2, raceValue, isLoaded]);
+  // Use custom hook to manage scoreboard state with persistence
+  const { 
+    player1, 
+    player2, 
+    raceValue, 
+    updatePlayer1, 
+    updatePlayer2,
+    updateRaceValue,
+    resetScores,
+    resetAll
+  } = useScoreboardStorage(initialPlayer1, initialPlayer2, initialRaceValue);
 
   /**
    * Handles score changes for a specific player
@@ -94,9 +52,9 @@ export const Scoreboard = ({
    */
   const handleScoreChange = (player: "player1" | "player2", change: number) => {
     if (player === "player1") {
-      setPlayer1(prev => ({ ...prev, score: Math.max(0, prev.score + change) }));
+      updatePlayer1({ ...player1, score: Math.max(0, player1.score + change) });
     } else {
-      setPlayer2(prev => ({ ...prev, score: Math.max(0, prev.score + change) }));
+      updatePlayer2({ ...player2, score: Math.max(0, player2.score + change) });
     }
   };
 
@@ -107,9 +65,9 @@ export const Scoreboard = ({
    */
   const handleInputFocus = (player: "player1" | "player2") => {
     if (player === "player1" && player1.name === "Player 1") {
-      setPlayer1({ ...player1, name: "" });
+      updatePlayer1({ ...player1, name: "" });
     } else if (player === "player2" && player2.name === "Player 2") {
-      setPlayer2({ ...player2, name: "" });
+      updatePlayer2({ ...player2, name: "" });
     }
   };
 
@@ -120,46 +78,26 @@ export const Scoreboard = ({
    */
   const handleNameChange = (player: "player1" | "player2", name: string) => {
     if (player === "player1") {
-      setPlayer1({ ...player1, name });
+      updatePlayer1({ ...player1, name });
     } else {
-      setPlayer2({ ...player2, name });
+      updatePlayer2({ ...player2, name });
     }
   };
 
   /**
    * Resets both players' scores to zero and shows notification
    */
-  const resetScores = () => {
-    setPlayer1({ ...player1, score: 0 });
-    setPlayer2({ ...player2, score: 0 });
+  const handleResetScores = () => {
+    resetScores();
     toast.success('Scores reset to zero');
   };
 
   /**
    * Completely reset all scoreboard data including names and race value
    */
-  const resetAll = () => {
-    setPlayer1(initialPlayer1);
-    setPlayer2(initialPlayer2);
-    setRaceValue(initialRaceValue);
+  const handleResetAll = () => {
+    resetAll();
     toast.success('Scoreboard completely reset');
-  };
-
-  /**
-   * Helper function to format the time ago for toast notifications
-   */
-  const getTimeAgo = (date: Date): string => {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffSecs = Math.floor(diffMs / 1000);
-    const diffMins = Math.floor(diffSecs / 60);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffDays > 0) return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-    if (diffHours > 0) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-    if (diffMins > 0) return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
-    return 'just now';
   };
 
   return (
@@ -218,20 +156,20 @@ export const Scoreboard = ({
         {/* Race To section */}
         <div className="mt-6">
           <Separator className="bg-deadpunch-gray-dark mb-4" />
-          <RaceToSelector value={raceValue} onChange={setRaceValue} />
+          <RaceToSelector value={raceValue} onChange={updateRaceValue} />
         </div>
 
         {/* Reset buttons */}
         <div className="flex justify-center gap-4 mt-4">
           <Button 
-            onClick={resetScores}
+            onClick={handleResetScores}
             variant="outline"
             className="border-white/20 hover:border-white/70"
           >
             Reset Scores
           </Button>
           <Button 
-            onClick={resetAll}
+            onClick={handleResetAll}
             variant="outline"
             className="border-deadpunch-red/20 hover:border-deadpunch-red/70 text-deadpunch-red"
           >

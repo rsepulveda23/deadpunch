@@ -7,9 +7,13 @@ import { RackGenerator } from "@/components/pool/RackGenerator";
 /**
  * PoolTools Page
  * 
- * A dedicated page containing essential tools for pool/billiards players:
- * - Scoreboard: Keep track of scores in various game formats with customizable race targets
- * - Rack Generator: Create randomized, tournament-legal rack layouts for different pool games
+ * A dedicated page containing useful tools for pool/billiards players:
+ * 
+ * Features:
+ * - Scoreboard: For tracking games between two players with customizable race targets
+ * - Rack Generator: Creates randomized, tournament-legal rack layouts for different pool games
+ * 
+ * The tools are responsive and designed to be used on both desktop and mobile devices.
  */
 const PoolTools = () => {
   return (
