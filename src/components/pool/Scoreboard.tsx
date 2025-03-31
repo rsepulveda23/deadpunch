@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from 'sonner';
@@ -43,17 +42,42 @@ export const Scoreboard = ({
     resetAll
   } = useScoreboardStorage(initialPlayer1, initialPlayer2, initialRaceValue);
 
+  // Track the previous race value to detect changes
+  const [previousRaceValue, setPreviousRaceValue] = useState(raceValue);
+
   /**
    * Handles score changes for a specific player
    * @param player The player identifier ("player1" or "player2")
    * @param change The amount to change the score by
    */
   const handleScoreChange = (player: "player1" | "player2", change: number) => {
-    if (player === "player1") {
-      updatePlayer1({ ...player1, score: Math.max(0, player1.score + change) });
-    } else {
-      updatePlayer2({ ...player2, score: Math.max(0, player2.score + change) });
+    // Get the current player data
+    const currentPlayer = player === "player1" ? player1 : player2;
+    
+    // Calculate the new score
+    const newScore = Math.max(0, currentPlayer.score + change);
+    
+    // Check if player is trying to increase score beyond race value
+    if (change > 0 && currentPlayer.score >= raceValue) {
+      toast.error(`${currentPlayer.name} has already won! Adjust the race value to continue.`);
+      return;
     }
+    
+    // Otherwise update the score
+    if (player === "player1") {
+      updatePlayer1({ ...player1, score: newScore });
+    } else {
+      updatePlayer2({ ...player2, score: newScore });
+    }
+  };
+
+  /**
+   * Handles the race value change, updating the previous race value
+   * @param newValue The new race value
+   */
+  const handleRaceValueChange = (newValue: number) => {
+    setPreviousRaceValue(raceValue);
+    updateRaceValue(newValue);
   };
 
   /**
@@ -95,6 +119,7 @@ export const Scoreboard = ({
    */
   const handleResetAll = () => {
     resetAll();
+    setPreviousRaceValue(initialRaceValue);
     toast.success('Scoreboard completely reset');
   };
 
@@ -121,7 +146,7 @@ export const Scoreboard = ({
         {/* Race To section and reset buttons */}
         <ScoreboardControls 
           raceValue={raceValue}
-          onRaceValueChange={updateRaceValue}
+          onRaceValueChange={handleRaceValueChange}
           onResetScores={handleResetScores}
           onResetAll={handleResetAll}
         />

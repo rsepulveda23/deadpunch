@@ -19,6 +19,7 @@ interface PlayerScoreProps {
  * 
  * Displays a player's name and score, with controls to increment or decrement
  * the score. Shows a trophy icon when the player reaches the race target.
+ * Disables the increment button when the player has reached the race value.
  */
 export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScoreProps) => {
   const hasWon = player.score >= raceValue;
@@ -48,7 +49,12 @@ export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScorePro
         <Button 
           size="icon" 
           onClick={() => onScoreChange(1)}
-          className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
+          className={cn(
+            "bg-deadpunch-red hover:bg-deadpunch-red-hover",
+            hasWon && "opacity-50 cursor-not-allowed"
+          )}
+          disabled={hasWon}
+          title={hasWon ? "Player has won. Adjust race value to continue." : "Increment score"}
         >
           <Plus size={18} />
         </Button>
