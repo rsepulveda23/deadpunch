@@ -1,7 +1,11 @@
 
 import { GameType } from './GameTypeSelector';
 
-// Helper function to shuffle array using Fisher-Yates algorithm
+/**
+ * Shuffles an array using the Fisher-Yates algorithm
+ * @param array The array to shuffle
+ * @returns A new shuffled array
+ */
 const shuffleArray = <T>(array: T[]): T[] => {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -11,6 +15,11 @@ const shuffleArray = <T>(array: T[]): T[] => {
   return newArray;
 };
 
+/**
+ * Generates a randomized rack layout based on the specified game type
+ * @param gameType The type of pool game (9-ball, 10-ball, or 8-ball)
+ * @returns Array of pool ball numbers in their rack positions
+ */
 export const generateRack = (gameType: GameType): number[] => {
   if (gameType === "9-ball") {
     // In 9-ball, the specific positions are:
@@ -110,6 +119,11 @@ export const generateRack = (gameType: GameType): number[] => {
   return [];
 };
 
+/**
+ * Returns game-specific rules as a string description
+ * @param gameType The type of pool game
+ * @returns A string describing the rack setup rules
+ */
 export const getGameRules = (gameType: GameType): string => {
   if (gameType === "9-ball") {
     return "Ball 1 (yellow) at the apex, ball 9 (striped yellow) in the center, others randomly placed in a diamond formation.";

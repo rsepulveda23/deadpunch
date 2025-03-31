@@ -4,12 +4,23 @@ import { cn } from "@/lib/utils";
 import { GameType } from './GameTypeSelector';
 
 interface RackDisplayProps {
+  /** The current game type */
   gameType: GameType;
+  /** Array of ball numbers in their rack positions */
   rack: number[];
 }
 
+/**
+ * RackDisplay Component
+ * 
+ * Visualizes the pool ball rack based on the selected game type
+ * and the provided array of ball numbers.
+ */
 export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
-  // Function to get the appropriate layout classes based on game type
+  /**
+   * Returns the CSS grid layout classes based on the game type
+   * Each game type has a different formation pattern
+   */
   const getRackLayout = () => {
     if (gameType === "9-ball") {
       // Diamond formation for 9-ball
@@ -26,7 +37,7 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
         [&>*:nth-child(9)]:col-start-3 [&>*:nth-child(9)]:col-end-4 [&>*:nth-child(9)]:row-start-5
       `;
     } else if (gameType === "10-ball") {
-      // Updated triangle formation for 10-ball (4 rows)
+      // Triangle formation for 10-ball (4 rows)
       // First row: 1 ball
       // Second row: 2 balls
       // Third row: 3 balls (with 10 ball in the middle)
@@ -46,7 +57,7 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
       `;
     } else {
       // Triangle formation for 8-ball (5 rows)
-      // Using the same positioning convention as 10-ball with an extra row
+      // Full pyramid arrangement with 15 balls
       return `
         grid-cols-9 gap-1 md:gap-2 max-w-[280px]
         [&>*:nth-child(1)]:col-start-5 [&>*:nth-child(1)]:col-end-6 [&>*:nth-child(1)]:row-start-1

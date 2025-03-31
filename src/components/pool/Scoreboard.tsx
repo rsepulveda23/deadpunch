@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Minus, Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { PlayerScore } from './player/PlayerScore';
+import { RaceToSelector } from './race/RaceToSelector';
 
 interface Player {
   name: string;
@@ -19,6 +19,12 @@ interface ScoreboardProps {
   initialRaceValue?: number;
 }
 
+/**
+ * Scoreboard Component
+ * 
+ * A tool for keeping track of scores in pool games.
+ * Features player name inputs, score tracking, and "race to" target adjustment.
+ */
 export const Scoreboard = ({
   initialPlayer1 = { name: "Player 1", score: 0 },
   initialPlayer2 = { name: "Player 2", score: 0 },
@@ -28,7 +34,11 @@ export const Scoreboard = ({
   const [player2, setPlayer2] = useState<Player>(initialPlayer2);
   const [raceValue, setRaceValue] = useState(initialRaceValue);
 
-  // Handle score changes
+  /**
+   * Handles score changes for a specific player
+   * @param player The player identifier ("player1" or "player2")
+   * @param change The amount to change the score by
+   */
   const handleScoreChange = (player: "player1" | "player2", change: number) => {
     if (player === "player1") {
       setPlayer1(prev => ({ ...prev, score: Math.max(0, prev.score + change) }));
@@ -37,13 +47,25 @@ export const Scoreboard = ({
     }
   };
 
-  // Handle focus on input field to clear the value
+  /**
+   * Handles focus on player name input fields
+   * Clears the default placeholder text when focused
+   * @param player The player identifier
+   */
   const handleInputFocus = (player: "player1" | "player2") => {
     if (player === "player1" && player1.name === "Player 1") {
       setPlayer1({ ...player1, name: "" });
     } else if (player === "player2" && player2.name === "Player 2") {
       setPlayer2({ ...player2, name: "" });
     }
+  };
+
+  /**
+   * Resets both players' scores to zero
+   */
+  const resetScores = () => {
+    setPlayer1({ ...player1, score: 0 });
+    setPlayer2({ ...player2, score: 0 });
   };
 
   return (
@@ -57,6 +79,7 @@ export const Scoreboard = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Player name inputs */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="player1Name">Player 1</Label>
@@ -84,117 +107,30 @@ export const Scoreboard = ({
           </div>
         </div>
 
+        {/* Player score displays */}
         <div className="grid grid-cols-2 gap-8">
-          {/* Player 1 Score */}
-          <div className={cn(
-            "p-4 rounded-lg text-center relative overflow-hidden",
-            "glass border-2 border-white/10 hover:border-white/30 transition-all duration-300",
-            player1.score >= raceValue ? "bg-deadpunch-red/20 animate-pulse-glow" : ""
-          )}>
-            <h3 className="text-xl font-semibold mb-1 truncate">{player1.name || "Player 1"}</h3>
-            <div className="text-4xl font-display font-bold mb-3 flex justify-center">
-              {player1.score}
-              {player1.score >= raceValue && (
-                <span className="text-deadpunch-red ml-2">🏆</span>
-              )}
-            </div>
-            <div className="flex justify-center space-x-2">
-              <Button 
-                size="icon" 
-                variant="outline"
-                onClick={() => handleScoreChange("player1", -1)}
-                className="hover:border-white/50 hover:bg-deadpunch-dark/50"
-              >
-                <Minus size={18} />
-              </Button>
-              <Button 
-                size="icon" 
-                onClick={() => handleScoreChange("player1", 1)}
-                className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
-              >
-                <Plus size={18} />
-              </Button>
-            </div>
-          </div>
-
-          {/* Player 2 Score */}
-          <div className={cn(
-            "p-4 rounded-lg text-center relative overflow-hidden",
-            "glass border-2 border-white/10 hover:border-white/30 transition-all duration-300",
-            player2.score >= raceValue ? "bg-deadpunch-red/20 animate-pulse-glow" : ""
-          )}>
-            <h3 className="text-xl font-semibold mb-1 truncate">{player2.name || "Player 2"}</h3>
-            <div className="text-4xl font-display font-bold mb-3 flex justify-center">
-              {player2.score}
-              {player2.score >= raceValue && (
-                <span className="text-deadpunch-red ml-2">🏆</span>
-              )}
-            </div>
-            <div className="flex justify-center space-x-2">
-              <Button 
-                size="icon" 
-                variant="outline"
-                onClick={() => handleScoreChange("player2", -1)}
-                className="hover:border-white/50 hover:bg-deadpunch-dark/50"
-              >
-                <Minus size={18} />
-              </Button>
-              <Button 
-                size="icon" 
-                onClick={() => handleScoreChange("player2", 1)}
-                className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
-              >
-                <Plus size={18} />
-              </Button>
-            </div>
-          </div>
+          <PlayerScore 
+            player={player1} 
+            raceValue={raceValue} 
+            onScoreChange={(change) => handleScoreChange("player1", change)} 
+          />
+          <PlayerScore 
+            player={player2} 
+            raceValue={raceValue} 
+            onScoreChange={(change) => handleScoreChange("player2", change)} 
+          />
         </div>
 
-        {/* Race To section - updated to center between the player boxes */}
+        {/* Race To section */}
         <div className="mt-6">
           <Separator className="bg-deadpunch-gray-dark mb-4" />
-          
-          <div className="text-center">
-            <Label htmlFor="raceValue" className="text-lg font-semibold block mb-2">Race To</Label>
-            
-            <div className="flex items-center justify-center">
-              <div className="flex-1 flex justify-end">
-                <Button 
-                  size="icon" 
-                  variant="outline"
-                  onClick={() => setRaceValue(prev => Math.max(1, prev - 1))}
-                  className="hover:border-white/50 hover:bg-deadpunch-dark/50"
-                >
-                  <Minus size={16} />
-                </Button>
-              </div>
-              
-              <div className={cn(
-                "mx-3 text-4xl font-display font-bold",
-                "text-[#FEF7CD]" // Yellow color for the race number
-              )}>
-                {raceValue}
-              </div>
-              
-              <div className="flex-1 flex justify-start">
-                <Button 
-                  size="icon"
-                  onClick={() => setRaceValue(prev => prev + 1)}
-                  className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
-                >
-                  <Plus size={16} />
-                </Button>
-              </div>
-            </div>
-          </div>
+          <RaceToSelector value={raceValue} onChange={setRaceValue} />
         </div>
 
+        {/* Reset button */}
         <div className="flex justify-center mt-4">
           <Button 
-            onClick={() => {
-              setPlayer1({ ...player1, score: 0 });
-              setPlayer2({ ...player2, score: 0 });
-            }}
+            onClick={resetScores}
             variant="outline"
             className="border-white/20 hover:border-white/70"
           >

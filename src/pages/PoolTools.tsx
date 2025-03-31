@@ -4,6 +4,13 @@ import Navbar from "@/components/Navbar";
 import { Scoreboard } from "@/components/pool/Scoreboard";
 import { RackGenerator } from "@/components/pool/RackGenerator";
 
+/**
+ * PoolTools Page
+ * 
+ * A page containing various tools for pool/billiards players:
+ * - Scoreboard: Keep track of scores in pool games
+ * - Rack Generator: Create randomized rack layouts for different pool games
+ */
 const PoolTools = () => {
   return (
     <>
