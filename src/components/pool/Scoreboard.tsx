@@ -65,6 +65,7 @@ export const Scoreboard = ({
               value={player1.name}
               onChange={(e) => setPlayer1({ ...player1, name: e.target.value })}
               onFocus={() => handleInputFocus("player1")}
+              onClick={() => handleInputFocus("player1")}
               className="input-field"
               placeholder="Enter name"
             />
@@ -76,6 +77,7 @@ export const Scoreboard = ({
               value={player2.name}
               onChange={(e) => setPlayer2({ ...player2, name: e.target.value })}
               onFocus={() => handleInputFocus("player2")}
+              onClick={() => handleInputFocus("player2")}
               className="input-field"
               placeholder="Enter name"
             />

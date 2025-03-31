@@ -121,7 +121,7 @@ export const RackGenerator = () => {
   const getRackLayout = () => {
     if (gameType === "9-ball") {
       return `
-        grid-cols-5 gap-[-8px] max-w-[170px]
+        grid-cols-5 gap-0 max-w-[140px] 
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2 
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -134,7 +134,7 @@ export const RackGenerator = () => {
       `;
     } else if (gameType === "10-ball") {
       return `
-        grid-cols-5 gap-[-8px] max-w-[170px]
+        grid-cols-5 gap-0 max-w-[140px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -148,7 +148,7 @@ export const RackGenerator = () => {
       `;
     } else {
       return `
-        grid-cols-5 gap-[-8px] max-w-[170px]
+        grid-cols-5 gap-0 max-w-[140px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
