@@ -25,7 +25,7 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
     if (gameType === "9-ball") {
       // Diamond formation for 9-ball
       return `
-        grid-cols-5 gap-1 md:gap-2 max-w-[180px] 
+        grid-cols-5 gap-0.5 md:gap-1 max-w-[160px] 
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2 
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -43,7 +43,7 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
       // Third row: 3 balls (with 10 ball in the middle)
       // Fourth row: 4 balls
       return `
-        grid-cols-7 gap-1 md:gap-2 max-w-[250px]
+        grid-cols-7 gap-0.5 md:gap-1 max-w-[230px]
         [&>*:nth-child(1)]:col-start-4 [&>*:nth-child(1)]:col-end-5 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-3 [&>*:nth-child(2)]:col-end-4 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-5 [&>*:nth-child(3)]:col-end-6 [&>*:nth-child(3)]:row-start-2
@@ -79,6 +79,14 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
     }
   };
 
+  // Also adjust the ball size based on game type for better proportions
+  const getBallSizeClass = () => {
+    if (gameType === "9-ball" || gameType === "10-ball") {
+      return "w-8 h-8 md:w-9 md:h-9"; // Slightly smaller balls for 9-ball and 10-ball
+    }
+    return "w-10 h-10 md:w-11 md:h-11"; // Original size for 8-ball
+  };
+
   return (
     <div className={cn(
       "min-h-[280px] flex items-center justify-center p-6 rounded-lg",
@@ -92,7 +100,11 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
           "animate-fade-in"
         )}>
           {rack.map((ball, index) => (
-            <PoolBall key={index} number={ball} />
+            <PoolBall 
+              key={index} 
+              number={ball} 
+              sizeClass={getBallSizeClass()}
+            />
           ))}
         </div>
       ) : (

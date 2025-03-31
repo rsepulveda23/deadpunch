@@ -28,6 +28,8 @@ const ballColors: Record<number, string> = {
 interface PoolBallProps {
   /** The number on the pool ball (1-15) */
   number: number;
+  /** Optional class to control the ball size */
+  sizeClass?: string;
 }
 
 /**
@@ -42,12 +44,21 @@ const isStriped = (number: number) => number >= 9 && number <= 15;
  * Renders a pool ball with the appropriate color, pattern (solid/striped),
  * and number according to standard pool ball conventions.
  */
-export const PoolBall = ({ number }: PoolBallProps) => {
+export const PoolBall = ({ number, sizeClass = "w-10 h-10 md:w-11 md:h-11" }: PoolBallProps) => {
   const striped = isStriped(number);
+
+  // Adjust the number circle size based on the overall ball size
+  const getNumberCircleSize = () => {
+    if (sizeClass.includes("w-8")) {
+      return "w-5 h-5 md:w-6 md:h-6"; // Smaller number circle for smaller balls
+    }
+    return "w-6 h-6 md:w-7 md:h-7"; // Default number circle size
+  };
 
   return (
     <div className={cn(
-      "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center",
+      sizeClass,
+      "rounded-full flex items-center justify-center",
       "border border-white/20 shadow-lg",
       "relative overflow-hidden",
       ballColors[number]
@@ -61,7 +72,10 @@ export const PoolBall = ({ number }: PoolBallProps) => {
       
       {/* Number display - consistent circular white background for all balls */}
       <div className="z-10 relative flex items-center justify-center">
-        <div className="w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center">
+        <div className={cn(
+          getNumberCircleSize(),
+          "bg-white rounded-full flex items-center justify-center"
+        )}>
           <span className="font-bold text-sm md:text-base text-black">
             {number}
           </span>
