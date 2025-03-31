@@ -9,8 +9,10 @@ interface RackDisplayProps {
 }
 
 export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
+  // Function to get the appropriate layout classes based on game type
   const getRackLayout = () => {
     if (gameType === "9-ball") {
+      // Diamond formation for 9-ball
       return `
         grid-cols-5 gap-2 max-w-[180px] 
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
@@ -24,38 +26,40 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
         [&>*:nth-child(9)]:col-start-3 [&>*:nth-child(9)]:col-end-4 [&>*:nth-child(9)]:row-start-5
       `;
     } else if (gameType === "10-ball") {
+      // Triangle formation for 10-ball (4 rows)
       return `
-        grid-cols-5 gap-2 max-w-[180px]
-        [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
-        [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
-        [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
-        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-2 [&>*:nth-child(4)]:row-start-3
-        [&>*:nth-child(5)]:col-start-3 [&>*:nth-child(5)]:col-end-4 [&>*:nth-child(5)]:row-start-3
-        [&>*:nth-child(6)]:col-start-5 [&>*:nth-child(6)]:col-end-6 [&>*:nth-child(6)]:row-start-3
-        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-2 [&>*:nth-child(7)]:row-start-4
-        [&>*:nth-child(8)]:col-start-2 [&>*:nth-child(8)]:col-end-3 [&>*:nth-child(8)]:row-start-4
-        [&>*:nth-child(9)]:col-start-4 [&>*:nth-child(9)]:col-end-5 [&>*:nth-child(9)]:row-start-4
-        [&>*:nth-child(10)]:col-start-5 [&>*:nth-child(10)]:col-end-6 [&>*:nth-child(10)]:row-start-4
+        grid-cols-4 gap-2 max-w-[180px]
+        [&>*:nth-child(1)]:col-start-2 [&>*:nth-child(1)]:col-span-2 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-1 [&>*:nth-child(2)]:row-start-2
+        [&>*:nth-child(3)]:col-start-3 [&>*:nth-child(3)]:row-start-2
+        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:row-start-3 
+        [&>*:nth-child(5)]:col-start-2 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-3 [&>*:nth-child(6)]:row-start-3
+        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:row-start-4
+        [&>*:nth-child(8)]:col-start-2 [&>*:nth-child(8)]:row-start-4
+        [&>*:nth-child(9)]:col-start-3 [&>*:nth-child(9)]:row-start-4
+        [&>*:nth-child(10)]:col-start-4 [&>*:nth-child(10)]:row-start-4
       `;
     } else {
+      // Triangle formation for 8-ball (5 rows)
       return `
         grid-cols-5 gap-2 max-w-[240px]
-        [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
-        [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
-        [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
-        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-2 [&>*:nth-child(4)]:row-start-3
-        [&>*:nth-child(5)]:col-start-3 [&>*:nth-child(5)]:col-end-4 [&>*:nth-child(5)]:row-start-3
-        [&>*:nth-child(6)]:col-start-5 [&>*:nth-child(6)]:col-end-6 [&>*:nth-child(6)]:row-start-3
-        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-2 [&>*:nth-child(7)]:row-start-4
-        [&>*:nth-child(8)]:col-start-2 [&>*:nth-child(8)]:col-end-3 [&>*:nth-child(8)]:row-start-4
-        [&>*:nth-child(9)]:col-start-3 [&>*:nth-child(9)]:col-end-4 [&>*:nth-child(9)]:row-start-4
-        [&>*:nth-child(10)]:col-start-4 [&>*:nth-child(10)]:col-end-5 [&>*:nth-child(10)]:row-start-4
-        [&>*:nth-child(11)]:col-start-5 [&>*:nth-child(11)]:col-end-6 [&>*:nth-child(11)]:row-start-4
-        [&>*:nth-child(12)]:col-start-1 [&>*:nth-child(12)]:col-end-2 [&>*:nth-child(12)]:row-start-5
-        [&>*:nth-child(13)]:col-start-2 [&>*:nth-child(13)]:col-end-3 [&>*:nth-child(13)]:row-start-5
-        [&>*:nth-child(14)]:col-start-3 [&>*:nth-child(14)]:col-end-4 [&>*:nth-child(14)]:row-start-5
-        [&>*:nth-child(15)]:col-start-4 [&>*:nth-child(15)]:col-end-5 [&>*:nth-child(15)]:row-start-5
-        [&>*:nth-child(15)]:col-start-5 [&>*:nth-child(15)]:col-end-6 [&>*:nth-child(15)]:row-start-5
+        [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:row-start-2
+        [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:row-start-2
+        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:row-start-3
+        [&>*:nth-child(5)]:col-start-3 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-5 [&>*:nth-child(6)]:row-start-3
+        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:row-start-4
+        [&>*:nth-child(8)]:col-start-2 [&>*:nth-child(8)]:row-start-4
+        [&>*:nth-child(9)]:col-start-3 [&>*:nth-child(9)]:row-start-4
+        [&>*:nth-child(10)]:col-start-4 [&>*:nth-child(10)]:row-start-4
+        [&>*:nth-child(11)]:col-start-5 [&>*:nth-child(11)]:row-start-4
+        [&>*:nth-child(12)]:col-start-1 [&>*:nth-child(12)]:row-start-5
+        [&>*:nth-child(13)]:col-start-2 [&>*:nth-child(13)]:row-start-5
+        [&>*:nth-child(14)]:col-start-3 [&>*:nth-child(14)]:row-start-5
+        [&>*:nth-child(15)]:col-start-4 [&>*:nth-child(15)]:row-start-5
+        [&>*:nth-child(16)]:col-start-5 [&>*:nth-child(16)]:row-start-5
       `;
     }
   };

@@ -43,8 +43,8 @@ export const PoolBall = ({ number }: PoolBallProps) => {
         </div>
       )}
       <span className={cn(
-        "z-10 text-sm md:text-base font-bold flex items-center justify-center",
-        striped ? "" : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full"
+        "z-10 text-sm md:text-base font-bold",
+        striped ? "" : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center"
       )}>
         {number}
       </span>
