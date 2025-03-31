@@ -152,7 +152,7 @@ const PoolTools = () => {
   const getRackLayout = () => {
     if (gameType === "9-ball") {
       return `
-        grid-cols-5 max-w-[300px]
+        grid-cols-5 gap-0.5 max-w-[240px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2 
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -165,7 +165,7 @@ const PoolTools = () => {
       `;
     } else if (gameType === "10-ball") {
       return `
-        grid-cols-5 max-w-[300px]
+        grid-cols-5 gap-0.5 max-w-[240px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -179,7 +179,7 @@ const PoolTools = () => {
       `;
     } else {
       return `
-        grid-cols-5 max-w-[300px] 
+        grid-cols-5 gap-0.5 max-w-[240px]
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -214,19 +214,19 @@ const PoolTools = () => {
 
     return (
       <div className={cn(
-        "w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center font-bold text-xl transition-all duration-300",
-        "border-2 border-white/20 shadow-lg hover:scale-110 hover:border-white/70",
+        "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-sm md:text-base transition-all",
+        "border border-white/10 shadow-lg",
         "relative overflow-hidden",
         ballColors[number]
       )}>
         {striped && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-white w-full h-6 absolute"></div>
+            <div className="bg-white w-full h-1/3 absolute"></div>
           </div>
         )}
         <div className={cn(
           "z-10 flex items-center justify-center",
-          striped ? "w-full h-full" : "w-8 h-8 bg-white rounded-full"
+          striped ? "w-full h-full" : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full"
         )}>
           {number}
         </div>
@@ -439,7 +439,7 @@ const PoolTools = () => {
               )}>
                 {rack.length > 0 ? (
                   <div className={cn(
-                    "grid gap-3 relative", 
+                    "grid relative", 
                     getRackLayout(),
                     "animate-fade-in"
                   )}>
