@@ -152,49 +152,50 @@ const PoolTools = () => {
   const getRackLayout = () => {
     if (gameType === "9-ball") {
       return `
-        grid-cols-1 max-w-[300px]
-        [&>*:nth-child(1)]:col-start-1 [&>*:nth-child(1)]:col-end-2 [&>*:nth-child(1)]:row-start-1
-        [&>*:nth-child(2)]:col-start-1 [&>*:nth-child(2)]:col-end-1 [&>*:nth-child(2)]:row-start-2 [&>*:nth-child(2)]:translate-x-[-15px]
-        [&>*:nth-child(3)]:col-start-1 [&>*:nth-child(3)]:col-end-2 [&>*:nth-child(3)]:row-start-2 [&>*:nth-child(3)]:translate-x-[15px]
-        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-1 [&>*:nth-child(4)]:row-start-3 [&>*:nth-child(4)]:translate-x-[-30px]
-        [&>*:nth-child(5)]:col-start-1 [&>*:nth-child(5)]:col-end-2 [&>*:nth-child(5)]:row-start-3
-        [&>*:nth-child(6)]:col-start-1 [&>*:nth-child(6)]:col-end-2 [&>*:nth-child(6)]:row-start-3 [&>*:nth-child(6)]:translate-x-[30px]
-        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-1 [&>*:nth-child(7)]:row-start-4 [&>*:nth-child(7)]:translate-x-[-45px]
-        [&>*:nth-child(8)]:col-start-1 [&>*:nth-child(8)]:col-end-2 [&>*:nth-child(8)]:row-start-4 [&>*:nth-child(8)]:translate-x-[45px]
-        [&>*:nth-child(9)]:col-start-1 [&>*:nth-child(9)]:col-end-2 [&>*:nth-child(9)]:row-start-5
+        grid-cols-5 max-w-[300px]
+        [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2 
+        [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
+        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-2 [&>*:nth-child(4)]:row-start-3
+        [&>*:nth-child(5)]:col-start-3 [&>*:nth-child(5)]:col-end-4 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-5 [&>*:nth-child(6)]:col-end-6 [&>*:nth-child(6)]:row-start-3
+        [&>*:nth-child(7)]:col-start-2 [&>*:nth-child(7)]:col-end-3 [&>*:nth-child(7)]:row-start-4
+        [&>*:nth-child(8)]:col-start-4 [&>*:nth-child(8)]:col-end-5 [&>*:nth-child(8)]:row-start-4
+        [&>*:nth-child(9)]:col-start-3 [&>*:nth-child(9)]:col-end-4 [&>*:nth-child(9)]:row-start-5
       `;
     } else if (gameType === "10-ball") {
       return `
-        grid-cols-1 max-w-[300px]
-        [&>*:nth-child(1)]:col-start-1 [&>*:nth-child(1)]:col-end-2 [&>*:nth-child(1)]:row-start-1
-        [&>*:nth-child(2)]:col-start-1 [&>*:nth-child(2)]:col-end-1 [&>*:nth-child(2)]:row-start-2 [&>*:nth-child(2)]:translate-x-[-15px]
-        [&>*:nth-child(3)]:col-start-1 [&>*:nth-child(3)]:col-end-2 [&>*:nth-child(3)]:row-start-2 [&>*:nth-child(3)]:translate-x-[15px]
-        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-1 [&>*:nth-child(4)]:row-start-3 [&>*:nth-child(4)]:translate-x-[-30px]
-        [&>*:nth-child(5)]:col-start-1 [&>*:nth-child(5)]:col-end-2 [&>*:nth-child(5)]:row-start-3
-        [&>*:nth-child(6)]:col-start-1 [&>*:nth-child(6)]:col-end-2 [&>*:nth-child(6)]:row-start-3 [&>*:nth-child(6)]:translate-x-[30px]
-        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-1 [&>*:nth-child(7)]:row-start-4 [&>*:nth-child(7)]:translate-x-[-45px]
-        [&>*:nth-child(8)]:col-start-1 [&>*:nth-child(8)]:col-end-2 [&>*:nth-child(8)]:row-start-4 [&>*:nth-child(8)]:translate-x-[-15px]
-        [&>*:nth-child(9)]:col-start-1 [&>*:nth-child(9)]:col-end-2 [&>*:nth-child(9)]:row-start-4 [&>*:nth-child(9)]:translate-x-[15px]
-        [&>*:nth-child(10)]:col-start-1 [&>*:nth-child(10)]:col-end-2 [&>*:nth-child(10)]:row-start-4 [&>*:nth-child(10)]:translate-x-[45px]
+        grid-cols-5 max-w-[300px]
+        [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
+        [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
+        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-2 [&>*:nth-child(4)]:row-start-3
+        [&>*:nth-child(5)]:col-start-3 [&>*:nth-child(5)]:col-end-4 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-5 [&>*:nth-child(6)]:col-end-6 [&>*:nth-child(6)]:row-start-3
+        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-2 [&>*:nth-child(7)]:row-start-4
+        [&>*:nth-child(8)]:col-start-2 [&>*:nth-child(8)]:col-end-3 [&>*:nth-child(8)]:row-start-4
+        [&>*:nth-child(9)]:col-start-4 [&>*:nth-child(9)]:col-end-5 [&>*:nth-child(9)]:row-start-4
+        [&>*:nth-child(10)]:col-start-5 [&>*:nth-child(10)]:col-end-6 [&>*:nth-child(10)]:row-start-4
       `;
     } else {
       return `
-        grid-cols-1 max-w-[300px] 
-        [&>*:nth-child(1)]:col-start-1 [&>*:nth-child(1)]:col-end-2 [&>*:nth-child(1)]:row-start-1
-        [&>*:nth-child(2)]:col-start-1 [&>*:nth-child(2)]:col-end-1 [&>*:nth-child(2)]:row-start-2 [&>*:nth-child(2)]:translate-x-[-15px]
-        [&>*:nth-child(3)]:col-start-1 [&>*:nth-child(3)]:col-end-2 [&>*:nth-child(3)]:row-start-2 [&>*:nth-child(3)]:translate-x-[15px]
-        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-1 [&>*:nth-child(4)]:row-start-3 [&>*:nth-child(4)]:translate-x-[-30px]
-        [&>*:nth-child(5)]:col-start-1 [&>*:nth-child(5)]:col-end-2 [&>*:nth-child(5)]:row-start-3
-        [&>*:nth-child(6)]:col-start-1 [&>*:nth-child(6)]:col-end-2 [&>*:nth-child(6)]:row-start-3 [&>*:nth-child(6)]:translate-x-[30px]
-        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-1 [&>*:nth-child(7)]:row-start-4 [&>*:nth-child(7)]:translate-x-[-45px]
-        [&>*:nth-child(8)]:col-start-1 [&>*:nth-child(8)]:col-end-1 [&>*:nth-child(8)]:row-start-4 [&>*:nth-child(8)]:translate-x-[-15px]
-        [&>*:nth-child(9)]:col-start-1 [&>*:nth-child(9)]:col-end-2 [&>*:nth-child(9)]:row-start-4 [&>*:nth-child(9)]:translate-x-[15px]
-        [&>*:nth-child(10)]:col-start-1 [&>*:nth-child(10)]:col-end-2 [&>*:nth-child(10)]:row-start-4 [&>*:nth-child(10)]:translate-x-[45px]
-        [&>*:nth-child(11)]:col-start-1 [&>*:nth-child(11)]:col-end-1 [&>*:nth-child(11)]:row-start-5 [&>*:nth-child(11)]:translate-x-[-60px]
-        [&>*:nth-child(12)]:col-start-1 [&>*:nth-child(12)]:col-end-2 [&>*:nth-child(12)]:row-start-5 [&>*:nth-child(12)]:translate-x-[-30px]
-        [&>*:nth-child(13)]:col-start-1 [&>*:nth-child(13)]:col-end-2 [&>*:nth-child(13)]:row-start-5
-        [&>*:nth-child(14)]:col-start-1 [&>*:nth-child(14)]:col-end-2 [&>*:nth-child(14)]:row-start-5 [&>*:nth-child(14)]:translate-x-[30px]
-        [&>*:nth-child(15)]:col-start-1 [&>*:nth-child(15)]:col-end-2 [&>*:nth-child(15)]:row-start-5 [&>*:nth-child(15)]:translate-x-[60px]
+        grid-cols-5 max-w-[300px] 
+        [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2
+        [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
+        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-2 [&>*:nth-child(4)]:row-start-3
+        [&>*:nth-child(5)]:col-start-3 [&>*:nth-child(5)]:col-end-4 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-5 [&>*:nth-child(6)]:col-end-6 [&>*:nth-child(6)]:row-start-3
+        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-2 [&>*:nth-child(7)]:row-start-4
+        [&>*:nth-child(8)]:col-start-2 [&>*:nth-child(8)]:col-end-3 [&>*:nth-child(8)]:row-start-4
+        [&>*:nth-child(9)]:col-start-3 [&>*:nth-child(9)]:col-end-4 [&>*:nth-child(9)]:row-start-4
+        [&>*:nth-child(10)]:col-start-4 [&>*:nth-child(10)]:col-end-5 [&>*:nth-child(10)]:row-start-4
+        [&>*:nth-child(11)]:col-start-5 [&>*:nth-child(11)]:col-end-6 [&>*:nth-child(11)]:row-start-4
+        [&>*:nth-child(12)]:col-start-1 [&>*:nth-child(12)]:col-end-2 [&>*:nth-child(12)]:row-start-5
+        [&>*:nth-child(13)]:col-start-2 [&>*:nth-child(13)]:col-end-3 [&>*:nth-child(13)]:row-start-5
+        [&>*:nth-child(14)]:col-start-3 [&>*:nth-child(14)]:col-end-4 [&>*:nth-child(14)]:row-start-5
+        [&>*:nth-child(15)]:col-start-4 [&>*:nth-child(15)]:col-end-5 [&>*:nth-child(15)]:row-start-5
+        [&>*:nth-child(15)]:col-start-5 [&>*:nth-child(15)]:col-end-6 [&>*:nth-child(15)]:row-start-5
       `;
     }
   };
@@ -213,7 +214,7 @@ const PoolTools = () => {
 
     return (
       <div className={cn(
-        "w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl transition-all duration-300",
+        "w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center font-bold text-xl transition-all duration-300",
         "border-2 border-white/20 shadow-lg hover:scale-110 hover:border-white/70",
         "relative overflow-hidden",
         ballColors[number]
@@ -448,13 +449,6 @@ const PoolTools = () => {
                   </div>
                 ) : (
                   <div className="text-center">
-                    <img 
-                      src={gameType === "9-ball" ? "/lovable-uploads/d031930d-317f-41e9-8fd3-fd96e5ef0a68.png" : 
-                           gameType === "10-ball" ? "/lovable-uploads/da57d4fb-3092-4276-ba9d-744ad73df75e.png" : 
-                           "/lovable-uploads/3965ae9b-050a-496d-9232-e984599d1016.png"} 
-                      alt={`${gameType} rack example`}
-                      className="max-h-[200px] mx-auto opacity-40 mb-4"
-                    />
                     <p className="text-deadpunch-gray-light">
                       Click "Generate Rack" to create a randomized rack layout
                     </p>
