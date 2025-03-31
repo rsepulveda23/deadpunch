@@ -10,15 +10,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg active:translate-y-0",
+        default: "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-white/30 active:translate-y-0",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/90 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg active:translate-y-0",
+          "bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/90 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-white/30 active:translate-y-0",
         outline:
-          "border-2 border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover:translate-y-[-2px] hover:scale-105 hover:shadow-md active:translate-y-0",
+          "border-2 border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover:translate-y-[-2px] hover:scale-105 hover:shadow-md hover:border-white/50 active:translate-y-0",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-md hover:bg-secondary/80 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg active:translate-y-0",
-        ghost: "hover:bg-accent hover:text-accent-foreground hover:translate-y-[-1px] hover:scale-105 active:translate-y-0",
-        link: "text-primary underline-offset-4 hover:underline hover:translate-y-[-1px] active:translate-y-0",
+          "bg-secondary text-secondary-foreground shadow-md hover:bg-secondary/80 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-white/20 active:translate-y-0",
+        ghost: "hover:bg-accent hover:text-accent-foreground hover:translate-y-[-1px] hover:scale-105 hover:ring-1 hover:ring-white/20 active:translate-y-0",
+        link: "text-primary underline-offset-4 hover:underline hover:translate-y-[-1px] hover:text-white active:translate-y-0",
       },
       size: {
         default: "h-10 px-6 py-2",

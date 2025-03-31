@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ComingSoon from "./pages/ComingSoon";
+import PoolTools from "./pages/PoolTools";
 
 // Create a QueryClient instance
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const categoryRoutes = [
   { category: "Training Tools", subcategory: "Journals", path: "/training-tools/journals" },
   { category: "Training Tools", subcategory: "Stickers", path: "/training-tools/stickers" },
   { category: "Training Tools", subcategory: "Accessories", path: "/training-tools/accessories" },
+  { category: "Training Tools", subcategory: "Score Keeper & Rack Generator", path: "/training-tools/pool-tools" },
 ];
 
 const App = () => (
@@ -52,6 +54,9 @@ const App = () => (
           <Route path="/blog/*" element={<Navigate to="/" replace />} />
           <Route path="/blog-admin" element={<Navigate to="/" replace />} />
           <Route path="/login" element={<Navigate to="/" replace />} />
+          
+          {/* Pool Tools route */}
+          <Route path="/training-tools/pool-tools" element={<PoolTools />} />
           
           {/* Dynamic category routes */}
           {categoryRoutes.map((route) => (
