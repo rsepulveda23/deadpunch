@@ -46,25 +46,24 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
       `;
     } else {
       // Triangle formation for 8-ball (5 rows)
+      // Using the same positioning convention as 10-ball with an extra row
       return `
-        grid-cols-5 gap-1 md:gap-2 max-w-[240px]
-        [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:row-start-1
-        [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:row-start-2
-        [&>*:nth-child(3)]:col-start-3 [&>*:nth-child(3)]:row-start-2
-        [&>*:nth-child(4)]:col-start-4 [&>*:nth-child(4)]:row-start-2
-        [&>*:nth-child(5)]:col-start-2 [&>*:nth-child(5)]:row-start-3
-        [&>*:nth-child(6)]:col-start-3 [&>*:nth-child(6)]:row-start-3
-        [&>*:nth-child(7)]:col-start-4 [&>*:nth-child(7)]:row-start-3
-        [&>*:nth-child(8)]:col-start-1 [&>*:nth-child(8)]:row-start-4
-        [&>*:nth-child(9)]:col-start-2 [&>*:nth-child(9)]:row-start-4
-        [&>*:nth-child(10)]:col-start-3 [&>*:nth-child(10)]:row-start-4
-        [&>*:nth-child(11)]:col-start-4 [&>*:nth-child(11)]:row-start-4
-        [&>*:nth-child(12)]:col-start-5 [&>*:nth-child(12)]:row-start-4
-        [&>*:nth-child(13)]:col-start-1 [&>*:nth-child(13)]:row-start-5
-        [&>*:nth-child(14)]:col-start-2 [&>*:nth-child(14)]:row-start-5
-        [&>*:nth-child(15)]:col-start-3 [&>*:nth-child(15)]:row-start-5
-        [&>*:nth-child(16)]:col-start-4 [&>*:nth-child(16)]:row-start-5
-        [&>*:nth-child(17)]:col-start-5 [&>*:nth-child(17)]:row-start-5
+        grid-cols-9 gap-1 md:gap-2 max-w-[280px]
+        [&>*:nth-child(1)]:col-start-5 [&>*:nth-child(1)]:col-end-6 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-4 [&>*:nth-child(2)]:col-end-5 [&>*:nth-child(2)]:row-start-2
+        [&>*:nth-child(3)]:col-start-6 [&>*:nth-child(3)]:col-end-7 [&>*:nth-child(3)]:row-start-2
+        [&>*:nth-child(4)]:col-start-3 [&>*:nth-child(4)]:col-end-4 [&>*:nth-child(4)]:row-start-3
+        [&>*:nth-child(5)]:col-start-5 [&>*:nth-child(5)]:col-end-6 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-7 [&>*:nth-child(6)]:col-end-8 [&>*:nth-child(6)]:row-start-3
+        [&>*:nth-child(7)]:col-start-2 [&>*:nth-child(7)]:col-end-3 [&>*:nth-child(7)]:row-start-4
+        [&>*:nth-child(8)]:col-start-4 [&>*:nth-child(8)]:col-end-5 [&>*:nth-child(8)]:row-start-4
+        [&>*:nth-child(9)]:col-start-6 [&>*:nth-child(9)]:col-end-7 [&>*:nth-child(9)]:row-start-4
+        [&>*:nth-child(10)]:col-start-8 [&>*:nth-child(10)]:col-end-9 [&>*:nth-child(10)]:row-start-4
+        [&>*:nth-child(11)]:col-start-1 [&>*:nth-child(11)]:col-end-2 [&>*:nth-child(11)]:row-start-5
+        [&>*:nth-child(12)]:col-start-3 [&>*:nth-child(12)]:col-end-4 [&>*:nth-child(12)]:row-start-5
+        [&>*:nth-child(13)]:col-start-5 [&>*:nth-child(13)]:col-end-6 [&>*:nth-child(13)]:row-start-5
+        [&>*:nth-child(14)]:col-start-7 [&>*:nth-child(14)]:col-end-8 [&>*:nth-child(14)]:row-start-5
+        [&>*:nth-child(15)]:col-start-9 [&>*:nth-child(15)]:col-end-10 [&>*:nth-child(15)]:row-start-5
       `;
     }
   };
