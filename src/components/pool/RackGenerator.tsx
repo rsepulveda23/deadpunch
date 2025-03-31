@@ -10,6 +10,7 @@ import { generateRack, getGameRules } from './rackGeneratorUtils';
 export const RackGenerator = () => {
   const [gameType, setGameType] = useState<GameType>("9-ball");
   const [rack, setRack] = useState<number[]>([]);
+  const [key, setKey] = useState(0); // Add a key to force re-render
   
   useEffect(() => {
     generateRackLayout();
@@ -18,6 +19,7 @@ export const RackGenerator = () => {
   const generateRackLayout = () => {
     const newRack = generateRack(gameType);
     setRack(newRack);
+    setKey(prevKey => prevKey + 1); // Increment key to force re-render
   };
 
   return (
@@ -39,7 +41,7 @@ export const RackGenerator = () => {
           Generate Rack
         </Button>
 
-        <RackDisplay gameType={gameType} rack={rack} />
+        <RackDisplay key={key} gameType={gameType} rack={rack} />
 
         <div className="bg-deadpunch-red/10 border border-deadpunch-red/30 rounded-lg p-3 text-sm text-deadpunch-gray-light">
           <p>
