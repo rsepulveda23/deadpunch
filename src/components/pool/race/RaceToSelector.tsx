@@ -34,7 +34,7 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
         
         <div className={cn(
           "mx-3 text-4xl font-display font-bold",
-          "text-[#FEF7CD]" // Yellow color for the race number
+          "text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]" // Neon green color with glow effect
         )}>
           {value}
         </div>
