@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
@@ -17,11 +17,18 @@ import {
 } from "@/components/ui/dialog";
 
 interface ComingSoonProps {
-  category: string;
-  subcategory: string;
+  category?: string;
+  subcategory?: string;
 }
 
-const ComingSoon = ({ category, subcategory }: ComingSoonProps) => {
+const ComingSoon = ({ category: propCategory, subcategory: propSubcategory }: ComingSoonProps = {}) => {
+  // Extract route parameters
+  const params = useParams();
+  
+  // Use props if provided, otherwise fall back to URL params
+  const category = propCategory || params.category || 'Product';
+  const subcategory = propSubcategory || params.tool || params.category || 'Feature';
+  
   // Add navigate for proper navigation handling
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
