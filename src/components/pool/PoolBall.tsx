@@ -30,8 +30,6 @@ interface PoolBallProps {
   number: number;
   /** Optional class to control the ball size */
   sizeClass?: string;
-  /** Optional class for custom styling */
-  className?: string;
 }
 
 /**
@@ -50,7 +48,7 @@ const isStriped = (number: number) => number >= 9 && number <= 15;
  * 
  * Size can be controlled via the sizeClass prop for different game types.
  */
-export const PoolBall = ({ number, sizeClass = "w-10 h-10 md:w-11 md:h-11", className }: PoolBallProps) => {
+export const PoolBall = ({ number, sizeClass = "w-10 h-10 md:w-11 md:h-11" }: PoolBallProps) => {
   const striped = isStriped(number);
 
   // Adjust the number circle size based on the overall ball size
@@ -69,8 +67,7 @@ export const PoolBall = ({ number, sizeClass = "w-10 h-10 md:w-11 md:h-11", clas
       "rounded-full flex items-center justify-center",
       "border border-white/20 shadow-lg",
       "relative overflow-hidden",
-      ballColors[number],
-      className
+      ballColors[number]
     )}>
       {/* Stripe pattern for balls 9-15 */}
       {striped && (

@@ -30,15 +30,18 @@ export const generateRack = (gameType: GameType): number[] => {
     const nineIndex = availableBalls.indexOf(9);
     availableBalls.splice(nineIndex, 1);
     
+    balls.push(1); // 1 ball at the apex
+    
     // Randomize remaining balls
     shuffleArray(availableBalls);
     
-    // Create the rack with 1 at apex and 9 in the center
+    // Insert 9 ball in the center (position 4 in a 9-ball rack)
+    const centerPosition = 4;
     balls = [
-      1, // 1 ball at the apex
-      ...availableBalls.slice(0, 3), // First 3 random balls
-      9, // 9 ball in the center
-      ...availableBalls.slice(3) // Remaining random balls
+      ...balls,
+      ...availableBalls.slice(0, centerPosition),
+      9,
+      ...availableBalls.slice(centerPosition)
     ];
   } else if (gameType === "10-ball") {
     // In 10-ball, the 1 ball must be at the apex (front) and 10 ball in the center
@@ -48,15 +51,18 @@ export const generateRack = (gameType: GameType): number[] => {
     const tenIndex = availableBalls.indexOf(10);
     availableBalls.splice(tenIndex, 1);
     
+    balls.push(1); // 1 ball at the apex
+    
     // Randomize remaining balls
     shuffleArray(availableBalls);
     
-    // Create the rack with 1 at apex and 10 in the center
+    // Insert 10 ball in the center (position 4 in a 10-ball rack)
+    const centerPosition = 4;
     balls = [
-      1, // 1 ball at the apex
-      ...availableBalls.slice(0, 3), // First 3 random balls
-      10, // 10 ball in the center
-      ...availableBalls.slice(3) // Remaining random balls
+      ...balls,
+      ...availableBalls.slice(0, centerPosition),
+      10,
+      ...availableBalls.slice(centerPosition)
     ];
   } else { // 8-ball
     // In 8-ball, the 8 ball must be in the center
@@ -93,11 +99,11 @@ export const generateRack = (gameType: GameType): number[] => {
  */
 export const getGameRules = (gameType: GameType): string => {
   if (gameType === "9-ball") {
-    return "Target the lowest numbered ball first. 1-ball must be at the apex and 9-ball must be in the center. Pocketing the 9-ball at any legal time wins the game.";
+    return "Target the lowest numbered ball first. Pocketing the 9-ball at any legal time wins the game. Diamond formation with 1-ball at the apex.";
   } else if (gameType === "10-ball") {
-    return "Call pocket and call safety rules. 1-ball must be at the apex and 10-ball must be in the center. The 10-ball must be pocketed in the called pocket.";
+    return "Call pocket and call safety rules. The 10-ball must be pocketed in the called pocket. Triangle formation with 1-ball at the apex.";
   } else { // 8-ball
-    return "Rack consists of 7 solid, 7 striped, and the 8-ball. The 8-ball must be in the center position. The 8-ball must be pocketed in the called pocket after clearing your group.";
+    return "Rack consists of 7 solid, 7 striped, and the 8-ball. The 8-ball must be pocketed in the called pocket after clearing your group.";
   }
 };
 
