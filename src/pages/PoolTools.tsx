@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +20,7 @@ const PoolTools = () => {
   // Rack generator state
   const [gameType, setGameType] = useState("9-ball");
   const [rack, setRack] = useState<number[]>([]);
+  const [rackImage, setRackImage] = useState<string | null>(null);
 
   // Ball colors based on standard pool ball colors
   const ballColors: Record<number, string> = {
@@ -29,15 +30,15 @@ const PoolTools = () => {
     4: "bg-purple-700 text-white", // Purple
     5: "bg-orange-600 text-white", // Orange
     6: "bg-green-700 text-white", // Green
-    7: "bg-red-900 text-white", // Maroon
+    7: "bg-red-900 text-white", // Maroon/Burgundy
     8: "bg-black text-white", // Black
-    9: "bg-yellow-500 text-black", // Striped Yellow
-    10: "bg-blue-500 text-white", // Striped Blue
-    11: "bg-red-500 text-white", // Striped Red
-    12: "bg-purple-500 text-white", // Striped Purple
-    13: "bg-orange-500 text-white", // Striped Orange
-    14: "bg-green-500 text-white", // Striped Green
-    15: "bg-red-800 text-white", // Striped Maroon
+    9: "bg-yellow-400 text-black", // Yellow with stripe
+    10: "bg-blue-600 text-white", // Blue with stripe
+    11: "bg-red-600 text-white", // Red with stripe
+    12: "bg-purple-700 text-white", // Purple with stripe
+    13: "bg-orange-600 text-white", // Orange with stripe
+    14: "bg-green-700 text-white", // Green with stripe
+    15: "bg-red-900 text-white", // Maroon/Burgundy with stripe
   };
 
   // Handle score changes
@@ -52,42 +53,185 @@ const PoolTools = () => {
   // Generate rack based on game type
   const generateRack = () => {
     if (gameType === "9-ball") {
-      // 9-ball: 1 at front, 9 in center, 2-8 shuffled
-      const middle = [2, 3, 4, 5, 6, 7, 8].sort(() => Math.random() - 0.5);
-      middle.splice(3, 0, 9); // Insert 9 in center
-      setRack([1, ...middle]);
+      // 9-ball: ball 1 at the front, ball 9 in center
+      const rackArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      
+      // First, remove 1 and 9 from the available balls
+      const availableBalls = [2, 3, 4, 5, 6, 7, 8];
+      
+      // Shuffle available balls
+      const shuffledBalls = availableBalls.sort(() => Math.random() - 0.5);
+      
+      // Place 1 at the top (first position)
+      // Place shuffled balls in positions 2-8
+      // Insert 9 in the center (position 5)
+      const finalRack = [
+        1,                    // Top of the diamond - first ball
+        shuffledBalls[0],     // Second row - left
+        shuffledBalls[1],     // Second row - right
+        shuffledBalls[2],     // Third row - left
+        9,                    // Third row - middle (ALWAYS ball 9)
+        shuffledBalls[3],     // Third row - right
+        shuffledBalls[4],     // Fourth row - left
+        shuffledBalls[5],     // Fourth row - right
+        shuffledBalls[6]      // Fifth row - bottom
+      ];
+      
+      setRack(finalRack);
+      
     } else if (gameType === "10-ball") {
-      // 10-ball: 1 at front, 10 in center, 2-9 shuffled
-      const middle = [2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
-      middle.splice(4, 0, 10); // Insert 10 in center
-      setRack([1, ...middle]);
-    } else {
-      // 8-ball: 8 in center, other balls shuffled
-      const allBalls = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].sort(() => Math.random() - 0.5);
-      const firstHalf = allBalls.slice(0, 7);
-      const secondHalf = allBalls.slice(7);
-      setRack([...firstHalf, 8, ...secondHalf]);
+      // 10-ball: ball 1 at the front, ball 10 in center
+      
+      // First, remove 1 and 10 from the available balls
+      const availableBalls = [2, 3, 4, 5, 6, 7, 8, 9];
+      
+      // Shuffle available balls
+      const shuffledBalls = availableBalls.sort(() => Math.random() - 0.5);
+      
+      // Place balls in a 10-ball rack pattern (4 rows triangle)
+      // 1 at the top, 10 in the center
+      const finalRack = [
+        1,                    // Top of the diamond - first ball
+        shuffledBalls[0],     // Second row - left
+        shuffledBalls[1],     // Second row - right
+        shuffledBalls[2],     // Third row - left
+        10,                   // Third row - middle (ALWAYS ball 10)
+        shuffledBalls[3],     // Third row - right
+        shuffledBalls[4],     // Fourth row - left
+        shuffledBalls[5],     // Fourth row - middle-left
+        shuffledBalls[6],     // Fourth row - middle-right
+        shuffledBalls[7]      // Fourth row - right
+      ];
+      
+      setRack(finalRack);
+      
+    } else if (gameType === "8-ball") {
+      // 8-ball: 1-7 solids & 9-15 stripes mixed, 8 in center
+      
+      // Create arrays for solids and stripes
+      const solids = [1, 2, 3, 4, 5, 6, 7];
+      const stripes = [9, 10, 11, 12, 13, 14, 15];
+      
+      // Shuffle solid and stripe arrays
+      const shuffledSolids = [...solids].sort(() => Math.random() - 0.5);
+      const shuffledStripes = [...stripes].sort(() => Math.random() - 0.5);
+      
+      // Ensure we have one solid and one stripe at the back corners
+      const firstCorner = Math.random() > 0.5 ? shuffledSolids.pop()! : shuffledStripes.pop()!;
+      const secondCorner = firstCorner <= 8 ? shuffledStripes.pop()! : shuffledSolids.pop()!;
+      
+      // Combine remaining balls, excluding 8 ball and corner balls
+      const remainingBalls = [...shuffledSolids, ...shuffledStripes].sort(() => Math.random() - 0.5);
+      
+      // Create the rack with proper 8-ball rules
+      // 15-ball triangle with 8-ball in the center
+      // First solid on one back corner, first stripe on other back corner
+      const finalRack = [
+        1,                     // Front (apex) - can be any ball, but typically 1
+        remainingBalls[0],     // Second row - left
+        remainingBalls[1],     // Second row - right
+        remainingBalls[2],     // Third row - left
+        8,                     // Third row - middle (ALWAYS 8 ball)
+        remainingBalls[3],     // Third row - right
+        remainingBalls[4],     // Fourth row - left
+        remainingBalls[5],     // Fourth row - middle-left
+        remainingBalls[6],     // Fourth row - middle-right
+        remainingBalls[7],     // Fourth row - right
+        remainingBalls[8],     // Fifth row - left
+        remainingBalls[9],     // Fifth row - middle-left
+        remainingBalls[10],    // Fifth row - middle
+        remainingBalls[11],    // Fifth row - middle-right
+        firstCorner,           // Fifth row - right corner (solid or stripe)
+      ];
+      
+      setRack(finalRack);
     }
   };
 
-  // UI for rendering a pool ball
-  const PoolBall = ({ number }: { number: number }) => (
-    <div className={cn(
-      "w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300",
-      "border-2 border-white/20 shadow-lg hover:scale-110 hover:border-white/70",
-      ballColors[number]
-    )}>
-      {number}
-    </div>
-  );
+  // Get the rack layout based on game type
+  const getRackLayout = () => {
+    if (gameType === "9-ball") {
+      return `
+        grid-cols-1 max-w-[300px]
+        [&>*:nth-child(1)]:col-start-1 [&>*:nth-child(1)]:col-end-2 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-1 [&>*:nth-child(2)]:col-end-1 [&>*:nth-child(2)]:row-start-2 [&>*:nth-child(2)]:translate-x-[-15px]
+        [&>*:nth-child(3)]:col-start-1 [&>*:nth-child(3)]:col-end-2 [&>*:nth-child(3)]:row-start-2 [&>*:nth-child(3)]:translate-x-[15px]
+        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-1 [&>*:nth-child(4)]:row-start-3 [&>*:nth-child(4)]:translate-x-[-30px]
+        [&>*:nth-child(5)]:col-start-1 [&>*:nth-child(5)]:col-end-2 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-1 [&>*:nth-child(6)]:col-end-2 [&>*:nth-child(6)]:row-start-3 [&>*:nth-child(6)]:translate-x-[30px]
+        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-1 [&>*:nth-child(7)]:row-start-4 [&>*:nth-child(7)]:translate-x-[-45px]
+        [&>*:nth-child(8)]:col-start-1 [&>*:nth-child(8)]:col-end-2 [&>*:nth-child(8)]:row-start-4 [&>*:nth-child(8)]:translate-x-[45px]
+        [&>*:nth-child(9)]:col-start-1 [&>*:nth-child(9)]:col-end-2 [&>*:nth-child(9)]:row-start-5
+      `;
+    } else if (gameType === "10-ball") {
+      return `
+        grid-cols-1 max-w-[300px]
+        [&>*:nth-child(1)]:col-start-1 [&>*:nth-child(1)]:col-end-2 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-1 [&>*:nth-child(2)]:col-end-1 [&>*:nth-child(2)]:row-start-2 [&>*:nth-child(2)]:translate-x-[-15px]
+        [&>*:nth-child(3)]:col-start-1 [&>*:nth-child(3)]:col-end-2 [&>*:nth-child(3)]:row-start-2 [&>*:nth-child(3)]:translate-x-[15px]
+        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-1 [&>*:nth-child(4)]:row-start-3 [&>*:nth-child(4)]:translate-x-[-30px]
+        [&>*:nth-child(5)]:col-start-1 [&>*:nth-child(5)]:col-end-2 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-1 [&>*:nth-child(6)]:col-end-2 [&>*:nth-child(6)]:row-start-3 [&>*:nth-child(6)]:translate-x-[30px]
+        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-1 [&>*:nth-child(7)]:row-start-4 [&>*:nth-child(7)]:translate-x-[-45px]
+        [&>*:nth-child(8)]:col-start-1 [&>*:nth-child(8)]:col-end-2 [&>*:nth-child(8)]:row-start-4 [&>*:nth-child(8)]:translate-x-[-15px]
+        [&>*:nth-child(9)]:col-start-1 [&>*:nth-child(9)]:col-end-2 [&>*:nth-child(9)]:row-start-4 [&>*:nth-child(9)]:translate-x-[15px]
+        [&>*:nth-child(10)]:col-start-1 [&>*:nth-child(10)]:col-end-2 [&>*:nth-child(10)]:row-start-4 [&>*:nth-child(10)]:translate-x-[45px]
+      `;
+    } else {
+      return `
+        grid-cols-1 max-w-[300px] 
+        [&>*:nth-child(1)]:col-start-1 [&>*:nth-child(1)]:col-end-2 [&>*:nth-child(1)]:row-start-1
+        [&>*:nth-child(2)]:col-start-1 [&>*:nth-child(2)]:col-end-1 [&>*:nth-child(2)]:row-start-2 [&>*:nth-child(2)]:translate-x-[-15px]
+        [&>*:nth-child(3)]:col-start-1 [&>*:nth-child(3)]:col-end-2 [&>*:nth-child(3)]:row-start-2 [&>*:nth-child(3)]:translate-x-[15px]
+        [&>*:nth-child(4)]:col-start-1 [&>*:nth-child(4)]:col-end-1 [&>*:nth-child(4)]:row-start-3 [&>*:nth-child(4)]:translate-x-[-30px]
+        [&>*:nth-child(5)]:col-start-1 [&>*:nth-child(5)]:col-end-2 [&>*:nth-child(5)]:row-start-3
+        [&>*:nth-child(6)]:col-start-1 [&>*:nth-child(6)]:col-end-2 [&>*:nth-child(6)]:row-start-3 [&>*:nth-child(6)]:translate-x-[30px]
+        [&>*:nth-child(7)]:col-start-1 [&>*:nth-child(7)]:col-end-1 [&>*:nth-child(7)]:row-start-4 [&>*:nth-child(7)]:translate-x-[-45px]
+        [&>*:nth-child(8)]:col-start-1 [&>*:nth-child(8)]:col-end-1 [&>*:nth-child(8)]:row-start-4 [&>*:nth-child(8)]:translate-x-[-15px]
+        [&>*:nth-child(9)]:col-start-1 [&>*:nth-child(9)]:col-end-2 [&>*:nth-child(9)]:row-start-4 [&>*:nth-child(9)]:translate-x-[15px]
+        [&>*:nth-child(10)]:col-start-1 [&>*:nth-child(10)]:col-end-2 [&>*:nth-child(10)]:row-start-4 [&>*:nth-child(10)]:translate-x-[45px]
+        [&>*:nth-child(11)]:col-start-1 [&>*:nth-child(11)]:col-end-1 [&>*:nth-child(11)]:row-start-5 [&>*:nth-child(11)]:translate-x-[-60px]
+        [&>*:nth-child(12)]:col-start-1 [&>*:nth-child(12)]:col-end-2 [&>*:nth-child(12)]:row-start-5 [&>*:nth-child(12)]:translate-x-[-30px]
+        [&>*:nth-child(13)]:col-start-1 [&>*:nth-child(13)]:col-end-2 [&>*:nth-child(13)]:row-start-5
+        [&>*:nth-child(14)]:col-start-1 [&>*:nth-child(14)]:col-end-2 [&>*:nth-child(14)]:row-start-5 [&>*:nth-child(14)]:translate-x-[30px]
+        [&>*:nth-child(15)]:col-start-1 [&>*:nth-child(15)]:col-end-2 [&>*:nth-child(15)]:row-start-5 [&>*:nth-child(15)]:translate-x-[60px]
+      `;
+    }
+  };
 
-  // Determine rack layout based on game type
-  let rackLayout = "grid-cols-5";
-  if (gameType === "9-ball") {
-    rackLayout = "grid-cols-3 justify-items-center";
-  } else if (gameType === "10-ball") {
-    rackLayout = "grid-cols-4 justify-items-center";
-  }
+  // Set rack image based on game type
+  useEffect(() => {
+    setRack([]);
+  }, [gameType]);
+
+  // Determine if a ball is striped
+  const isStriped = (number: number) => number >= 9 && number <= 15;
+
+  // UI for rendering a pool ball
+  const PoolBall = ({ number }: { number: number }) => {
+    const striped = isStriped(number);
+
+    return (
+      <div className={cn(
+        "w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl transition-all duration-300",
+        "border-2 border-white/20 shadow-lg hover:scale-110 hover:border-white/70",
+        "relative overflow-hidden",
+        ballColors[number]
+      )}>
+        {striped && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-white w-full h-6 absolute"></div>
+          </div>
+        )}
+        <div className={cn(
+          "z-10 flex items-center justify-center",
+          striped ? "w-full h-full" : "w-8 h-8 bg-white rounded-full"
+        )}>
+          {number}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -288,13 +432,14 @@ const PoolTools = () => {
               </Button>
 
               <div className={cn(
-                "min-h-[200px] flex items-center justify-center p-6 rounded-lg",
-                "glass border-2 border-white/10 hover:border-white/30 transition-all duration-300"
+                "min-h-[280px] flex items-center justify-center p-6 rounded-lg",
+                "glass border-2 border-white/10 hover:border-white/30 transition-all duration-300",
+                "bg-green-950/30" // Pool table green tint
               )}>
                 {rack.length > 0 ? (
                   <div className={cn(
-                    "grid gap-3", 
-                    rackLayout,
+                    "grid gap-3 relative", 
+                    getRackLayout(),
                     "animate-fade-in"
                   )}>
                     {rack.map((ball, index) => (
@@ -302,18 +447,27 @@ const PoolTools = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-deadpunch-gray-light text-center">
-                    Click "Generate Rack" to create a randomized rack layout
-                  </p>
+                  <div className="text-center">
+                    <img 
+                      src={gameType === "9-ball" ? "/lovable-uploads/d031930d-317f-41e9-8fd3-fd96e5ef0a68.png" : 
+                           gameType === "10-ball" ? "/lovable-uploads/da57d4fb-3092-4276-ba9d-744ad73df75e.png" : 
+                           "/lovable-uploads/3965ae9b-050a-496d-9232-e984599d1016.png"} 
+                      alt={`${gameType} rack example`}
+                      className="max-h-[200px] mx-auto opacity-40 mb-4"
+                    />
+                    <p className="text-deadpunch-gray-light">
+                      Click "Generate Rack" to create a randomized rack layout
+                    </p>
+                  </div>
                 )}
               </div>
 
               <div className="bg-deadpunch-red/10 border border-deadpunch-red/30 rounded-lg p-3 text-sm text-deadpunch-gray-light">
                 <p>
                   <strong className="text-white">Game Rules:</strong><br />
-                  {gameType === "9-ball" && "Ball 1 at the front, ball 9 in the center, others randomly placed."}
-                  {gameType === "10-ball" && "Ball 1 at the front, ball 10 in the center, others randomly placed."}
-                  {gameType === "8-ball" && "Ball 8 in the center, other balls randomly arranged in the triangle."}
+                  {gameType === "9-ball" && "Ball 1 (yellow) at the apex, ball 9 (striped yellow) in the center, others randomly placed in a diamond formation."}
+                  {gameType === "10-ball" && "Ball 1 (yellow) at the apex, ball 10 (striped blue) in the center, others randomly placed in the triangle."}
+                  {gameType === "8-ball" && "Ball 8 (black) in the center, with a mix of solids and stripes. One solid and one stripe must be placed at the back corners."}
                 </p>
               </div>
             </CardContent>
