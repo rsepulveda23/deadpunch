@@ -150,36 +150,41 @@ export const Scoreboard = ({
           </div>
         </div>
 
-        {/* Centered Race To section */}
-        <div className="flex flex-col items-center mt-6">
+        {/* Race To section - updated to center between the player boxes */}
+        <div className="mt-6">
           <Separator className="bg-deadpunch-gray-dark mb-4" />
           
-          <div className="flex items-center justify-center gap-4">
-            <Label htmlFor="raceValue" className="text-lg font-semibold whitespace-nowrap">Race To</Label>
-            <div className="flex items-center">
-              <Button 
-                size="icon" 
-                variant="outline"
-                onClick={() => setRaceValue(prev => Math.max(1, prev - 1))}
-                className="hover:border-white/50 hover:bg-deadpunch-dark/50"
-              >
-                <Minus size={16} />
-              </Button>
+          <div className="text-center">
+            <Label htmlFor="raceValue" className="text-lg font-semibold block mb-2">Race To</Label>
+            
+            <div className="flex items-center justify-center">
+              <div className="flex-1 flex justify-end">
+                <Button 
+                  size="icon" 
+                  variant="outline"
+                  onClick={() => setRaceValue(prev => Math.max(1, prev - 1))}
+                  className="hover:border-white/50 hover:bg-deadpunch-dark/50"
+                >
+                  <Minus size={16} />
+                </Button>
+              </div>
               
               <div className={cn(
                 "mx-3 text-4xl font-display font-bold",
-                "text-deadpunch-red"
+                "text-[#FEF7CD]" // Yellow color for the race number
               )}>
                 {raceValue}
               </div>
               
-              <Button 
-                size="icon"
-                onClick={() => setRaceValue(prev => prev + 1)}
-                className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
-              >
-                <Plus size={16} />
-              </Button>
+              <div className="flex-1 flex justify-start">
+                <Button 
+                  size="icon"
+                  onClick={() => setRaceValue(prev => prev + 1)}
+                  className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
+                >
+                  <Plus size={16} />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
