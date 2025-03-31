@@ -33,7 +33,7 @@ export const PoolBall = ({ number }: PoolBallProps) => {
   return (
     <div className={cn(
       "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center font-bold",
-      "border border-white/10 shadow-lg",
+      "border border-white/20 shadow-lg",
       "relative overflow-hidden",
       ballColors[number]
     )}>
@@ -44,7 +44,7 @@ export const PoolBall = ({ number }: PoolBallProps) => {
       )}
       <span className={cn(
         "z-10 text-sm md:text-base font-bold",
-        striped ? "" : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center"
+        striped ? "relative z-20" : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center"
       )}>
         {number}
       </span>
