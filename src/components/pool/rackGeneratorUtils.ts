@@ -65,23 +65,18 @@ export const generateRack = (gameType: GameType): number[] => {
     
   } else if (gameType === "8-ball") {
     // In 8-ball:
-    // Random ball at the apex (but traditionally a solid)
-    // 8-ball in the center of the third row
+    // Ball 1 (yellow) must be at the apex according to standard rules
+    // 8-ball must be in the center of the third row
     // A mix of solids (1-7) and stripes (9-15)
     // One solid and one stripe must be at the back corners
     
-    const solids = [1, 2, 3, 4, 5, 6, 7];
+    // For solids, we exclude 1 (apex) and 8 (center)
+    const solids = [2, 3, 4, 5, 6, 7];
     const stripes = [9, 10, 11, 12, 13, 14, 15];
     
     // Shuffle the solids and stripes arrays
     const shuffledSolids = shuffleArray(solids);
     const shuffledStripes = shuffleArray(stripes);
-    
-    // Take one solid for the apex (traditional, though sometimes players use any ball)
-    const apexBall = shuffledSolids.shift()!;
-    
-    // 8 ball goes in the center of the third row 
-    const centerBall = 8;
     
     // One solid and one stripe must be at the back corners (positions 11 and 15)
     const cornerSolid = shuffledSolids.shift()!;
@@ -92,11 +87,11 @@ export const generateRack = (gameType: GameType): number[] => {
     
     // Create the full rack with the fixed positions (5 rows triangle)
     const finalRack = [
-      apexBall,           // First row (apex)
+      1,                  // First row (apex) - ALWAYS ball 1 (yellow)
       remainingBalls[0],  // Second row - left
       remainingBalls[1],  // Second row - right
       remainingBalls[2],  // Third row - left
-      centerBall,         // Third row - middle (ALWAYS 8 ball)
+      8,                  // Third row - middle (ALWAYS 8 ball)
       remainingBalls[3],  // Third row - right
       remainingBalls[4],  // Fourth row - left
       remainingBalls[5],  // Fourth row - middle-left
@@ -121,6 +116,6 @@ export const getGameRules = (gameType: GameType): string => {
   } else if (gameType === "10-ball") {
     return "Ball 1 (yellow) at the apex, ball 10 (striped blue) in the center of the third row with a proper triangle formation: 1 ball in first row, 2 in second, 3 in third, and 4 in the fourth row.";
   } else {
-    return "A proper triangle with 5 rows: 1 ball at apex (typically a solid), the 8-ball (black) in the center of the third row, with a mix of solids and stripes. One solid and one stripe must be placed at the back corners.";
+    return "A proper triangle with 5 rows: Ball 1 (yellow) always at the apex, the 8-ball (black) in the center of the third row, with a mix of solids and stripes. One solid and one stripe must be placed at the back corners.";
   }
 };
