@@ -55,7 +55,7 @@ const App = () => (
           <Route path="/blog-admin" element={<Navigate to="/" replace />} />
           <Route path="/login" element={<Navigate to="/" replace />} />
           
-          {/* Pool Tools route */}
+          {/* Pool Tools route - this is given higher priority */}
           <Route path="/training-tools/pool-tools" element={<PoolTools />} />
           
           {/* Dynamic category routes */}

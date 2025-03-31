@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
@@ -41,7 +40,6 @@ import { supabase } from '@/integrations/supabase/client';
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // Store expanded subcategories
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -49,7 +47,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [notifyDialogOpen, setNotifyDialogOpen] = useState(false);
 
-  // Reset expanded categories when location changes
   useEffect(() => {
     setExpandedCategories([]);
   }, [location.pathname]);
@@ -63,7 +60,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle outside clicks to close the menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node) && isMenuOpen) {
@@ -77,7 +73,6 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
-  // Toggle a category expansion state
   const toggleCategory = (categoryName: string) => {
     setExpandedCategories(prev => {
       if (prev.includes(categoryName)) {
@@ -124,7 +119,8 @@ const Navbar = () => {
       subcategories: [
         { name: "Journals", path: "/training-tools/journals" },
         { name: "Stickers", path: "/training-tools/stickers" },
-        { name: "Accessories", path: "/training-tools/accessories" }
+        { name: "Accessories", path: "/training-tools/accessories" },
+        { name: "Score Keeper & Rack Generator", path: "/training-tools/pool-tools", isActive: true }
       ]
     }
   ];
@@ -237,7 +233,6 @@ const Navbar = () => {
             />
           </div>
 
-          {/* Mobile menu section */}
           <div className="md:hidden flex items-center space-x-4">
             <HoverCard>
               <HoverCardTrigger asChild>

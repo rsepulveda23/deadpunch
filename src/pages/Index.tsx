@@ -1,5 +1,6 @@
 
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
@@ -7,7 +8,7 @@ import ProductTeasers from '@/components/ProductTeasers';
 import EmailForm from '@/components/EmailForm';
 import ChatInterface from '@/components/Chat/ChatInterface';
 import TikTokIcon from '@/components/icons/TikTokIcon';
-import { Mail, Phone } from 'lucide-react';
+import { Mail, Phone, Target } from 'lucide-react';
 import {
   HoverCard,
   HoverCardContent,
@@ -120,6 +121,10 @@ const Index = () => {
               <Phone size={16} className="mr-2" />
               <span className="text-sm">413-475-9156</span>
             </a>
+            <Link to="/training-tools/pool-tools" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
+              <Target size={16} className="mr-2" />
+              <span className="text-sm">Pool Tools</span>
+            </Link>
           </div>
           
           <div className="flex flex-col items-center md:items-end">
