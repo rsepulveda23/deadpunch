@@ -52,7 +52,7 @@ export const Scoreboard = ({
         <CardTitle className="text-2xl flex items-center">
           <span className="text-deadpunch-red mr-2">Scoreboard</span>
           <span className="text-sm bg-deadpunch-red/20 text-deadpunch-red px-2 py-1 rounded-full ml-auto">
-            Race to {raceValue}
+            Pool
           </span>
         </CardTitle>
       </CardHeader>
@@ -83,20 +83,6 @@ export const Scoreboard = ({
             />
           </div>
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="raceValue">Race To</Label>
-          <Input
-            id="raceValue"
-            type="number"
-            min="1"
-            value={raceValue}
-            onChange={(e) => setRaceValue(parseInt(e.target.value) || 1)}
-            className="input-field"
-          />
-        </div>
-
-        <Separator className="bg-deadpunch-gray-dark" />
 
         <div className="grid grid-cols-2 gap-8">
           {/* Player 1 Score */}
@@ -159,6 +145,40 @@ export const Scoreboard = ({
                 className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
               >
                 <Plus size={18} />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Centered Race To section */}
+        <div className="flex flex-col items-center mt-6">
+          <Separator className="bg-deadpunch-gray-dark mb-4" />
+          
+          <div className="flex items-center justify-center gap-4">
+            <Label htmlFor="raceValue" className="text-lg font-semibold whitespace-nowrap">Race To</Label>
+            <div className="flex items-center">
+              <Button 
+                size="icon" 
+                variant="outline"
+                onClick={() => setRaceValue(prev => Math.max(1, prev - 1))}
+                className="hover:border-white/50 hover:bg-deadpunch-dark/50"
+              >
+                <Minus size={16} />
+              </Button>
+              
+              <div className={cn(
+                "mx-3 text-4xl font-display font-bold",
+                "text-deadpunch-red"
+              )}>
+                {raceValue}
+              </div>
+              
+              <Button 
+                size="icon"
+                onClick={() => setRaceValue(prev => prev + 1)}
+                className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
+              >
+                <Plus size={16} />
               </Button>
             </div>
           </div>
