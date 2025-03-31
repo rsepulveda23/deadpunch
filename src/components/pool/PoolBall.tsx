@@ -46,10 +46,10 @@ export const PoolBall = ({ number }: PoolBallProps) => {
       
       {/* Number display */}
       <div className={cn(
-        "z-10 text-sm md:text-base font-bold flex items-center justify-center",
+        "z-10 flex items-center justify-center",
         striped 
-          ? "relative z-20" 
-          : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full"
+          ? "relative z-20 font-bold text-sm md:text-base" 
+          : "w-6 h-6 md:w-7 md:h-7 bg-white rounded-full font-bold text-sm md:text-base"
       )}>
         {number}
       </div>
