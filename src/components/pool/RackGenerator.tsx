@@ -10,7 +10,7 @@ import { generateRack, getGameRules } from './rackGeneratorUtils';
 export const RackGenerator = () => {
   const [gameType, setGameType] = useState<GameType>("9-ball");
   const [rack, setRack] = useState<number[]>([]);
-  const [key, setKey] = useState(0); // Add a key to force re-render
+  const [key, setKey] = useState(0); // Key to force re-render
   
   useEffect(() => {
     generateRackLayout();
