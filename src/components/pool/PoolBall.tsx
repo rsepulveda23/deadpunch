@@ -11,13 +11,13 @@ const ballColors: Record<number, string> = {
   6: "bg-green-700 text-white", // Green
   7: "bg-red-900 text-white", // Maroon/Burgundy
   8: "bg-black text-white", // Black
-  9: "bg-yellow-400 text-black", // Yellow with stripe
-  10: "bg-blue-600 text-white", // Blue with stripe
-  11: "bg-red-600 text-white", // Red with stripe
-  12: "bg-purple-700 text-white", // Purple with stripe
-  13: "bg-orange-600 text-white", // Orange with stripe
-  14: "bg-green-700 text-white", // Green with stripe
-  15: "bg-red-900 text-white", // Maroon/Burgundy with stripe
+  9: "bg-yellow-400 text-black", // Yellow with stripe (same as 1)
+  10: "bg-blue-600 text-white", // Blue with stripe (same as 2)
+  11: "bg-red-600 text-white", // Red with stripe (same as 3)
+  12: "bg-purple-700 text-white", // Purple with stripe (same as 4)
+  13: "bg-orange-600 text-white", // Orange with stripe (same as 5)
+  14: "bg-green-700 text-white", // Green with stripe (same as 6)
+  15: "bg-red-900 text-white", // Maroon/Burgundy with stripe (same as 7)
 };
 
 interface PoolBallProps {
