@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,14 +19,12 @@ export const RackGenerator = () => {
 
   const generateRack = () => {
     if (gameType === "9-ball") {
-      const rackArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      
       const availableBalls = [2, 3, 4, 5, 6, 7, 8];
       
       const shuffledBalls = availableBalls.sort(() => Math.random() - 0.5);
       
       const finalRack = [
-        1,                    // Top of the diamond - first ball
+        1,                    // Top of the diamond - first ball (always 1)
         shuffledBalls[0],     // Second row - left
         shuffledBalls[1],     // Second row - right
         shuffledBalls[2],     // Third row - left
@@ -97,7 +94,7 @@ export const RackGenerator = () => {
   const getRackLayout = () => {
     if (gameType === "9-ball") {
       return `
-        grid-cols-5 gap-[-8px] max-w-[80px] 
+        grid-cols-5 gap-2 max-w-[180px] 
         [&>*:nth-child(1)]:col-start-3 [&>*:nth-child(1)]:col-end-4 [&>*:nth-child(1)]:row-start-1
         [&>*:nth-child(2)]:col-start-2 [&>*:nth-child(2)]:col-end-3 [&>*:nth-child(2)]:row-start-2 
         [&>*:nth-child(3)]:col-start-4 [&>*:nth-child(3)]:col-end-5 [&>*:nth-child(3)]:row-start-2
@@ -200,7 +197,7 @@ export const RackGenerator = () => {
         )}>
           {rack.length > 0 ? (
             <div className={cn(
-              "grid relative transform scale-[1.6] md:scale-[1.8]", 
+              "grid relative", 
               getRackLayout(),
               "animate-fade-in"
             )}>
