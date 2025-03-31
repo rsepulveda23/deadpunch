@@ -162,9 +162,11 @@ const Navbar = () => {
                               className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-deadpunch-dark-lighter hover:text-deadpunch-red focus:bg-deadpunch-dark-lighter focus:text-accent-foreground"
                             >
                               <div className="text-sm font-medium leading-none">{subcategory.name}</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-deadpunch-red mt-1">
-                                Coming Soon
-                              </p>
+                              {!subcategory.isActive && (
+                                <p className="line-clamp-2 text-sm leading-snug text-deadpunch-red mt-1">
+                                  Coming Soon
+                                </p>
+                              )}
                             </Link>
                           </NavigationMenuLink>
                         </li>
@@ -330,7 +332,9 @@ const Navbar = () => {
                               onClick={() => setIsMenuOpen(false)}
                             >
                               <div>{subcategory.name}</div>
-                              <p className="text-xs text-deadpunch-red">Coming Soon</p>
+                              {!subcategory.isActive && (
+                                <p className="text-xs text-deadpunch-red">Coming Soon</p>
+                              )}
                             </Link>
                           </div>
                         ))}

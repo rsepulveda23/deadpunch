@@ -7,9 +7,9 @@ import { RackGenerator } from "@/components/pool/RackGenerator";
 /**
  * PoolTools Page
  * 
- * A page containing various tools for pool/billiards players:
- * - Scoreboard: Keep track of scores in pool games
- * - Rack Generator: Create randomized rack layouts for different pool games
+ * A dedicated page containing essential tools for pool/billiards players:
+ * - Scoreboard: Keep track of scores in various game formats with customizable race targets
+ * - Rack Generator: Create randomized, tournament-legal rack layouts for different pool games
  */
 const PoolTools = () => {
   return (
@@ -30,7 +30,8 @@ const PoolTools = () => {
             Pool Game <span className="text-deadpunch-red">Tools</span>
           </h1>
           <p className="text-deadpunch-gray-light max-w-2xl mx-auto">
-            Keep track of your scores and generate perfect racks for 9-ball, 10-ball, or 8-ball games.
+            Enhance your pool game with our interactive score tracking system and tournament-legal rack generator. 
+            Perfect for practice sessions, friendly matches, and competitive play in 8-ball, 9-ball, and 10-ball formats.
           </p>
         </div>
 
