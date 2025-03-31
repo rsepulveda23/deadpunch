@@ -1,4 +1,6 @@
 
+import { Session, User } from '@supabase/supabase-js';
+
 export interface AuthState {
   isLoading: boolean;
   email: string;
@@ -12,4 +14,10 @@ export interface UseAuthReturn extends AuthState {
   setPassword: (password: string) => void;
   handleSignIn: (e: React.FormEvent) => Promise<void>;
   handleSignUp: (e: React.FormEvent) => Promise<void>;
+}
+
+export interface AuthContextType {
+  session: Session | null;
+  user: User | null;
+  isLoading: boolean;
 }

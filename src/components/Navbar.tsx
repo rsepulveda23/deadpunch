@@ -36,6 +36,7 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import NotifyDialog from './NotifyDialog';
 import { supabase } from '@/integrations/supabase/client';
+import UserMenu from './UserMenu';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -226,9 +227,10 @@ const Navbar = () => {
                 </div>
               </HoverCardContent>
             </HoverCard>
+            <UserMenu />
             <NotifyDialog 
               trigger={
-                <Button variant="default" className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
+                <Button variant="outline" className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-deadpunch-red">
                   Notify Me
                 </Button>
               }
@@ -282,6 +284,7 @@ const Navbar = () => {
                 </div>
               </HoverCardContent>
             </HoverCard>
+            <UserMenu />
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
                 <Button 
