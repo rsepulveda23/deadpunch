@@ -1,0 +1,57 @@
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+interface Player {
+  name: string;
+  score: number;
+}
+
+interface PlayerNameInputsProps {
+  player1: Player;
+  player2: Player;
+  onNameChange: (player: "player1" | "player2", name: string) => void;
+  onInputFocus: (player: "player1" | "player2") => void;
+}
+
+/**
+ * PlayerNameInputs Component
+ * 
+ * Renders input fields for both players' names with appropriate labels.
+ * Handles name changes and focus events.
+ */
+export const PlayerNameInputs = ({ 
+  player1, 
+  player2, 
+  onNameChange, 
+  onInputFocus 
+}: PlayerNameInputsProps) => {
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-2">
+        <Label htmlFor="player1Name">Player 1</Label>
+        <Input
+          id="player1Name"
+          value={player1.name}
+          onChange={(e) => onNameChange("player1", e.target.value)}
+          onFocus={() => onInputFocus("player1")}
+          onClick={() => onInputFocus("player1")}
+          className="input-field"
+          placeholder="Enter name"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="player2Name">Player 2</Label>
+        <Input
+          id="player2Name"
+          value={player2.name}
+          onChange={(e) => onNameChange("player2", e.target.value)}
+          onFocus={() => onInputFocus("player2")}
+          onClick={() => onInputFocus("player2")}
+          className="input-field"
+          placeholder="Enter name"
+        />
+      </div>
+    </div>
+  );
+};

@@ -1,14 +1,12 @@
 
-import { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { PlayerScore } from './player/PlayerScore';
-import { RaceToSelector } from './race/RaceToSelector';
+import { useState } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
 import { toast } from 'sonner';
 import { useScoreboardStorage } from './hooks/useScoreboardStorage';
+import { ScoreboardHeader } from './scoreboard/ScoreboardHeader';
+import { PlayerNameInputs } from './scoreboard/PlayerNameInputs';
+import { PlayerScoresDisplay } from './scoreboard/PlayerScoresDisplay';
+import { ScoreboardControls } from './scoreboard/ScoreboardControls';
 
 interface Player {
   name: string;
@@ -102,80 +100,31 @@ export const Scoreboard = ({
 
   return (
     <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark hover:border-white/30 transition-all duration-300">
-      <CardHeader>
-        <CardTitle className="text-2xl flex items-center">
-          <span className="text-deadpunch-red mr-2">Scoreboard</span>
-          <span className="text-sm bg-deadpunch-red/20 text-deadpunch-red px-2 py-1 rounded-full ml-auto">
-            Pool
-          </span>
-        </CardTitle>
-      </CardHeader>
+      <ScoreboardHeader />
       <CardContent className="space-y-6">
         {/* Player name inputs */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="player1Name">Player 1</Label>
-            <Input
-              id="player1Name"
-              value={player1.name}
-              onChange={(e) => handleNameChange("player1", e.target.value)}
-              onFocus={() => handleInputFocus("player1")}
-              onClick={() => handleInputFocus("player1")}
-              className="input-field"
-              placeholder="Enter name"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="player2Name">Player 2</Label>
-            <Input
-              id="player2Name"
-              value={player2.name}
-              onChange={(e) => handleNameChange("player2", e.target.value)}
-              onFocus={() => handleInputFocus("player2")}
-              onClick={() => handleInputFocus("player2")}
-              className="input-field"
-              placeholder="Enter name"
-            />
-          </div>
-        </div>
+        <PlayerNameInputs 
+          player1={player1}
+          player2={player2}
+          onNameChange={handleNameChange}
+          onInputFocus={handleInputFocus}
+        />
 
         {/* Player score displays */}
-        <div className="grid grid-cols-2 gap-8">
-          <PlayerScore 
-            player={player1} 
-            raceValue={raceValue} 
-            onScoreChange={(change) => handleScoreChange("player1", change)} 
-          />
-          <PlayerScore 
-            player={player2} 
-            raceValue={raceValue} 
-            onScoreChange={(change) => handleScoreChange("player2", change)} 
-          />
-        </div>
+        <PlayerScoresDisplay 
+          player1={player1}
+          player2={player2}
+          raceValue={raceValue}
+          onScoreChange={handleScoreChange}
+        />
 
-        {/* Race To section */}
-        <div className="mt-6">
-          <Separator className="bg-deadpunch-gray-dark mb-4" />
-          <RaceToSelector value={raceValue} onChange={updateRaceValue} />
-        </div>
-
-        {/* Reset buttons */}
-        <div className="flex justify-center gap-4 mt-4">
-          <Button 
-            onClick={handleResetScores}
-            variant="outline"
-            className="border-white/20 hover:border-white/70"
-          >
-            Reset Scores
-          </Button>
-          <Button 
-            onClick={handleResetAll}
-            variant="outline"
-            className="border-deadpunch-red/20 hover:border-deadpunch-red/70 text-deadpunch-red"
-          >
-            Reset All
-          </Button>
-        </div>
+        {/* Race To section and reset buttons */}
+        <ScoreboardControls 
+          raceValue={raceValue}
+          onRaceValueChange={updateRaceValue}
+          onResetScores={handleResetScores}
+          onResetAll={handleResetAll}
+        />
       </CardContent>
     </Card>
   );
