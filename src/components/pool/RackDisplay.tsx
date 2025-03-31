@@ -1,3 +1,4 @@
+
 import { PoolBall } from './PoolBall';
 import { cn } from "@/lib/utils";
 import { GameType } from './GameTypeSelector';
@@ -73,6 +74,16 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
     }
   };
 
+  // Highlights specific balls based on game type to show they're in fixed positions
+  const getHighlightForBall = (ballNumber: number) => {
+    if ((gameType === "9-ball" && (ballNumber === 1 || ballNumber === 9)) ||
+        (gameType === "10-ball" && (ballNumber === 1 || ballNumber === 10)) ||
+        (gameType === "8-ball" && ballNumber === 8)) {
+      return "ring-2 ring-white/50 ring-offset-1 ring-offset-green-900 animate-pulse-slow"; 
+    }
+    return "";
+  };
+
   // Adjust the ball size based on game type for better proportions
   const getBallSizeClass = () => {
     if (gameType === "9-ball") {
@@ -100,6 +111,7 @@ export const RackDisplay = ({ gameType, rack }: RackDisplayProps) => {
               key={index} 
               number={ball} 
               sizeClass={getBallSizeClass()}
+              className={getHighlightForBall(ball)}
             />
           ))}
         </div>
