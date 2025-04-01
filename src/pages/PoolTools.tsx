@@ -3,6 +3,9 @@ import { Helmet } from 'react-helmet';
 import Navbar from "@/components/Navbar";
 import { Scoreboard } from "@/components/pool/Scoreboard";
 import { RackGenerator } from "@/components/pool/RackGenerator";
+import { Button } from "@/components/ui/button";
+import { Home } from "lucide-react";
+import { Link } from "react-router-dom";
 
 /**
  * PoolTools Page
@@ -25,6 +28,14 @@ const PoolTools = () => {
       
       <div className="container mx-auto px-4 pt-24 pb-16">
         <div className="text-center mb-12 mt-4">
+          <div className="flex justify-center mb-4">
+            <Link to="/">
+              <Button variant="outline" className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-deadpunch-red">
+                <Home size={18} className="mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
           <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm hover:border-white/20 transition-all duration-300">
             <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
               Training Tools
