@@ -30,10 +30,15 @@ const NavbarActions = ({
         <UserMenu />
         <NotifyDialog 
           trigger={
-            <Button variant="default" className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
+            <Button 
+              variant="default" 
+              className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white"
+            >
               Notify Me
             </Button>
           }
+          open={notifyDialogOpen}
+          onOpenChange={setNotifyDialogOpen}
         />
       </div>
 

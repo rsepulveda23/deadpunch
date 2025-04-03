@@ -61,8 +61,14 @@ interface EmailSubscriptionMetadata {
  * @returns {Promise<{success: boolean, mock?: boolean, error?: any}>} Success status and any errors
  */
 export const saveEmailSubscription = async (email: string, metadata: EmailSubscriptionMetadata = {}) => {
+  // Validate email format
+  if (!email || !email.includes('@')) {
+    console.error('Invalid email format:', email);
+    return { success: false, error: 'Invalid email format' };
+  }
+  
   // If Supabase is not configured, return a mock success for development
-  if (!isSupabaseConfigured) {
+  if (!isSupabaseConfigured || !supabase) {
     console.warn('Supabase not configured. Using mock response for email subscription.');
     // Simulate a delay to mimic a real API call
     await new Promise(resolve => setTimeout(resolve, 800));
@@ -71,7 +77,27 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
   
   try {
     console.log('Saving email to Supabase table: deadpunch_email_capture', { email, metadata });
-    const { error, data } = await supabase!
+    
+    // Check if this email already exists to prevent duplicates
+    const { data: existingData, error: checkError } = await supabase
+      .from('deadpunch_email_capture')
+      .select('email')
+      .eq('email', email)
+      .limit(1);
+    
+    if (checkError) {
+      console.error('Error checking for existing email:', checkError);
+      throw checkError;
+    }
+    
+    // If email already exists, return success without inserting
+    if (existingData && existingData.length > 0) {
+      console.log('Email already exists, not saving duplicate:', email);
+      return { success: true, duplicate: true };
+    }
+    
+    // Insert the new email
+    const { error, data } = await supabase
       .from('deadpunch_email_capture')
       .insert([{ 
         email, 

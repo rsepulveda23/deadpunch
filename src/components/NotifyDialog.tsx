@@ -23,12 +23,24 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { toast } = useToast();
   
+  const validateEmail = (email: string) => {
+    // Basic email validation
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !email.includes('@')) {
+    // Reset previous error state
+    setErrorMsg(null);
+    
+    // Validate email
+    if (!email || !validateEmail(email)) {
+      setErrorMsg("Please enter a valid email address");
       toast({
         title: "Invalid email",
         description: "Please enter a valid email address.",
@@ -40,10 +52,13 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     setIsSubmitting(true);
     
     try {
+      console.log("Submitting email:", email);
       const result = await saveEmailSubscription(email, { source: 'dialog' });
+      console.log("Subscription result:", result);
       
       if (result.success) {
         setIsSuccess(true);
+        setErrorMsg(null);
         
         // If it's a mock response, show a different message
         if (result.mock) {
@@ -69,10 +84,11 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
           }
         }, 2000);
       } else {
-        throw new Error('Failed to save subscription');
+        throw new Error(result.error || 'Failed to save subscription');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error in form submission:', error);
+      setErrorMsg("Failed to submit your email. Please try again.");
       toast({
         title: "Something went wrong",
         description: "There was an error submitting your email. Please try again.",
@@ -106,6 +122,11 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
             disabled={isSubmitting || isSuccess}
             required
           />
+          {errorMsg && (
+            <div className="text-sm text-red-500 mt-1">
+              {errorMsg}
+            </div>
+          )}
         </div>
         <Button
           type="submit"
