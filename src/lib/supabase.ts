@@ -94,9 +94,9 @@ export const saveEmailSubscription = async (
     }
     
     // Fix: Check if the operation was an insert or a no-op (duplicate)
-    // by checking if data exists and is an array with content
+    // Using type-safe checks for the data variable
     const isDuplicate = !data || 
-                      (Array.isArray(data) && data.length === 0);
+                       (Array.isArray(data) && data.length === 0);
     
     if (isDuplicate) {
       console.log('[Email Service] Email already exists in database:', email);
