@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Mail, Loader2, CheckCircle } from 'lucide-react';
 import { 
   Dialog, 
   DialogContent, 

@@ -33,7 +33,7 @@ export const NotificationDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
           Notify Me When Available
         </Button>
       </DialogTrigger>

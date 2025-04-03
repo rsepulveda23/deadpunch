@@ -230,7 +230,7 @@ const Navbar = () => {
             <UserMenu />
             <NotifyDialog 
               trigger={
-                <Button variant="outline" className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-deadpunch-red">
+                <Button variant="default" className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
                   Notify Me
                 </Button>
               }

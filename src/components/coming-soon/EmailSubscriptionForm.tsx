@@ -112,9 +112,9 @@ export const EmailSubscriptionForm = ({
       
       <Button
         type="submit"
-        className={`w-full ${
+        className={`w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-white ${
           isSuccess 
-            ? 'bg-green-600 hover:bg-green-700 text-white' 
+            ? 'bg-green-600 hover:bg-green-700' 
             : ''
         }`}
         disabled={isSubmitting || isSuccess}
