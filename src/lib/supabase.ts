@@ -64,16 +64,12 @@ interface EmailSubscriptionResponse {
   
   /** Error message if the operation failed */
   error?: string;
-  
-  /** Whether the email already existed in the database */
-  duplicate?: boolean;
 }
 
 /**
- * Saves an email subscription to the Supabase 'deadpunch_email_capture' table
+ * Saves an email subscription via Supabase Edge Function
  * 
- * This function handles input validation and error handling.
- * It uses upsert with ignoreDuplicates to ensure each email is only stored once.
+ * This function handles calling the Edge Function that saves the email to the database.
  * 
  * @param {string} email - The subscriber's email address
  * @param {EmailMetadata} metadata - Optional metadata about the subscription (source, category, etc.)
@@ -92,28 +88,18 @@ export const saveEmailSubscription = async (
   }
   
   try {
-    // Prepare data for insertion with current timestamp
-    const emailData = { 
-      email, 
-      created_at: new Date().toISOString(),
-      metadata 
-    };
+    console.log('[Email Service] Saving email subscription via Edge Function:', email);
     
-    console.log('[Email Service] Saving email subscription:', email);
+    // Call the Supabase Edge Function to handle the email subscription
+    const { data, error } = await supabase.functions.invoke('collect-email', {
+      body: { email, metadata }
+    });
     
-    // Using upsert with the unique constraint on the email column
-    const { error } = await supabase
-      .from('deadpunch_email_capture')
-      .upsert([emailData], { 
-        onConflict: 'email',
-        ignoreDuplicates: true // Don't update if record exists
-      });
-      
     if (error) {
-      console.error('[Email Service] Database error when inserting email:', error);
+      console.error('[Email Service] Edge Function error:', error);
       return { 
         success: false, 
-        error: `Database error: ${error.message}` 
+        error: `Function error: ${error.message}` 
       };
     }
     

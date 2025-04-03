@@ -1,2 +1,30 @@
 
 project_id = "yunwcbujnowcifbkfjmr"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+
+[db]
+port = 54322
+
+[studio]
+port = 54323
+
+[inbucket]
+port = 54324
+
+[auth]
+enabled = true
+port = 9999
+
+[realtime]
+enabled = true
+
+[storage]
+enabled = true
+
+[functions]
+[functions.collect-email]
+verify_jwt = false
