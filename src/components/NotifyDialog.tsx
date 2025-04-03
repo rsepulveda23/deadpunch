@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Mail, Loader2, CheckCircle, AlertTriangle, ExternalLink } from 'lucide-react';
 import { 
   Dialog, 
   DialogContent, 
@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { saveEmailSubscription } from '@/lib/supabase';
+import { saveEmailSubscription, testSupabaseConnection } from '@/lib/supabase';
 
 interface NotifyDialogProps {
   trigger?: React.ReactNode;
@@ -25,6 +25,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<string | null>(null);
   const { toast } = useToast();
   
   const validateEmail = (email: string) => {
@@ -33,11 +34,31 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     return re.test(email);
   };
 
+  /**
+   * Tests the Supabase connection
+   * Useful for diagnosing issues
+   */
+  const handleTestConnection = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setDebugInfo('Testing connection...');
+    
+    try {
+      const result = await testSupabaseConnection();
+      setDebugInfo(result.success 
+        ? `Connection successful: ${JSON.stringify(result.data)}` 
+        : `Connection failed: ${JSON.stringify(result.error)}`
+      );
+    } catch (error) {
+      setDebugInfo(`Test error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Reset previous error state
+    // Reset previous error and debug state
     setErrorMsg(null);
+    setDebugInfo(null);
     
     // Validate email
     if (!email || !validateEmail(email)) {
@@ -54,8 +75,15 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     
     try {
       console.log("Submitting email from dialog:", email);
-      const result = await saveEmailSubscription(email, { source: 'dialog' });
+      setDebugInfo(`Attempting to save email: ${email}`);
+      
+      const result = await saveEmailSubscription(email, { 
+        source: 'dialog', 
+        timestamp: new Date().toISOString() 
+      });
+      
       console.log("Subscription result:", result);
+      setDebugInfo(prev => `${prev}\nResult: ${JSON.stringify(result)}`);
       
       if (result.success) {
         setIsSuccess(true);
@@ -95,8 +123,9 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
       }
     } catch (error) {
       console.error('Error in form submission:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : String(error);
       setErrorMsg(`Failed to submit: ${errorMessage}`);
+      setDebugInfo(prev => `${prev}\nError: ${errorMessage}`);
       toast({
         title: "Something went wrong",
         description: `There was an error submitting your email. Please try again later.`,
@@ -136,6 +165,18 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
               <span>{errorMsg}</span>
             </div>
           )}
+          {debugInfo && (
+            <div className="text-xs text-deadpunch-gray-light mt-1 p-2 bg-deadpunch-dark-lighter rounded-md whitespace-pre-wrap">
+              <span className="block font-medium mb-1">Debug info:</span>
+              {debugInfo}
+              <button 
+                onClick={handleTestConnection}
+                className="block mt-1 text-deadpunch-red text-xs underline"
+              >
+                Test connection
+              </button>
+            </div>
+          )}
         </div>
         <Button
           type="submit"
@@ -165,6 +206,18 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
           <p className="text-xs text-deadpunch-red font-medium">
             No spam, just heat.
           </p>
+        </div>
+        <div className="text-center pt-2">
+          <button 
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              setDebugInfo(debugInfo ? null : "Click 'Test connection' to check Supabase connectivity");
+            }}
+            className="text-xs text-deadpunch-gray-light underline"
+          >
+            {debugInfo ? "Hide debug info" : "Show debug info"}
+          </button>
         </div>
       </form>
     </DialogContent>
