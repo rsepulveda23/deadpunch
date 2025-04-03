@@ -7,6 +7,7 @@ import { validateEmailFormat, formatEmail } from "../_shared/utils.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 // Request body interface
@@ -31,24 +32,46 @@ interface EmailResponse {
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders, status: 204 });
   }
 
   try {
+    console.log("[Edge Function] Email collection request received");
+    
     // Create a Supabase client with the project details and service role key
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error("[Edge Function] Missing Supabase credentials");
+      throw new Error("Server configuration error");
+    }
+    
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
     // Parse request body
-    const { email: rawEmail, metadata = {} }: EmailRequest = await req.json();
+    let emailData: EmailRequest;
+    try {
+      emailData = await req.json();
+    } catch (e) {
+      console.error("[Edge Function] Error parsing request body:", e);
+      return new Response(
+        JSON.stringify({ success: false, error: "Invalid request body" }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
+    }
+    
+    const { email: rawEmail, metadata = {} } = emailData;
 
     // Format the email properly
     const email = formatEmail(rawEmail);
 
     // Input validation
     if (!email) {
+      console.error("[Edge Function] Missing email");
       return new Response(
         JSON.stringify({ success: false, error: "Email is required" }),
         { 
@@ -60,6 +83,7 @@ serve(async (req) => {
     
     // Validate email format
     if (!validateEmailFormat(email)) {
+      console.error("[Edge Function] Invalid email format:", email);
       return new Response(
         JSON.stringify({ success: false, error: "Invalid email format" }),
         { 
@@ -69,6 +93,8 @@ serve(async (req) => {
       );
     }
 
+    console.log("[Edge Function] Checking for duplicate email:", email);
+    
     // Check if email already exists in database
     const { data: existingEmails, error: lookupError } = await supabaseClient
       .from("deadpunch_email_capture")
@@ -77,7 +103,7 @@ serve(async (req) => {
       .limit(1);
 
     if (lookupError) {
-      console.error("[Email Function] Database lookup error:", lookupError);
+      console.error("[Edge Function] Database lookup error:", lookupError);
       throw lookupError;
     }
 
@@ -86,7 +112,7 @@ serve(async (req) => {
     
     // If duplicate, we can return early with success but marked as duplicate
     if (isDuplicate) {
-      console.log("[Email Function] Duplicate email found:", email);
+      console.log("[Edge Function] Duplicate email found:", email);
       
       return new Response(
         JSON.stringify({ 
@@ -100,10 +126,10 @@ serve(async (req) => {
       );
     }
 
-    console.log("[Email Function] Saving new email subscription:", email);
+    console.log("[Edge Function] Saving new email subscription:", email);
 
     // Prepare data for insertion
-    const emailData = { 
+    const emailData2 = { 
       email, 
       created_at: new Date().toISOString(),
       metadata 
@@ -112,14 +138,14 @@ serve(async (req) => {
     // Insert email into database
     const { error } = await supabaseClient
       .from("deadpunch_email_capture")
-      .insert([emailData]);
+      .insert([emailData2]);
 
     if (error) {
-      console.error("[Email Function] Database error:", error);
+      console.error("[Edge Function] Database error:", error);
       throw error;
     }
 
-    console.log("[Email Function] Email saved successfully:", email);
+    console.log("[Edge Function] Email saved successfully:", email);
     
     // Return success response
     return new Response(
@@ -134,7 +160,7 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error("[Email Function] Error:", error);
+    console.error("[Edge Function] Error:", error);
     
     // Return error response
     return new Response(

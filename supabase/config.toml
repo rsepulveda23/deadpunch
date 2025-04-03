@@ -27,3 +27,4 @@ enabled = true
 [functions]
 [functions.collect-email]
 verify_jwt = false
+

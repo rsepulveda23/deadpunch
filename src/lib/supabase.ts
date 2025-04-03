@@ -27,7 +27,7 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
  */
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: localStorage,
+    storage: typeof localStorage !== 'undefined' ? localStorage : undefined,
     persistSession: true,
     autoRefreshToken: true,
   }
@@ -95,7 +95,11 @@ export const saveEmailSubscription = async (
     
     // Call the Supabase Edge Function to handle the email subscription
     const { data, error } = await supabase.functions.invoke('collect-email', {
-      body: { email, metadata }
+      method: 'POST',
+      body: { email, metadata },
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
     
     if (error) {
