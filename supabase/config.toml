@@ -23,3 +23,6 @@ enabled = true
 
 [storage]
 enabled = true
+
+[functions]
+[functions.openai-chat]
