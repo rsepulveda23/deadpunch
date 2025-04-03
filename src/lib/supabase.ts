@@ -70,9 +70,9 @@ interface EmailSubscriptionResponse {
 }
 
 /**
- * Saves an email subscription via Supabase Edge Function
+ * Saves an email subscription directly to the Supabase database
  * 
- * This function handles calling the Edge Function that saves the email to the database.
+ * This function handles saving the email to the database and checking for duplicates.
  * 
  * @param {string} email - The subscriber's email address
  * @param {EmailMetadata} metadata - Optional metadata about the subscription (source, category, etc.)
@@ -91,30 +91,54 @@ export const saveEmailSubscription = async (
   }
   
   try {
-    console.log('[Email Service] Saving email subscription via Edge Function:', email);
+    console.log('[Email Service] Saving email subscription:', email);
     
-    // Call the Supabase Edge Function to handle the email subscription
-    const { data, error } = await supabase.functions.invoke('collect-email', {
-      method: 'POST',
-      body: { email, metadata },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    // First check if the email already exists in the database
+    const { data: existingEmails, error: checkError } = await supabase
+      .from('deadpunch_email_capture')
+      .select('email')
+      .eq('email', email)
+      .limit(1);
     
-    if (error) {
-      console.error('[Email Service] Edge Function error:', error);
+    if (checkError) {
+      console.error('[Email Service] Error checking for existing email:', checkError);
       return { 
         success: false, 
-        error: `Function error: ${error.message}` 
+        error: `Database error: ${checkError.message}` 
       };
     }
     
-    // Success response - data will now include the duplicate flag from the edge function
-    console.log('[Email Service] Email subscription saved successfully:', email, data);
+    // If email already exists, return success with duplicate flag
+    if (existingEmails && existingEmails.length > 0) {
+      console.log('[Email Service] Email already exists:', email);
+      return { 
+        success: true,
+        duplicate: true
+      };
+    }
+    
+    // If email doesn't exist, insert it into the database
+    const { error: insertError } = await supabase
+      .from('deadpunch_email_capture')
+      .insert([{ 
+        email, 
+        created_at: new Date().toISOString(),
+        metadata 
+      }]);
+    
+    if (insertError) {
+      console.error('[Email Service] Error inserting email:', insertError);
+      return { 
+        success: false, 
+        error: `Database error: ${insertError.message}` 
+      };
+    }
+    
+    // Success response
+    console.log('[Email Service] Email subscription saved successfully:', email);
     return { 
       success: true,
-      duplicate: data?.duplicate || false
+      duplicate: false
     };
     
   } catch (error) {
