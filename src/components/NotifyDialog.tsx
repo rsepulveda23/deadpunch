@@ -10,6 +10,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
 
@@ -67,6 +68,12 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
             description: "Email saved in development mode. Connect Supabase to enable database storage.",
             variant: "default"
           });
+        } else if (result.duplicate) {
+          toast({
+            title: "Already Subscribed",
+            description: "This email is already on our notification list.",
+            variant: "default"
+          });
         } else {
           toast({
             title: "Success!",
@@ -113,10 +120,10 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
       
       <form onSubmit={handleSubmit} className="space-y-4 mt-2">
         <div className="space-y-2">
-          <input
+          <Input
             type="email"
             placeholder="Enter your email address"
-            className="input-field w-full"
+            className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isSubmitting || isSuccess}

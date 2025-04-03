@@ -96,7 +96,8 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
       return { success: true, duplicate: true };
     }
     
-    // Insert the new email
+    // Insert the new email with detailed logging
+    console.log(`Attempting to insert email: ${email} with metadata:`, metadata);
     const { error, data } = await supabase
       .from('deadpunch_email_capture')
       .insert([{ 
@@ -106,7 +107,7 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
       }]);
     
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('Supabase insert error:', error);
       throw error;
     }
     

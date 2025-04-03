@@ -8,12 +8,24 @@ const EmailForm = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { toast } = useToast();
+
+  const validateEmail = (email: string) => {
+    // Basic email validation
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !email.includes('@')) {
+    // Reset previous error state
+    setErrorMsg(null);
+    
+    // Validate email
+    if (!email || !validateEmail(email)) {
+      setErrorMsg("Please enter a valid email address");
       toast({
         title: "Invalid email",
         description: "Please enter a valid email address.",
@@ -25,16 +37,25 @@ const EmailForm = () => {
     setIsSubmitting(true);
     
     try {
-      const result = await saveEmailSubscription(email);
+      console.log("Submitting email from homepage:", email);
+      const result = await saveEmailSubscription(email, { source: 'homepage' });
+      console.log("Subscription result:", result);
       
       if (result.success) {
         setIsSuccess(true);
+        setErrorMsg(null);
         
         // If it's a mock response, show a different message
         if (result.mock) {
           toast({
             title: "Development Mode",
             description: "Email saved in development mode. Connect Supabase to enable database storage.",
+            variant: "default"
+          });
+        } else if (result.duplicate) {
+          toast({
+            title: "Already Subscribed",
+            description: "This email is already on our notification list.",
             variant: "default"
           });
         } else {
@@ -51,10 +72,11 @@ const EmailForm = () => {
           setIsSuccess(false);
         }, 2000);
       } else {
-        throw new Error('Failed to save subscription');
+        throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
       console.error('Error in form submission:', error);
+      setErrorMsg("Failed to submit your email. Please try again.");
       toast({
         title: "Something went wrong",
         description: "There was an error submitting your email. Please try again.",
@@ -117,6 +139,12 @@ const EmailForm = () => {
                 )}
               </button>
             </div>
+            {errorMsg && (
+              <div className="text-sm text-red-500 flex items-center justify-center mt-2">
+                <AlertTriangle className="mr-2" size={16} />
+                <span>{errorMsg}</span>
+              </div>
+            )}
             <div className="text-center space-y-1">
               <p className="text-xs text-deadpunch-gray-light">
                 We respect your privacy and will never share your information.
