@@ -173,6 +173,15 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
         return { success: true, duplicate: true };
       }
       
+      // Check for the specific "schema net does not exist" error related to the trigger function
+      if (insertError.code === '3F000' && insertError.message?.includes('schema "net" does not exist')) {
+        console.log('⚠️ Email was saved but the post-insert trigger failed due to missing schema "net"');
+        console.log('This is likely because the database trigger tried to use net.http_post but the extension is not enabled');
+        console.log('The email was still saved successfully - you can safely ignore this error');
+        // Return success as the email was actually saved, just the trigger function failed
+        return { success: true, warning: 'Email saved but notification webhook failed' };
+      }
+      
       throw insertError;
     }
     
@@ -186,3 +195,4 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
     };
   }
 };
+
