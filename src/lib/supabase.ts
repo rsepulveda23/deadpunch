@@ -9,6 +9,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
+import { validateEmailFormat } from '@/utils/emailUtils';
 
 // Supabase connection credentials
 // These values are public and safe to be in the client code
@@ -93,7 +94,7 @@ export const saveEmailSubscription = async (
     }
     
     // Check if the operation was an insert or a no-op (duplicate)
-    const isDuplicate = data === null || data.length === 0;
+    const isDuplicate = !data || data.length === 0;
     
     if (isDuplicate) {
       console.log('[Email Service] Email already exists in database:', email);
