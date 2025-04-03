@@ -119,7 +119,7 @@ export const saveEmailSubscription = async (
     }
     
     // Fixed TypeScript null safety - properly handle both null and array cases
-    // Using type guards to ensure proper handling of the data variable
+    // Check if data is null OR if it's an empty array, both indicate a duplicate
     const isDuplicate = data === null || (Array.isArray(data) && data.length === 0);
     
     if (isDuplicate) {
