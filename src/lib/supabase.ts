@@ -93,8 +93,8 @@ export const saveEmailSubscription = async (
       };
     }
     
-    // Fix: Use type-safe check for duplicates
-    // Explicitly check for both null and empty array cases
+    // TypeScript-safe check for duplicate entry - the response for a duplicate will be
+    // either null data or an empty array depending on the Supabase version
     const isDuplicate = data === null || (Array.isArray(data) && data.length === 0);
     
     if (isDuplicate) {
