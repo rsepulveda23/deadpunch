@@ -118,9 +118,9 @@ export const saveEmailSubscription = async (
       };
     }
     
-    // Fixed TypeScript null safety - properly handle both null and array cases
-    // We need to check if data is null OR if it's an empty array, both indicate a duplicate
-    const isDuplicate = data === null || (data && data.length === 0);
+    // Properly handle both null and empty array cases to identify duplicates
+    // data will be null or an empty array if the email already exists
+    const isDuplicate = !data || data.length === 0;
     
     if (isDuplicate) {
       console.log('[Email Service] Email already exists in database:', email);
