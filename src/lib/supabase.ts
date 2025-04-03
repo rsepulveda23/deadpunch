@@ -76,7 +76,20 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
   }
   
   try {
+    console.log('Starting email save process to Supabase...');
     console.log('Saving email to Supabase table: deadpunch_email_capture', { email, metadata });
+    
+    // Verify connection to Supabase by trying a simple operation
+    const { error: healthCheckError } = await supabase
+      .from('deadpunch_email_capture')
+      .select('count(*)', { count: 'exact', head: true });
+    
+    if (healthCheckError) {
+      console.error('❌ Supabase connection check failed:', healthCheckError);
+      return { success: false, error: 'Failed to connect to Supabase database' };
+    }
+    
+    console.log('✅ Supabase connection verified');
     
     // Check if this email already exists to prevent duplicates
     const { data: existingData, error: checkError } = await supabase
@@ -96,25 +109,28 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
       return { success: true, duplicate: true };
     }
     
+    // Prepare data for insertion
+    const emailData = { 
+      email, 
+      created_at: new Date().toISOString(),
+      metadata 
+    };
+    
     // Insert the new email with detailed logging
-    console.log(`Attempting to insert email: ${email} with metadata:`, metadata);
+    console.log(`Attempting to insert email with data:`, emailData);
     const { error, data } = await supabase
       .from('deadpunch_email_capture')
-      .insert([{ 
-        email, 
-        created_at: new Date().toISOString(),
-        metadata 
-      }]);
+      .insert([emailData]);
     
     if (error) {
-      console.error('Supabase insert error:', error);
+      console.error('❌ Supabase insert error:', error);
       throw error;
     }
     
-    console.log('Email saved successfully:', data);
+    console.log('✅ Email saved successfully:', data);
     return { success: true };
   } catch (error) {
-    console.error('Error saving email subscription:', error);
-    return { success: false, error };
+    console.error('❌ Error saving email subscription:', error);
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 };

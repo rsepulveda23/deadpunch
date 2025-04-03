@@ -76,10 +76,10 @@ const EmailForm = () => {
       }
     } catch (error) {
       console.error('Error in form submission:', error);
-      setErrorMsg("Failed to submit your email. Please try again.");
+      setErrorMsg(`Failed to submit your email: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
       toast({
         title: "Something went wrong",
-        description: "There was an error submitting your email. Please try again.",
+        description: `There was an error submitting your email: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`,
         variant: "destructive"
       });
     } finally {

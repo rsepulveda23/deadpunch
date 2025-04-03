@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Loader2, CheckCircle } from 'lucide-react';
+import { Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -59,7 +59,7 @@ export const EmailSubscriptionForm = ({
     setIsSubmitting(true);
     
     try {
-      console.log("Submitting email:", email, { category, subcategory });
+      console.log("Submitting email from coming-soon page:", email, { category, subcategory });
       // Save email subscription with metadata about source
       const result = await saveEmailSubscription(email, {
         category, 
@@ -104,10 +104,10 @@ export const EmailSubscriptionForm = ({
       }
     } catch (error) {
       console.error('Error in form submission:', error);
-      setErrorMsg("Failed to submit your email. Please try again.");
+      setErrorMsg(`Failed to submit your email: ${error instanceof Error ? error.message : 'Unknown error'}`);
       toast({
         title: "Something went wrong",
-        description: "There was an error submitting your email. Please try again.",
+        description: `There was an error submitting your email: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`,
         variant: "destructive"
       });
     } finally {
@@ -133,7 +133,8 @@ export const EmailSubscriptionForm = ({
         />
         {errorMsg && (
           <div className="text-sm text-red-500 mt-1">
-            {errorMsg}
+            <AlertTriangle className="inline-block mr-1" size={14} />
+            <span>{errorMsg}</span>
           </div>
         )}
       </div>

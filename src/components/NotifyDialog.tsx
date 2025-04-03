@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Mail, Loader2, CheckCircle } from 'lucide-react';
+import { Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { 
   Dialog, 
   DialogContent, 
@@ -53,7 +53,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     setIsSubmitting(true);
     
     try {
-      console.log("Submitting email:", email);
+      console.log("Submitting email from dialog:", email);
       const result = await saveEmailSubscription(email, { source: 'dialog' });
       console.log("Subscription result:", result);
       
@@ -95,10 +95,10 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
       }
     } catch (error: any) {
       console.error('Error in form submission:', error);
-      setErrorMsg("Failed to submit your email. Please try again.");
+      setErrorMsg(`Failed to submit your email: ${error.message || 'Unknown error'}`);
       toast({
         title: "Something went wrong",
-        description: "There was an error submitting your email. Please try again.",
+        description: `There was an error submitting your email: ${error.message || 'Unknown error'}. Please try again.`,
         variant: "destructive"
       });
     } finally {
@@ -131,7 +131,8 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
           />
           {errorMsg && (
             <div className="text-sm text-red-500 mt-1">
-              {errorMsg}
+              <AlertTriangle className="inline-block mr-1" size={14} />
+              <span>{errorMsg}</span>
             </div>
           )}
         </div>
