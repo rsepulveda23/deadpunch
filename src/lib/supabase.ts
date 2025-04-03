@@ -77,36 +77,50 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
   
   try {
     console.log('Starting email save process to Supabase...');
-    console.log('Saving email to Supabase table: deadpunch_email_capture', { email, metadata });
+    console.log('Attempting to save email:', email);
     
     // Verify connection to Supabase by trying a simple operation
-    const { error: healthCheckError } = await supabase
-      .from('deadpunch_email_capture')
-      .select('count(*)', { count: 'exact', head: true });
-    
-    if (healthCheckError) {
-      console.error('❌ Supabase connection check failed:', healthCheckError);
-      return { success: false, error: 'Failed to connect to Supabase database' };
+    try {
+      const { error: healthCheckError } = await supabase
+        .from('deadpunch_email_capture')
+        .select('count')
+        .limit(1);
+      
+      if (healthCheckError) {
+        console.error('❌ Supabase connection check failed:', healthCheckError);
+        throw new Error(`Failed to connect to Supabase: ${healthCheckError.message}`);
+      }
+      
+      console.log('✅ Supabase connection verified');
+    } catch (connectionError) {
+      console.error('❌ Fatal connection error:', connectionError);
+      return { success: false, error: 'Database connection failed' };
     }
-    
-    console.log('✅ Supabase connection verified');
     
     // Check if this email already exists to prevent duplicates
-    const { data: existingData, error: checkError } = await supabase
-      .from('deadpunch_email_capture')
-      .select('email')
-      .eq('email', email)
-      .limit(1);
-    
-    if (checkError) {
-      console.error('Error checking for existing email:', checkError);
+    try {
+      console.log('Checking for existing email...');
+      const { data: existingData, error: checkError } = await supabase
+        .from('deadpunch_email_capture')
+        .select('email')
+        .eq('email', email)
+        .limit(1);
+      
+      if (checkError) {
+        console.error('Error checking for existing email:', checkError);
+        throw checkError;
+      }
+      
+      // If email already exists, return success without inserting
+      if (existingData && existingData.length > 0) {
+        console.log('Email already exists, not saving duplicate:', email);
+        return { success: true, duplicate: true };
+      }
+      
+      console.log('Email is new, proceeding with insert');
+    } catch (checkError) {
+      console.error('❌ Error checking for existing email:', checkError);
       throw checkError;
-    }
-    
-    // If email already exists, return success without inserting
-    if (existingData && existingData.length > 0) {
-      console.log('Email already exists, not saving duplicate:', email);
-      return { success: true, duplicate: true };
     }
     
     // Prepare data for insertion
@@ -118,19 +132,34 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
     
     // Insert the new email with detailed logging
     console.log(`Attempting to insert email with data:`, emailData);
-    const { error, data } = await supabase
+    const { error: insertError } = await supabase
       .from('deadpunch_email_capture')
       .insert([emailData]);
     
-    if (error) {
-      console.error('❌ Supabase insert error:', error);
-      throw error;
+    if (insertError) {
+      console.error('❌ Supabase insert error:', insertError);
+      
+      // Check if it's a permissions issue
+      if (insertError.message?.includes('permission denied')) {
+        return { success: false, error: 'Database permission denied. Please check table permissions.' };
+      }
+      
+      // Check if it's a duplicate key error (in case the previous check missed it)
+      if (insertError.message?.includes('duplicate key')) {
+        console.log('Duplicate email detected during insert, returning as success');
+        return { success: true, duplicate: true };
+      }
+      
+      throw insertError;
     }
     
-    console.log('✅ Email saved successfully:', data);
+    console.log('✅ Email saved successfully to deadpunch_email_capture table');
     return { success: true };
   } catch (error) {
     console.error('❌ Error saving email subscription:', error);
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : String(error)
+    };
   }
 };

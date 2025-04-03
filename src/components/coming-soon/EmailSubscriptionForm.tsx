@@ -104,10 +104,11 @@ export const EmailSubscriptionForm = ({
       }
     } catch (error) {
       console.error('Error in form submission:', error);
-      setErrorMsg(`Failed to submit your email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setErrorMsg(`Failed to submit: ${errorMessage}`);
       toast({
         title: "Something went wrong",
-        description: `There was an error submitting your email: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`,
+        description: `There was an error submitting your email. Please try again later.`,
         variant: "destructive"
       });
     } finally {
