@@ -93,9 +93,10 @@ export const saveEmailSubscription = async (
       };
     }
     
-    // TypeScript-safe check for duplicate entry - the response for a duplicate will be
-    // either null data or an empty array depending on the Supabase version
-    const isDuplicate = data === null || (Array.isArray(data) && data.length === 0);
+    // Fix for TypeScript null safety - properly handle both null and empty array cases
+    // This addresses the error: Property 'length' does not exist on type 'never'
+    // as well as the error: 'data' is possibly 'null'
+    const isDuplicate = !data || (Array.isArray(data) && data.length === 0);
     
     if (isDuplicate) {
       console.log('[Email Service] Email already exists in database:', email);
