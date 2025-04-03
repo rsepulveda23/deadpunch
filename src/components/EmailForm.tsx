@@ -12,7 +12,6 @@ const EmailForm = () => {
   const { toast } = useToast();
 
   const validateEmail = (email: string) => {
-    // Basic email validation
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
@@ -20,7 +19,7 @@ const EmailForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Reset previous error state
+    // Reset states
     setErrorMsg(null);
     
     // Validate email
@@ -44,16 +43,8 @@ const EmailForm = () => {
       
       if (result.success) {
         setIsSuccess(true);
-        setErrorMsg(null);
         
-        // If it's a mock response, show a different message
-        if (result.mock) {
-          toast({
-            title: "Development Mode",
-            description: "Email saved in development mode. Connect Supabase to enable database storage.",
-            variant: "default"
-          });
-        } else if (result.duplicate) {
+        if (result.duplicate) {
           toast({
             title: "Already Subscribed",
             description: "This email is already on our notification list.",
@@ -67,7 +58,7 @@ const EmailForm = () => {
           });
         }
         
-        // Reset the form after 2 seconds
+        // Reset the form after successful submission
         setTimeout(() => {
           setEmail('');
           setIsSuccess(false);
@@ -76,7 +67,6 @@ const EmailForm = () => {
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
       setErrorMsg(`Failed to submit email`);
       toast({
         title: "Something went wrong",
