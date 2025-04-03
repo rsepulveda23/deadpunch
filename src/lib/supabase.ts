@@ -93,10 +93,8 @@ export const saveEmailSubscription = async (
       };
     }
     
-    // Fix: Use proper type checking to handle the data response
-    // TypeScript-safe way to check if it's a duplicate entry
-    const isDuplicate = !data || 
-                       (Array.isArray(data) && data.length === 0);
+    // Fix: Type-safe check for duplicate entries
+    const isDuplicate = data === null || (Array.isArray(data) && data.length === 0);
     
     if (isDuplicate) {
       console.log('[Email Service] Email already exists in database:', email);
