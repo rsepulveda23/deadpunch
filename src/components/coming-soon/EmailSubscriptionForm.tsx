@@ -15,32 +15,49 @@ interface EmailSubscriptionFormProps {
 /**
  * EmailSubscriptionForm Component
  * 
- * Handles the collection and submission of user email addresses for notification
- * when a product or feature becomes available.
+ * A specialized email subscription form used on "Coming Soon" pages.
+ * Collects emails with additional metadata about which product/feature
+ * the user is interested in.
+ * 
+ * @param {string} category - The product category (e.g., 'Training')
+ * @param {string} subcategory - The product subcategory (e.g., 'Pool Tools')
+ * @param {Function} onSuccess - Callback function to execute after successful submission
  */
 export const EmailSubscriptionForm = ({ 
   category, 
   subcategory, 
   onSuccess 
 }: EmailSubscriptionFormProps) => {
+  // Form state management
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
+  /**
+   * Validates email format using regex
+   * 
+   * @param {string} email - Email to validate
+   * @returns {boolean} True if email format is valid
+   */
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
+  /**
+   * Handles the email submission form
+   * 
+   * @param {React.FormEvent} e - The form submission event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Reset states
+    // Reset state for new submission
     setErrorMsg(null);
     
-    // Validate email
+    // Validate email format
     if (!email || !validateEmail(email)) {
       setErrorMsg("Please enter a valid email address");
       toast({
@@ -51,12 +68,13 @@ export const EmailSubscriptionForm = ({
       return;
     }
     
+    // Submit email to Supabase
     setIsSubmitting(true);
     
     try {
-      console.log('Submitting email from coming soon page:', email, 'Category:', category, 'Subcategory:', subcategory);
+      console.log('[ComingSoon] Submitting email subscription:', email, 'Category:', category, 'Subcategory:', subcategory);
       
-      // Save email subscription with metadata about source
+      // Save email with rich metadata
       const result = await saveEmailSubscription(email, {
         category, 
         subcategory,
@@ -64,9 +82,11 @@ export const EmailSubscriptionForm = ({
         timestamp: new Date().toISOString()
       });
       
+      // Handle successful submission
       if (result.success) {
         setIsSuccess(true);
         
+        // Different message for duplicate vs new subscription
         if (result.duplicate) {
           toast({
             title: "Already Subscribed",
@@ -81,17 +101,20 @@ export const EmailSubscriptionForm = ({
           });
         }
         
-        // Reset the form after success and notify parent
+        // Reset form after delay and trigger parent callback
         setTimeout(() => {
           setEmail('');
           setIsSuccess(false);
-          onSuccess();
+          onSuccess(); // Notify parent component
         }, 2000);
       } else {
+        // Handle errors from the service
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
-      console.error('Coming soon email form error:', error);
+      // Handle and display errors
+      console.error('[ComingSoon] Email submission error:', error);
+      
       setErrorMsg(`Failed to submit email`);
       toast({
         title: "Something went wrong",

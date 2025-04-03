@@ -4,47 +4,47 @@ import { Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
 
+/**
+ * EmailForm Component
+ * 
+ * A homepage email subscription form that allows visitors to sign up
+ * for notifications about DEADPUNCH product updates and launches.
+ */
 const EmailForm = () => {
+  // Form state management
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
-
+  /**
+   * Handles the email submission form
+   * 
+   * @param {React.FormEvent} e - The form submission event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Reset states
+    // Reset state for new submission
     setErrorMsg(null);
     
-    // Validate email
-    if (!email || !validateEmail(email)) {
-      setErrorMsg("Please enter a valid email address");
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+    // Submit email to Supabase
     setIsSubmitting(true);
     
     try {
-      console.log('Submitting email from home page:', email);
+      console.log('[HomePage] Submitting email subscription:', email);
+      
       const result = await saveEmailSubscription(email, { 
         source: 'homepage',
         timestamp: new Date().toISOString() 
       });
       
+      // Handle successful submission
       if (result.success) {
         setIsSuccess(true);
         
+        // Different message for duplicate vs new subscription
         if (result.duplicate) {
           toast({
             title: "Already Subscribed",
@@ -59,20 +59,23 @@ const EmailForm = () => {
           });
         }
         
-        // Reset the form after successful submission
+        // Reset form after delay for better UX
         setTimeout(() => {
           setEmail('');
           setIsSuccess(false);
         }, 2000);
       } else {
+        // Handle errors from the service
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
-      console.error('Email form submission error:', error);
-      setErrorMsg(`Failed to submit email`);
+      // Handle and display errors
+      console.error('[HomePage] Email submission error:', error);
+      
+      setErrorMsg('Failed to submit email');
       toast({
         title: "Something went wrong",
-        description: `There was an error submitting your email. Please try again later.`,
+        description: "There was an error submitting your email. Please try again later.",
         variant: "destructive"
       });
     } finally {
@@ -132,12 +135,14 @@ const EmailForm = () => {
                 )}
               </button>
             </div>
+            
             {errorMsg && (
               <div className="text-sm text-red-500 flex items-center justify-center mt-2">
                 <AlertTriangle className="mr-2" size={16} />
                 <span>{errorMsg}</span>
               </div>
             )}
+            
             <div className="text-center space-y-1">
               <p className="text-xs text-deadpunch-gray-light">
                 We respect your privacy and will never share your information.

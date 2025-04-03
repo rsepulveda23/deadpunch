@@ -20,25 +20,47 @@ interface NotifyDialogProps {
   onOpenChange?: (open: boolean) => void;
 }
 
+/**
+ * NotifyDialog Component
+ * 
+ * A reusable dialog for collecting email subscriptions throughout the app.
+ * Can be used as both controlled and uncontrolled component.
+ * 
+ * @param {React.ReactNode} [trigger] - Optional trigger element for uncontrolled mode
+ * @param {boolean} [open] - Optional open state for controlled mode
+ * @param {Function} [onOpenChange] - Optional open state change handler for controlled mode
+ */
 const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
+  // Form state management
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { toast } = useToast();
   
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
+  /**
+   * Validates email format using regex
+   * 
+   * @param {string} email - Email to validate
+   * @returns {boolean} True if email format is valid
+   */
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
+  /**
+   * Handles the email submission form
+   * 
+   * @param {React.FormEvent} e - The form submission event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Reset states
+    // Reset state for new submission
     setErrorMsg(null);
     
-    // Validate email
+    // Validate email format
     if (!email || !validateEmail(email)) {
       setErrorMsg("Please enter a valid email address");
       toast({
@@ -49,18 +71,22 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
       return;
     }
     
+    // Submit email to Supabase
     setIsSubmitting(true);
     
     try {
-      console.log('Submitting email from dialog:', email);
+      console.log('[Dialog] Submitting email subscription:', email);
+      
       const result = await saveEmailSubscription(email, { 
         source: 'dialog', 
         timestamp: new Date().toISOString() 
       });
       
+      // Handle successful submission
       if (result.success) {
         setIsSuccess(true);
         
+        // Different message for duplicate vs new subscription
         if (result.duplicate) {
           toast({
             title: "Already Subscribed",
@@ -75,23 +101,28 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
           });
         }
         
-        // Reset the form after successful submission
+        // Reset form after delay for better UX
         setTimeout(() => {
           setEmail('');
           setIsSuccess(false);
+          
+          // Close dialog if in controlled mode
           if (onOpenChange) {
             onOpenChange(false);
           }
         }, 2000);
       } else {
+        // Handle errors from the service
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
-      console.error('Dialog email submission error:', error);
-      setErrorMsg(`Failed to submit email`);
+      // Handle and display errors
+      console.error('[Dialog] Email submission error:', error);
+      
+      setErrorMsg('Failed to submit email');
       toast({
         title: "Something went wrong",
-        description: `There was an error submitting your email. Please try again later.`,
+        description: "There was an error submitting your email. Please try again later.",
         variant: "destructive"
       });
     } finally {
@@ -129,6 +160,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
             </div>
           )}
         </div>
+        
         <Button
           type="submit"
           className={`w-full ${
@@ -150,6 +182,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
             'Notify Me'
           )}
         </Button>
+        
         <div className="text-center space-y-1 pt-2">
           <p className="text-xs text-deadpunch-gray-light">
             We respect your privacy and will never share your information.
@@ -162,7 +195,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     </DialogContent>
   );
   
-  // If controlled from outside
+  // Support both controlled and uncontrolled usage
   if (open !== undefined && onOpenChange) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>

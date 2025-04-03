@@ -1,20 +1,26 @@
+
 /**
  * ChatInterface Component
  * 
  * A responsive, floating chat widget that provides AI assistance to users.
  * Features a toggle button, chat window with message history, and loading states.
+ * Collects user email before allowing chat interaction.
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, X, MessageSquare, HelpCircle, Mail } from 'lucide-react';
+import { Send, X, MessageSquare, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { sendChatMessage, defaultChatSettings } from '@/services/chatService';
 import { Message } from '@/types/chat';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { saveEmailSubscription } from '@/lib/supabase';
+import EmailCollectionForm from './EmailCollectionForm';
 
+/**
+ * ChatInterface Component
+ * 
+ * Provides a floating chat widget with AI assistance for users.
+ */
 const ChatInterface = () => {
   /**
    * State management for the chat interface
@@ -29,8 +35,6 @@ const ChatInterface = () => {
   });
   
   // Email collection state
-  const [email, setEmail] = useState('');
-  const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
   const [hasProvidedEmail, setHasProvidedEmail] = useState(() => {
     // Check localStorage to see if user has already provided email
     return localStorage.getItem('chatEmailProvided') === 'true';
@@ -106,80 +110,46 @@ const ChatInterface = () => {
   };
 
   /**
-   * Handles email submission
-   * Saves the email to Supabase and transitions to regular chat
+   * Handles successful email submission
+   * 
+   * @param {string} email - The submitted email
+   * @param {boolean} success - Whether submission was successful
    */
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !email.includes('@') || isEmailSubmitting) return;
-    
-    setIsEmailSubmitting(true);
-    
-    try {
-      // Add user message to the chat
-      const userEmailMessage: Message = {
+  const handleEmailSubmitResult = (email: string, success: boolean) => {
+    if (success) {
+      // Add confirmation message
+      const confirmationMessage: Message = {
         id: Date.now().toString(),
-        content: email,
-        isUser: true,
+        content: 'Thank you for providing your email! How can I help you today?',
+        isUser: false,
         timestamp: new Date(),
       };
       
-      setMessages(prev => [...prev, userEmailMessage]);
+      setMessages(prev => [...prev, confirmationMessage]);
       
-      // Save email to Supabase
-      const result = await saveEmailSubscription(email, { 
-        source: 'chat',
-        captureLocation: 'chat interface' 
-      });
-      
-      if (result.success) {
-        // Add confirmation message
-        const confirmationMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: 'Thank you for providing your email! How can I help you today?',
-          isUser: false,
-          timestamp: new Date(),
-        };
-        
-        setMessages(prev => [...prev, confirmationMessage]);
-        
-        // Mark as having provided email
-        setHasProvidedEmail(true);
-        localStorage.setItem('chatEmailProvided', 'true');
-        
-        // Show toast
-        toast({
-          title: "Email saved",
-          description: "Thanks for providing your email!",
-          variant: "default"
-        });
-      } else {
-        throw new Error('Failed to save email');
-      }
-    } catch (error) {
-      console.error('Error saving email:', error);
-      
-      // Add error message
+      // Mark as having provided email
+      setHasProvidedEmail(true);
+      localStorage.setItem('chatEmailProvided', 'true');
+    } else {
+      // Add error message but allow chat to continue
       const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: Date.now().toString(),
         content: 'Sorry, there was an issue saving your email. Please try again or proceed with your questions.',
         isUser: false,
         timestamp: new Date(),
       };
       
       setMessages(prev => [...prev, errorMessage]);
-      
-      // Show error toast
-      toast({
-        title: "Error",
-        description: "Failed to save your email. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsEmailSubmitting(false);
-      setEmail('');
     }
+  };
+
+  /**
+   * Adds user email message to chat
+   * 
+   * @param {Message} message - The message object containing user email
+   */
+  const handleEmailMessage = (message: Message) => {
+    setMessages(prev => [...prev, message]);
   };
 
   /**
@@ -205,6 +175,8 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
+      console.log('[Chat] Sending message to AI:', inputValue);
+      
       // Call the chat service using default settings
       const response = await sendChatMessage({
         message: inputValue,
@@ -222,13 +194,24 @@ const ChatInterface = () => {
       
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
+      console.error("[Chat] Error getting AI response:", error);
+      
       // Show error toast if API call fails
       toast({
         title: "Error",
         description: "Failed to get a response. Please try again.",
         variant: "destructive",
       });
-      console.error("Chat error:", error);
+      
+      // Add error message to chat
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I'm sorry, I'm having trouble responding right now. Please try again in a moment.",
+        isUser: false,
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -332,41 +315,10 @@ const ChatInterface = () => {
 
           {/* Chat input form - changes based on whether email is needed */}
           {!hasProvidedEmail ? (
-            <form onSubmit={handleEmailSubmit} className="p-4 border-t border-deadpunch-gray-dark flex flex-col space-y-2">
-              <div className="flex items-center text-deadpunch-gray-light text-sm mb-1">
-                <Mail className="h-4 w-4 mr-1" />
-                <span>Please provide your email to continue</span>
-              </div>
-              <div className="flex space-x-2">
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email address"
-                  className="flex-1 bg-deadpunch-dark border-deadpunch-gray-dark focus:border-deadpunch-red"
-                  disabled={isEmailSubmitting}
-                  required
-                />
-                <Button 
-                  type="submit" 
-                  disabled={isEmailSubmitting}
-                  className="bg-deadpunch-red hover:bg-deadpunch-red-hover whitespace-nowrap"
-                >
-                  {isEmailSubmitting ? (
-                    <div className="flex items-center space-x-1">
-                      <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div>
-                      <div className="w-2 h-2 rounded-full bg-white animate-pulse delay-75"></div>
-                      <div className="w-2 h-2 rounded-full bg-white animate-pulse delay-150"></div>
-                    </div>
-                  ) : (
-                    "Submit"
-                  )}
-                </Button>
-              </div>
-              <p className="text-xs text-deadpunch-gray-light mt-1">
-                We'll use this to keep you updated on DEADPUNCH products and updates.
-              </p>
-            </form>
+            <EmailCollectionForm 
+              onSubmit={handleEmailSubmitResult}
+              onEmailMessage={handleEmailMessage}
+            />
           ) : (
             <form onSubmit={handleSubmit} className="p-4 border-t border-deadpunch-gray-dark flex space-x-2">
               <Input
