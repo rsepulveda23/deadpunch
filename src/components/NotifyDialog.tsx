@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Mail, Loader2, CheckCircle, AlertTriangle, ExternalLink } from 'lucide-react';
+import { Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { 
   Dialog, 
   DialogContent, 
@@ -95,9 +95,8 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
-      console.error('Error in form submission:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
-      setErrorMsg(`Failed to submit: ${errorMessage}`);
+      setErrorMsg(`Failed to submit email`);
       toast({
         title: "Something went wrong",
         description: `There was an error submitting your email. Please try again later.`,

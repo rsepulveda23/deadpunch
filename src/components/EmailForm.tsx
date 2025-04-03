@@ -76,9 +76,8 @@ const EmailForm = () => {
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
-      console.error('Error in form submission:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
-      setErrorMsg(`Failed to submit: ${errorMessage}`);
+      setErrorMsg(`Failed to submit email`);
       toast({
         title: "Something went wrong",
         description: `There was an error submitting your email. Please try again later.`,

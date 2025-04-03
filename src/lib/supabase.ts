@@ -19,18 +19,7 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
  */
 const isSupabaseConfigured = supabaseUrl && supabaseAnonKey;
 
-// Log configuration status (for debugging)
-if (!isSupabaseConfigured) {
-  console.warn('⚠️ Supabase environment variables are missing. Using mock mode.');
-  console.warn('Please check SUPABASE_SETUP_GUIDE.md for configuration instructions.');
-} else {
-  console.log('✅ Supabase environment variables detected.');
-}
-
-/**
- * Create a Supabase client instance if configured
- * Returns null if credentials are missing
- */
+// Create a Supabase client instance if configured
 export const supabase = isSupabaseConfigured 
   ? createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
@@ -93,71 +82,54 @@ interface EmailSubscriptionMetadata {
 export const saveEmailSubscription = async (email: string, metadata: EmailSubscriptionMetadata = {}) => {
   // Validate email format
   if (!email || !email.includes('@')) {
-    console.error('❌ Invalid email format:', email);
     return { success: false, error: 'Invalid email format' };
   }
   
   // If Supabase is not configured, return a mock success for development
-  if (!isSupabaseConfigured || !supabase) {
-    console.warn('⚠️ Supabase not configured. Using mock response for email subscription.');
+  if (!supabase) {
     // Simulate a delay to mimic a real API call
     await new Promise(resolve => setTimeout(resolve, 800));
     return { success: true, mock: true };
   }
   
   try {
-    // First attempt to directly insert the email without checking for duplicates
-    // This is more efficient if we expect most emails to be new
+    // Format the data for insertion
     const emailData = { 
       email, 
       created_at: new Date().toISOString(),
       metadata 
     };
     
-    // Insert the new email with handling for the net schema error
-    try {
-      const { error: insertError } = await supabase
-        .from('deadpunch_email_capture')
-        .insert([emailData]);
+    // First check if the email already exists to handle duplicates cleanly
+    const { data: existingData, error: checkError } = await supabase
+      .from('deadpunch_email_capture')
+      .select('email')
+      .eq('email', email)
+      .limit(1);
       
-      if (!insertError) {
-        // If no error, the email was successfully inserted
-        return { success: true };
-      }
-      
-      // Check if it's a duplicate key error 
-      if (insertError.message?.includes('duplicate key')) {
-        return { success: true, duplicate: true };
-      }
-      
-      // Check for the specific "schema net does not exist" error related to the trigger function
-      if (insertError.code === '3F000' && insertError.message?.includes('schema "net" does not exist')) {
-        // The email was saved, but the trigger function failed
-        // This is because the net.http_post extension is not enabled
-        return { success: true, warning: 'Email saved but notification webhook failed' };
-      }
-      
-      // For all other errors, try to check if this is already in the database
-      // This handles the case where we got an error but the email might still exist
-      const { data: existingData, error: checkError } = await supabase
-        .from('deadpunch_email_capture')
-        .select('email')
-        .eq('email', email)
-        .limit(1);
-      
-      if (!checkError && existingData && existingData.length > 0) {
-        // Email exists, so consider this a success with duplicate flag
-        return { success: true, duplicate: true };
-      }
-      
-      // If we get here, it's an actual error and the email wasn't saved
-      throw insertError;
-    } catch (error) {
-      // Re-throw the error to be caught by the outer catch block
-      throw error;
+    if (checkError) {
+      throw new Error(`Error checking for existing email: ${checkError.message}`);
     }
+    
+    // If email already exists, return success with duplicate flag
+    if (existingData && existingData.length > 0) {
+      return { success: true, duplicate: true };
+    }
+    
+    // Insert the new email
+    const { error: insertError } = await supabase
+      .from('deadpunch_email_capture')
+      .insert([emailData]);
+    
+    if (insertError) {
+      throw new Error(`Error inserting email: ${insertError.message}`);
+    }
+    
+    // Successful insert with no errors
+    return { success: true };
+    
   } catch (error) {
-    console.error('❌ Error saving email subscription:', error);
+    // Ensure we return a clean error object with consistent structure
     return { 
       success: false, 
       error: error instanceof Error ? error.message : String(error)
