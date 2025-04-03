@@ -92,7 +92,7 @@ const sendWelcomeEmail = async (
       return false;
     }
     
-    console.log('[Email Service] Welcome email sent successfully');
+    console.log('[Email Service] Welcome email sent successfully to:', email);
     return true;
   } catch (error) {
     console.error('[Email Service] Unexpected error sending welcome email:', error);
