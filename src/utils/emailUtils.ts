@@ -1,15 +1,20 @@
 
 /**
- * Email Utilities
+ * Email Utilities Module
  * 
- * This file provides common email-related functions used across the application,
- * including validation, formatting, and other helper functions.
+ * This module provides common email-related functions used across the application,
+ * including validation, formatting, and other helper functions for email handling.
+ * 
+ * @module emailUtils
  */
 
 /**
  * Validates email format using regex
  * 
- * @param {string} email - Email to validate
+ * Tests if the provided string matches a standard email format pattern
+ * with a username, @ symbol, and domain with at least one period.
+ * 
+ * @param {string} email - Email string to validate
  * @returns {boolean} True if email format is valid
  */
 export const validateEmailFormat = (email: string): boolean => {
@@ -21,6 +26,8 @@ export const validateEmailFormat = (email: string): boolean => {
 /**
  * Formats user-entered email to remove leading/trailing whitespace
  * 
+ * Ensures consistent email format by trimming whitespace and converting to lowercase.
+ * 
  * @param {string} email - Raw email input from user
  * @returns {string} Cleaned email string
  */
@@ -30,7 +37,9 @@ export const formatEmail = (email: string): string => {
 
 /**
  * Obscures part of the email for privacy in UI displays
- * Example: j***@example.com
+ * 
+ * Replaces most of the username portion with asterisks, keeping the first character
+ * and the domain intact. For example: "john@example.com" becomes "j***@example.com"
  * 
  * @param {string} email - Email address to obscure
  * @returns {string} Obscured email
