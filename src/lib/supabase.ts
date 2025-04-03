@@ -62,6 +62,9 @@ interface EmailSubscriptionResponse {
   /** Whether the operation was successful */
   success: boolean;
   
+  /** Whether the email was already in the database */
+  duplicate?: boolean;
+  
   /** Error message if the operation failed */
   error?: string;
 }
@@ -103,9 +106,12 @@ export const saveEmailSubscription = async (
       };
     }
     
-    // Success response
-    console.log('[Email Service] Email subscription saved successfully:', email);
-    return { success: true };
+    // Success response - data will now include the duplicate flag from the edge function
+    console.log('[Email Service] Email subscription saved successfully:', email, data);
+    return { 
+      success: true,
+      duplicate: data?.duplicate || false
+    };
     
   } catch (error) {
     // Handle any unexpected errors
