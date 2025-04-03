@@ -91,8 +91,6 @@ interface EmailSubscriptionMetadata {
  * @returns {Promise<{success: boolean, mock?: boolean, error?: any, duplicate?: boolean}>} Success status and any errors
  */
 export const saveEmailSubscription = async (email: string, metadata: EmailSubscriptionMetadata = {}) => {
-  console.log('🔍 Starting email subscription process...');
-  
   // Validate email format
   if (!email || !email.includes('@')) {
     console.error('❌ Invalid email format:', email);
@@ -108,85 +106,56 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
   }
   
   try {
-    console.log('📝 Attempting to save email:', email, 'with metadata:', metadata);
-    
-    // Test connection to Supabase before attempting to save
-    const connectionTest = await testSupabaseConnection();
-    if (!connectionTest.success) {
-      console.error('🔴 Connection to Supabase failed:', connectionTest.error);
-      throw new Error(`Failed to connect to Supabase: ${JSON.stringify(connectionTest.error)}`);
-    }
-    
-    console.log('✅ Supabase connection verified');
-    
-    // Check if this email already exists to prevent duplicates
-    try {
-      console.log('🔍 Checking for existing email...');
-      const { data: existingData, error: checkError } = await supabase
-        .from('deadpunch_email_capture')
-        .select('email')
-        .eq('email', email)
-        .limit(1);
-      
-      if (checkError) {
-        console.error('❌ Error checking for existing email:', checkError);
-        throw checkError;
-      }
-      
-      // If email already exists, return success without inserting
-      if (existingData && existingData.length > 0) {
-        console.log('⚠️ Email already exists, not saving duplicate:', email);
-        return { success: true, duplicate: true };
-      }
-      
-      console.log('✨ Email is new, proceeding with insert');
-    } catch (checkError) {
-      console.error('❌ Error checking for existing email:', checkError);
-      throw checkError;
-    }
-    
-    // Prepare data for insertion with detailed logging
+    // First attempt to directly insert the email without checking for duplicates
+    // This is more efficient if we expect most emails to be new
     const emailData = { 
       email, 
       created_at: new Date().toISOString(),
       metadata 
     };
     
-    console.log('📝 Inserting email data:', JSON.stringify(emailData));
-    
-    // Insert the new email with detailed logging
-    const { error: insertError } = await supabase
-      .from('deadpunch_email_capture')
-      .insert([emailData]);
-    
-    if (insertError) {
-      console.error('❌ Supabase insert error:', insertError);
+    // Insert the new email with handling for the net schema error
+    try {
+      const { error: insertError } = await supabase
+        .from('deadpunch_email_capture')
+        .insert([emailData]);
       
-      // Check if it's a permissions issue
-      if (insertError.message?.includes('permission denied')) {
-        return { success: false, error: 'Database permission denied. Please check table permissions.' };
+      if (!insertError) {
+        // If no error, the email was successfully inserted
+        return { success: true };
       }
       
-      // Check if it's a duplicate key error (in case the previous check missed it)
+      // Check if it's a duplicate key error 
       if (insertError.message?.includes('duplicate key')) {
-        console.log('⚠️ Duplicate email detected during insert, returning as success');
         return { success: true, duplicate: true };
       }
       
       // Check for the specific "schema net does not exist" error related to the trigger function
       if (insertError.code === '3F000' && insertError.message?.includes('schema "net" does not exist')) {
-        console.log('⚠️ Email was saved but the post-insert trigger failed due to missing schema "net"');
-        console.log('This is likely because the database trigger tried to use net.http_post but the extension is not enabled');
-        console.log('The email was still saved successfully - you can safely ignore this error');
-        // Return success as the email was actually saved, just the trigger function failed
+        // The email was saved, but the trigger function failed
+        // This is because the net.http_post extension is not enabled
         return { success: true, warning: 'Email saved but notification webhook failed' };
       }
       
+      // For all other errors, try to check if this is already in the database
+      // This handles the case where we got an error but the email might still exist
+      const { data: existingData, error: checkError } = await supabase
+        .from('deadpunch_email_capture')
+        .select('email')
+        .eq('email', email)
+        .limit(1);
+      
+      if (!checkError && existingData && existingData.length > 0) {
+        // Email exists, so consider this a success with duplicate flag
+        return { success: true, duplicate: true };
+      }
+      
+      // If we get here, it's an actual error and the email wasn't saved
       throw insertError;
+    } catch (error) {
+      // Re-throw the error to be caught by the outer catch block
+      throw error;
     }
-    
-    console.log('✅ Email saved successfully to deadpunch_email_capture table');
-    return { success: true };
   } catch (error) {
     console.error('❌ Error saving email subscription:', error);
     return { 
@@ -195,4 +164,3 @@ export const saveEmailSubscription = async (email: string, metadata: EmailSubscr
     };
   }
 };
-

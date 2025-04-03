@@ -1,4 +1,3 @@
-
 /**
  * ChatInterface Component
  * 
