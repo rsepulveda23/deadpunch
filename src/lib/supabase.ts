@@ -93,10 +93,9 @@ export const saveEmailSubscription = async (
       };
     }
     
-    // Check if the operation was an insert or a no-op (duplicate)
-    // Fix TypeScript error by using type guards before accessing length property
+    // Fix: Check if the operation was an insert or a no-op (duplicate)
+    // by checking if data exists and is an array with content
     const isDuplicate = !data || 
-                      data === null || 
                       (Array.isArray(data) && data.length === 0);
     
     if (isDuplicate) {
