@@ -3,12 +3,12 @@
  * Supabase Integration
  * 
  * This file sets up the Supabase client and provides utility functions
- * for interacting with Supabase services like edge functions and database.
+ * for interacting with Supabase services like database.
  */
 
 import { createClient } from '@supabase/supabase-js';
 
-// Hardcoded Supabase credentials for this project
+// Supabase credentials
 const supabaseUrl = 'https://yunwcbujnowcifbkfjmr.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1bndjYnVqbm93Y2lmYmtmam1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI3ODg1NTksImV4cCI6MjA1ODM2NDU1OX0.KTz1o0xYgYjIqrB9K4up-bri-0dhl0irldPy2TcsQY4';
 
@@ -42,7 +42,9 @@ export const saveEmailSubscription = async (email, metadata = {}) => {
       metadata 
     };
     
-    // First check if the email already exists to handle duplicates cleanly
+    console.log('Checking for existing email subscription:', email);
+    
+    // Check for existing email
     const { data: existingData, error: checkError } = await supabase
       .from('deadpunch_email_capture')
       .select('email')
@@ -51,13 +53,16 @@ export const saveEmailSubscription = async (email, metadata = {}) => {
       
     if (checkError) {
       console.error('Error checking for existing email:', checkError);
-      throw new Error(`Error checking for existing email: ${checkError.message}`);
+      return { success: false, error: checkError.message };
     }
     
     // If email already exists, return success with duplicate flag
     if (existingData && existingData.length > 0) {
+      console.log('Email already exists in database:', email);
       return { success: true, duplicate: true };
     }
+    
+    console.log('Inserting new email subscription:', emailData);
     
     // Insert the new email
     const { error: insertError } = await supabase
@@ -66,10 +71,10 @@ export const saveEmailSubscription = async (email, metadata = {}) => {
     
     if (insertError) {
       console.error('Error inserting email:', insertError);
-      throw new Error(`Error inserting email: ${insertError.message}`);
+      return { success: false, error: insertError.message };
     }
     
-    // Successful insert with no errors
+    console.log('Email subscription saved successfully');
     return { success: true };
     
   } catch (error) {

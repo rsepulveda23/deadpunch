@@ -52,6 +52,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     setIsSubmitting(true);
     
     try {
+      console.log('Submitting email from dialog:', email);
       const result = await saveEmailSubscription(email, { 
         source: 'dialog', 
         timestamp: new Date().toISOString() 
@@ -86,6 +87,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
+      console.error('Dialog email submission error:', error);
       setErrorMsg(`Failed to submit email`);
       toast({
         title: "Something went wrong",

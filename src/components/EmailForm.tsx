@@ -36,6 +36,7 @@ const EmailForm = () => {
     setIsSubmitting(true);
     
     try {
+      console.log('Submitting email from home page:', email);
       const result = await saveEmailSubscription(email, { 
         source: 'homepage',
         timestamp: new Date().toISOString() 
@@ -67,6 +68,7 @@ const EmailForm = () => {
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
+      console.error('Email form submission error:', error);
       setErrorMsg(`Failed to submit email`);
       toast({
         title: "Something went wrong",

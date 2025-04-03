@@ -54,6 +54,8 @@ export const EmailSubscriptionForm = ({
     setIsSubmitting(true);
     
     try {
+      console.log('Submitting email from coming soon page:', email, 'Category:', category, 'Subcategory:', subcategory);
+      
       // Save email subscription with metadata about source
       const result = await saveEmailSubscription(email, {
         category, 
@@ -89,6 +91,7 @@ export const EmailSubscriptionForm = ({
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
+      console.error('Coming soon email form error:', error);
       setErrorMsg(`Failed to submit email`);
       toast({
         title: "Something went wrong",
