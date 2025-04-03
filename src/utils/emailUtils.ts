@@ -13,6 +13,7 @@
  * @returns {boolean} True if email format is valid
  */
 export const validateEmailFormat = (email: string): boolean => {
+  if (!email) return false;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
@@ -24,7 +25,7 @@ export const validateEmailFormat = (email: string): boolean => {
  * @returns {string} Cleaned email string
  */
 export const formatEmail = (email: string): string => {
-  return email.trim().toLowerCase();
+  return email ? email.trim().toLowerCase() : '';
 };
 
 /**

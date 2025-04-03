@@ -58,10 +58,10 @@ export const saveEmailSubscription = async (
   metadata: EmailMetadata = {}
 ): Promise<EmailSubscriptionResponse> => {
   // Input validation for email format
-  if (!email || !validateEmailFormat(email)) {
+  if (!email) {
     return { 
       success: false, 
-      error: 'Invalid email format' 
+      error: 'Email is required' 
     };
   }
   
@@ -75,43 +75,31 @@ export const saveEmailSubscription = async (
     
     console.log('[Email Service] Checking for existing subscription:', email);
     
-    // Check if email already exists to handle duplicates gracefully
-    const { data: existingData, error: checkError } = await supabase
+    // Using upsert with the unique constraint we've added to the email column
+    // This will either insert a new record or do nothing if the email already exists
+    const { data, error } = await supabase
       .from('deadpunch_email_capture')
-      .select('email')
-      .eq('email', email)
-      .limit(1);
+      .upsert([emailData], { 
+        onConflict: 'email',
+        ignoreDuplicates: true // Don't update if record exists
+      });
       
-    if (checkError) {
-      console.error('[Email Service] Database error when checking for existing email:', checkError);
+    if (error) {
+      console.error('[Email Service] Database error when inserting email:', error);
       return { 
         success: false, 
-        error: `Database error: ${checkError.message}` 
+        error: `Database error: ${error.message}` 
       };
     }
     
-    // Return early with success if email already exists
-    if (existingData && existingData.length > 0) {
+    // Check if the operation was an insert or a no-op (duplicate)
+    const isDuplicate = data === null || data.length === 0;
+    
+    if (isDuplicate) {
       console.log('[Email Service] Email already exists in database:', email);
       return { 
         success: true, 
         duplicate: true 
-      };
-    }
-    
-    console.log('[Email Service] Inserting new email subscription:', email);
-    
-    // Insert the new email subscription - IMPORTANT: we're using upsert to avoid race conditions
-    // and we're setting `onConflict: 'email'` to handle the case where the email already exists
-    const { error: insertError } = await supabase
-      .from('deadpunch_email_capture')
-      .upsert([emailData], { onConflict: 'email' });
-    
-    if (insertError) {
-      console.error('[Email Service] Database error when inserting email:', insertError);
-      return { 
-        success: false, 
-        error: `Database error: ${insertError.message}` 
       };
     }
     
@@ -128,15 +116,4 @@ export const saveEmailSubscription = async (
       error: `Unexpected error: ${errorMessage}` 
     };
   }
-};
-
-/**
- * Validates email format using regex
- * 
- * @param {string} email - Email to validate
- * @returns {boolean} True if email format is valid
- */
-const validateEmailFormat = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
 };
