@@ -1,4 +1,3 @@
-
 /**
  * Supabase Client Integration
  * 
@@ -70,6 +69,36 @@ interface EmailSubscriptionResponse {
 }
 
 /**
+ * Sends a welcome email to a newly subscribed user
+ * 
+ * @param {string} email - The subscriber's email address
+ * @param {EmailMetadata} metadata - Optional metadata about the subscription
+ * @returns {Promise<boolean>} Success status of the operation
+ */
+const sendWelcomeEmail = async (
+  email: string,
+  metadata: EmailMetadata = {}
+): Promise<boolean> => {
+  try {
+    console.log('[Email Service] Sending welcome email to:', email);
+    
+    const { error } = await supabase.functions.invoke('send-welcome-email', {
+      body: { email, metadata },
+    });
+    
+    if (error) {
+      console.error('[Email Service] Error sending welcome email:', error);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('[Email Service] Unexpected error sending welcome email:', error);
+    return false;
+  }
+};
+
+/**
  * Saves an email subscription directly to the Supabase database
  * 
  * This function handles saving the email to the database and checking for duplicates.
@@ -133,6 +162,16 @@ export const saveEmailSubscription = async (
         error: `Database error: ${insertError.message}` 
       };
     }
+    
+    // Send welcome email for new subscriptions
+    // Note: We don't await this to keep the response fast
+    // The email sending runs in the background
+    sendWelcomeEmail(email, metadata)
+      .then(success => {
+        if (!success) {
+          console.warn('[Email Service] Failed to send welcome email to:', email);
+        }
+      });
     
     // Success response
     console.log('[Email Service] Email subscription saved successfully:', email);
