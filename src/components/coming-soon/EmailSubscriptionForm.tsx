@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
+import { validateEmailFormat, formatEmail } from '@/utils/emailUtils';
 
 interface EmailSubscriptionFormProps {
   category: string;
@@ -36,17 +37,6 @@ export const EmailSubscriptionForm = ({
   const { toast } = useToast();
 
   /**
-   * Validates email format using regex
-   * 
-   * @param {string} email - Email to validate
-   * @returns {boolean} True if email format is valid
-   */
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  /**
    * Handles the email submission form
    * 
    * @param {React.FormEvent} e - The form submission event
@@ -58,7 +48,8 @@ export const EmailSubscriptionForm = ({
     setErrorMsg(null);
     
     // Validate email format
-    if (!email || !validateEmail(email)) {
+    const formattedEmail = formatEmail(email);
+    if (!formattedEmail || !validateEmailFormat(formattedEmail)) {
       setErrorMsg("Please enter a valid email address");
       toast({
         title: "Invalid email",
@@ -72,10 +63,10 @@ export const EmailSubscriptionForm = ({
     setIsSubmitting(true);
     
     try {
-      console.log('[ComingSoon] Submitting email subscription:', email, 'Category:', category, 'Subcategory:', subcategory);
+      console.log('[ComingSoon] Submitting email subscription:', formattedEmail, 'Category:', category, 'Subcategory:', subcategory);
       
       // Save email with rich metadata
-      const result = await saveEmailSubscription(email, {
+      const result = await saveEmailSubscription(formattedEmail, {
         category, 
         subcategory,
         source: 'coming_soon_page',

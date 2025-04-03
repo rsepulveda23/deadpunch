@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
+import { validateEmailFormat, formatEmail } from '@/utils/emailUtils';
 
 /**
  * EmailForm Component
@@ -29,13 +30,25 @@ const EmailForm = () => {
     // Reset state for new submission
     setErrorMsg(null);
     
+    // Validate email format
+    const formattedEmail = formatEmail(email);
+    if (!formattedEmail || !validateEmailFormat(formattedEmail)) {
+      setErrorMsg("Please enter a valid email address");
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     // Submit email to Supabase
     setIsSubmitting(true);
     
     try {
-      console.log('[HomePage] Submitting email subscription:', email);
+      console.log('[HomePage] Submitting email subscription:', formattedEmail);
       
-      const result = await saveEmailSubscription(email, { 
+      const result = await saveEmailSubscription(formattedEmail, { 
         source: 'homepage',
         timestamp: new Date().toISOString() 
       });

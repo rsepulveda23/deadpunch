@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
+import { validateEmailFormat, formatEmail } from '@/utils/emailUtils';
 
 interface NotifyDialogProps {
   trigger?: React.ReactNode;
@@ -39,17 +40,6 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
   const { toast } = useToast();
   
   /**
-   * Validates email format using regex
-   * 
-   * @param {string} email - Email to validate
-   * @returns {boolean} True if email format is valid
-   */
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  /**
    * Handles the email submission form
    * 
    * @param {React.FormEvent} e - The form submission event
@@ -61,7 +51,8 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     setErrorMsg(null);
     
     // Validate email format
-    if (!email || !validateEmail(email)) {
+    const formattedEmail = formatEmail(email);
+    if (!formattedEmail || !validateEmailFormat(formattedEmail)) {
       setErrorMsg("Please enter a valid email address");
       toast({
         title: "Invalid email",
@@ -75,9 +66,9 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     setIsSubmitting(true);
     
     try {
-      console.log('[Dialog] Submitting email subscription:', email);
+      console.log('[Dialog] Submitting email subscription:', formattedEmail);
       
-      const result = await saveEmailSubscription(email, { 
+      const result = await saveEmailSubscription(formattedEmail, { 
         source: 'dialog', 
         timestamp: new Date().toISOString() 
       });
@@ -130,6 +121,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
     }
   };
 
+  // Content for the dialog
   const dialogContent = (
     <DialogContent className="sm:max-w-[425px] bg-deadpunch-dark border-deadpunch-gray-dark text-white">
       <DialogHeader>

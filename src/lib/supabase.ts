@@ -101,10 +101,11 @@ export const saveEmailSubscription = async (
     
     console.log('[Email Service] Inserting new email subscription:', email);
     
-    // Insert the new email subscription
+    // Insert the new email subscription - IMPORTANT: we're using upsert to avoid race conditions
+    // and we're setting `onConflict: 'email'` to handle the case where the email already exists
     const { error: insertError } = await supabase
       .from('deadpunch_email_capture')
-      .insert([emailData]);
+      .upsert([emailData], { onConflict: 'email' });
     
     if (insertError) {
       console.error('[Email Service] Database error when inserting email:', insertError);

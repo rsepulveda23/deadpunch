@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
+import { validateEmailFormat, formatEmail } from '@/utils/emailUtils';
 import { Message } from '@/types/chat';
 
 interface EmailCollectionFormProps {
@@ -30,17 +31,6 @@ const EmailCollectionForm = ({
   const { toast } = useToast();
 
   /**
-   * Validates email format using regex
-   * 
-   * @param {string} email - Email to validate
-   * @returns {boolean} True if email format is valid
-   */
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  /**
    * Handles the email submission form
    * 
    * @param {React.FormEvent} e - The form submission event
@@ -48,7 +38,9 @@ const EmailCollectionForm = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !validateEmail(email) || isSubmitting) return;
+    // Validate email format
+    const formattedEmail = formatEmail(email);
+    if (!formattedEmail || !validateEmailFormat(formattedEmail) || isSubmitting) return;
     
     setIsSubmitting(true);
     
@@ -56,17 +48,17 @@ const EmailCollectionForm = ({
       // Add user's email as a chat message
       const userEmailMessage: Message = {
         id: Date.now().toString(),
-        content: email,
+        content: formattedEmail,
         isUser: true,
         timestamp: new Date(),
       };
       
       onEmailMessage(userEmailMessage);
       
-      console.log('[Chat] Submitting email subscription from chat:', email);
+      console.log('[Chat] Submitting email subscription from chat:', formattedEmail);
       
       // Save email to Supabase with chat-specific metadata
-      const result = await saveEmailSubscription(email, { 
+      const result = await saveEmailSubscription(formattedEmail, { 
         source: 'chat',
         captureLocation: 'chat interface',
         timestamp: new Date().toISOString()
@@ -88,7 +80,7 @@ const EmailCollectionForm = ({
           });
         }
         
-        onSubmit(email, true);
+        onSubmit(formattedEmail, true);
       } else {
         throw new Error('Failed to save email');
       }
