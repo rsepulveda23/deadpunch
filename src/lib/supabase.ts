@@ -72,7 +72,7 @@ interface EmailSubscriptionResponse {
 /**
  * Saves an email subscription to the Supabase 'deadpunch_email_capture' table
  * 
- * This function handles input validation, duplicate checking, and error handling.
+ * This function handles input validation and error handling.
  * It uses upsert with ignoreDuplicates to ensure each email is only stored once.
  * 
  * @param {string} email - The subscriber's email address
@@ -99,11 +99,10 @@ export const saveEmailSubscription = async (
       metadata 
     };
     
-    console.log('[Email Service] Checking for existing subscription:', email);
+    console.log('[Email Service] Saving email subscription:', email);
     
     // Using upsert with the unique constraint on the email column
-    // This will either insert a new record or do nothing if the email already exists
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('deadpunch_email_capture')
       .upsert([emailData], { 
         onConflict: 'email',
@@ -118,18 +117,7 @@ export const saveEmailSubscription = async (
       };
     }
     
-    // Simplified duplicate check
-    // If data is null or undefined, or if it's an empty array, consider it a duplicate
-    const isDuplicate = !data || (Array.isArray(data) && data.length === 0);
-    
-    if (isDuplicate) {
-      console.log('[Email Service] Email already exists in database:', email);
-      return { 
-        success: true, 
-        duplicate: true 
-      };
-    }
-    
+    // Success response
     console.log('[Email Service] Email subscription saved successfully:', email);
     return { success: true };
     

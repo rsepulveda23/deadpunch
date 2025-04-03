@@ -65,20 +65,11 @@ const EmailCollectionForm = ({
       });
       
       if (result.success) {
-        // Show appropriate toast
-        if (result.duplicate) {
-          toast({
-            title: "Email Recognized",
-            description: "Thanks for providing your email!",
-            variant: "default"
-          });
-        } else {
-          toast({
-            title: "Email Saved",
-            description: "Thanks for providing your email!",
-            variant: "default"
-          });
-        }
+        toast({
+          title: "Email Saved",
+          description: "Thanks for providing your email!",
+          variant: "default"
+        });
         
         onSubmit(formattedEmail, true);
       } else {
