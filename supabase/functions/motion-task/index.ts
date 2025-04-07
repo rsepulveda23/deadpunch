@@ -103,15 +103,17 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Processing record for email: ${email}, name: ${name}`);
 
-    // Prepare the task payload for Motion
+    // Prepare the task payload for Motion according to their API documentation
     const taskPayload = {
-      title: `Send Welcome Email to ${name}`,
+      name: `Send Welcome Email to ${name}`,
       description: `Please send a welcome email to ${name}. (Email: ${email})`,
       dueDate: new Date().toISOString(),
-      status: "TODO",
-      priority: "MEDIUM",
-      // Adding metadata to help with tracking
-      metadata: {
+      priority: "MEDIUM", // Options: HIGH, MEDIUM, LOW
+      status: "NOT_STARTED", // Options: NOT_STARTED, IN_PROGRESS, COMPLETED
+      // Optional fields
+      isPrivate: false,
+      // Adding metadata as a custom field since it's not part of the standard API
+      customFields: {
         source: "deadpunch_email_capture",
         sourceEmail: email,
         timestamp: new Date().toISOString()
