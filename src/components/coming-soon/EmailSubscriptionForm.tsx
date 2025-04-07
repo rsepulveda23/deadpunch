@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -17,7 +16,7 @@ interface EmailSubscriptionFormProps {
  * EmailSubscriptionForm Component
  * 
  * A specialized email subscription form used on "Coming Soon" pages.
- * Collects emails with additional metadata about which product/feature
+ * Collects name and email with additional metadata about which product/feature
  * the user is interested in.
  * 
  * @param {string} category - The product category (e.g., 'Training')
@@ -30,6 +29,7 @@ export const EmailSubscriptionForm = ({
   onSuccess 
 }: EmailSubscriptionFormProps) => {
   // Form state management
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -37,7 +37,7 @@ export const EmailSubscriptionForm = ({
   const { toast } = useToast();
 
   /**
-   * Handles the email submission form
+   * Handles the email and name submission form
    * 
    * @param {React.FormEvent} e - The form submission event
    */
@@ -47,7 +47,17 @@ export const EmailSubscriptionForm = ({
     // Reset state for new submission
     setErrorMsg(null);
     
-    // Validate email format
+    // Basic validation
+    if (!name.trim()) {
+      setErrorMsg("Please enter your name");
+      toast({
+        title: "Name required",
+        description: "Please enter your name.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const formattedEmail = formatEmail(email);
     if (!formattedEmail || !validateEmailFormat(formattedEmail)) {
       setErrorMsg("Please enter a valid email address");
@@ -59,14 +69,15 @@ export const EmailSubscriptionForm = ({
       return;
     }
     
-    // Submit email to Supabase
+    // Submit data to Supabase
     setIsSubmitting(true);
     
     try {
-      console.log('[ComingSoon] Submitting email subscription:', formattedEmail, 'Category:', category, 'Subcategory:', subcategory);
+      console.log('[ComingSoon] Submitting subscription:', { name, email: formattedEmail, category, subcategory });
       
-      // Save email with rich metadata
+      // Save email with rich metadata, now including the name
       const result = await saveEmailSubscription(formattedEmail, {
+        name: name.trim(),
         category, 
         subcategory,
         source: 'coming_soon_page',
@@ -94,6 +105,7 @@ export const EmailSubscriptionForm = ({
         
         // Reset form after delay and trigger parent callback
         setTimeout(() => {
+          setName('');
           setEmail('');
           setIsSuccess(false);
           onSuccess(); // Notify parent component
@@ -103,13 +115,12 @@ export const EmailSubscriptionForm = ({
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
-      // Handle and display errors
-      console.error('[ComingSoon] Email submission error:', error);
+      console.error('[ComingSoon] Submission error:', error);
       
-      setErrorMsg(`Failed to submit email`);
+      setErrorMsg(`Failed to submit subscription`);
       toast({
         title: "Something went wrong",
-        description: `There was an error submitting your email. Please try again later.`,
+        description: `There was an error submitting your details. Please try again later.`,
         variant: "destructive"
       });
     } finally {
@@ -119,6 +130,21 @@ export const EmailSubscriptionForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <div className="space-y-2">
+        <label htmlFor="name" className="text-sm font-medium text-deadpunch-gray-light">
+          Your Name
+        </label>
+        <Input
+          id="name"
+          type="text"
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+          disabled={isSubmitting || isSuccess}
+          required
+        />
+      </div>
       <div className="space-y-2">
         <label htmlFor="email" className="text-sm font-medium text-deadpunch-gray-light">
           Email address
