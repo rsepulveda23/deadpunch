@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Minus, Plus } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
 
 interface RaceToSelectorProps {
   value: number;
@@ -17,8 +16,6 @@ interface RaceToSelectorProps {
  * needed to win the game.
  */
 export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
-  const { themeMode } = useTheme();
-  
   return (
     <div className="text-center">
       <Label htmlFor="raceValue" className="text-lg font-semibold block mb-2">Race To</Label>
@@ -29,21 +26,13 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
             size="icon" 
             variant="outline"
             onClick={() => onChange(Math.max(1, value - 1))}
-            className={cn(
-              "hover:border-white/50",
-              themeMode === 'day' ? "hover:bg-slate-200/50" : "hover:bg-deadpunch-dark/50"
-            )}
+            className="hover:border-white/50 hover:bg-deadpunch-dark/50"
           >
             <Minus size={16} />
           </Button>
         </div>
         
-        <div className={cn(
-          "mx-3 text-4xl font-display font-bold",
-          themeMode === 'day' 
-            ? "text-blue-600 drop-shadow-[0_0_8px_rgba(59,130,246,0.7)]" 
-            : "text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]" 
-        )}>
+        <div className="mx-3 text-4xl font-display font-bold text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]">
           {value}
         </div>
         
@@ -51,9 +40,7 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
           <Button 
             size="icon"
             onClick={() => onChange(value + 1)}
-            className={cn(
-              themeMode === 'day' ? "bg-blue-500 hover:bg-blue-600" : "bg-deadpunch-red hover:bg-deadpunch-red-hover"
-            )}
+            className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
           >
             <Plus size={16} />
           </Button>

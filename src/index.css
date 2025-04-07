@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -10,26 +9,26 @@
     /* Base colors shared between themes */
     --radius: 0.5rem;
     
-    /* Day theme colors - improved color palette */
-    --day-background: 210 40% 98%;
-    --day-foreground: 222.2 84% 4.9%;
-    --day-card: 0 0% 100%;
-    --day-card-foreground: 222.2 84% 4.9%;
-    --day-popover: 0 0% 100%;
-    --day-popover-foreground: 222.2 84% 4.9%;
-    --day-primary: 217 91% 60%; /* Updated to a vibrant blue */
-    --day-primary-foreground: 210 40% 98%;
-    --day-secondary: 214 32% 91%;
-    --day-secondary-foreground: 222.2 47.4% 11.2%;
-    --day-muted: 214 32% 91%;
-    --day-muted-foreground: 215.4 16.3% 46.9%;
-    --day-accent: 210 40% 96.1%;
-    --day-accent-foreground: 222.2 47.4% 11.2%;
-    --day-destructive: 0 84.2% 60.2%;
-    --day-destructive-foreground: 210 40% 98%;
-    --day-border: 214.3 31.8% 91.4%;
-    --day-input: 214.3 31.8% 91.4%;
-    --day-ring: 217 91% 60%; /* Match primary blue */
+    /* Night theme colors */
+    --background: var(--night-background);
+    --foreground: var(--night-foreground);
+    --card: var(--night-card);
+    --card-foreground: var(--night-card-foreground);
+    --popover: var(--night-popover);
+    --popover-foreground: var(--night-popover-foreground);
+    --primary: var(--night-primary);
+    --primary-foreground: var(--night-primary-foreground);
+    --secondary: var(--night-secondary);
+    --secondary-foreground: var(--night-secondary-foreground);
+    --muted: var(--night-muted);
+    --muted-foreground: var(--night-muted-foreground);
+    --accent: var(--night-accent);
+    --accent-foreground: var(--night-accent-foreground);
+    --destructive: var(--night-destructive);
+    --destructive-foreground: var(--night-destructive-foreground);
+    --border: var(--night-border);
+    --input: var(--night-input);
+    --ring: var(--night-ring);
     
     /* Night theme colors */
     --night-background: 0 0% 7%;
@@ -52,51 +51,6 @@
     --night-input: 240 3.7% 15.9%;
     --night-ring: 217 91% 60%; /* Match primary blue */
   }
-  
-  /* Apply theme variables */
-  .theme-day {
-    --background: var(--day-background);
-    --foreground: var(--day-foreground);
-    --card: var(--day-card);
-    --card-foreground: var(--day-card-foreground);
-    --popover: var(--day-popover);
-    --popover-foreground: var(--day-popover-foreground);
-    --primary: var(--day-primary);
-    --primary-foreground: var(--day-primary-foreground);
-    --secondary: var(--day-secondary);
-    --secondary-foreground: var(--day-secondary-foreground);
-    --muted: var(--day-muted);
-    --muted-foreground: var(--day-muted-foreground);
-    --accent: var(--day-accent);
-    --accent-foreground: var(--day-accent-foreground);
-    --destructive: var(--day-destructive);
-    --destructive-foreground: var(--day-destructive-foreground);
-    --border: var(--day-border);
-    --input: var(--day-input);
-    --ring: var(--day-ring);
-  }
-  
-  .theme-night {
-    --background: var(--night-background);
-    --foreground: var(--night-foreground);
-    --card: var(--night-card);
-    --card-foreground: var(--night-card-foreground);
-    --popover: var(--night-popover);
-    --popover-foreground: var(--night-popover-foreground);
-    --primary: var(--night-primary);
-    --primary-foreground: var(--night-primary-foreground);
-    --secondary: var(--night-secondary);
-    --secondary-foreground: var(--night-secondary-foreground);
-    --muted: var(--night-muted);
-    --muted-foreground: var(--night-muted-foreground);
-    --accent: var(--night-accent);
-    --accent-foreground: var(--night-accent-foreground);
-    --destructive: var(--night-destructive);
-    --destructive-foreground: var(--night-destructive-foreground);
-    --border: var(--night-border);
-    --input: var(--night-input);
-    --ring: var(--night-ring);
-  }
 }
 
 @layer base {
@@ -110,17 +64,6 @@
   
   body {
     @apply bg-background text-foreground antialiased overflow-x-hidden;
-  }
-  
-  /* Day-specific styling */
-  .theme-day body {
-    background-image: 
-      radial-gradient(circle at 15% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 25%),
-      radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 30%);
-  }
-  
-  /* Night-specific styling */
-  .theme-night body {
     background-image: 
       radial-gradient(circle at 15% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 25%),
       radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 30%);
@@ -176,15 +119,7 @@
 }
 
 .logo-container {
-  filter: drop-shadow(0 0 30px rgba(100, 190, 255, 0.9));
-}
-
-.theme-day .logo-container {
-  filter: drop-shadow(0 0 30px rgba(100, 180, 255, 0.9));
-}
-
-.theme-night .logo-container {
-  filter: drop-shadow(0 0 30px rgba(120, 200, 255, 0.9));
+  filter: drop-shadow(0 0 40px rgba(120, 200, 255, 0.9));
 }
 
 .noise-overlay {
@@ -211,9 +146,5 @@
 }
 
 .stars {
-  @apply fixed inset-0 pointer-events-none z-0 opacity-0 transition-opacity duration-1000;
-}
-
-.theme-night .stars {
-  @apply opacity-100;
+  @apply fixed inset-0 pointer-events-none z-0 opacity-100;
 }

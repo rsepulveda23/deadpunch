@@ -1,48 +1,24 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-
-type ThemeMode = 'day' | 'night';
+import React, { createContext, useContext } from 'react';
 
 interface ThemeContextType {
-  themeMode: ThemeMode;
+  themeMode: 'night';
   isDayTime: boolean;
   isNightTime: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  themeMode: 'day',
-  isDayTime: true,
-  isNightTime: false,
+  themeMode: 'night',
+  isDayTime: false,
+  isNightTime: true,
 });
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [themeMode, setThemeMode] = useState<ThemeMode>('day');
-  
-  useEffect(() => {
-    const checkTime = () => {
-      const currentHour = new Date().getHours();
-      // Consider daytime between 6am and 6pm
-      const isDaytime = currentHour >= 6 && currentHour < 18;
-      setThemeMode(isDaytime ? 'day' : 'night');
-      
-      // Apply theme class to document
-      document.documentElement.classList.remove('theme-day', 'theme-night');
-      document.documentElement.classList.add(isDaytime ? 'theme-day' : 'theme-night');
-    };
-    
-    // Check time immediately
-    checkTime();
-    
-    // Set up an interval to check the time every minute
-    const interval = setInterval(checkTime, 60000);
-    
-    return () => clearInterval(interval);
-  }, []);
-  
+  // Fixed night mode
   const value = {
-    themeMode,
-    isDayTime: themeMode === 'day',
-    isNightTime: themeMode === 'night'
+    themeMode: 'night' as const,
+    isDayTime: false,
+    isNightTime: true
   };
   
   return (

@@ -6,11 +6,12 @@
  * It renders the root App component into the DOM.
  */
 
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+// Apply night theme to document
+document.documentElement.classList.add('theme-night');
 
 // Create a React root and render the App component
 createRoot(document.getElementById("root")!).render(<App />);
-
-// Theme is now handled by ThemeProvider in App.tsx
