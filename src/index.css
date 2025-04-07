@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -9,18 +10,18 @@
     /* Base colors shared between themes */
     --radius: 0.5rem;
     
-    /* Day theme colors */
+    /* Day theme colors - improved color palette */
     --day-background: 210 40% 98%;
     --day-foreground: 222.2 84% 4.9%;
     --day-card: 0 0% 100%;
     --day-card-foreground: 222.2 84% 4.9%;
     --day-popover: 0 0% 100%;
     --day-popover-foreground: 222.2 84% 4.9%;
-    --day-primary: 0 77% 56%;
+    --day-primary: 217 91% 60%; /* Updated to a vibrant blue */
     --day-primary-foreground: 210 40% 98%;
-    --day-secondary: 210 40% 96.1%;
+    --day-secondary: 214 32% 91%;
     --day-secondary-foreground: 222.2 47.4% 11.2%;
-    --day-muted: 210 40% 96.1%;
+    --day-muted: 214 32% 91%;
     --day-muted-foreground: 215.4 16.3% 46.9%;
     --day-accent: 210 40% 96.1%;
     --day-accent-foreground: 222.2 47.4% 11.2%;
@@ -28,7 +29,7 @@
     --day-destructive-foreground: 210 40% 98%;
     --day-border: 214.3 31.8% 91.4%;
     --day-input: 214.3 31.8% 91.4%;
-    --day-ring: 0 77% 56%;
+    --day-ring: 217 91% 60%; /* Match primary blue */
     
     /* Night theme colors */
     --night-background: 0 0% 7%;
@@ -37,7 +38,7 @@
     --night-card-foreground: 0 0% 98%;
     --night-popover: 240 10% 3.9%;
     --night-popover-foreground: 0 0% 98%;
-    --night-primary: 0 77% 56%;
+    --night-primary: 217 91% 60%; /* Updated to match day theme blue */
     --night-primary-foreground: 210 40% 98%;
     --night-secondary: 240 3.7% 15.9%;
     --night-secondary-foreground: 0 0% 98%;
@@ -49,7 +50,7 @@
     --night-destructive-foreground: 0 0% 98%;
     --night-border: 240 3.7% 15.9%;
     --night-input: 240 3.7% 15.9%;
-    --night-ring: 240 4.9% 83.9%;
+    --night-ring: 217 91% 60%; /* Match primary blue */
   }
   
   /* Apply theme variables */
@@ -114,15 +115,15 @@
   /* Day-specific styling */
   .theme-day body {
     background-image: 
-      radial-gradient(circle at 15% 30%, rgba(100, 149, 237, 0.05) 0%, transparent 25%),
-      radial-gradient(circle at 85% 80%, rgba(100, 149, 237, 0.05) 0%, transparent 30%);
+      radial-gradient(circle at 15% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 25%),
+      radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 30%);
   }
   
   /* Night-specific styling */
   .theme-night body {
     background-image: 
-      radial-gradient(circle at 15% 30%, rgba(225, 60, 60, 0.05) 0%, transparent 25%),
-      radial-gradient(circle at 85% 80%, rgba(225, 60, 60, 0.05) 0%, transparent 30%);
+      radial-gradient(circle at 15% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 25%),
+      radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 30%);
   }
   
   h1, h2, h3, h4 {
@@ -136,18 +137,18 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-deadpunch-red hover:bg-deadpunch-red-hover text-white font-semibold py-3 px-6 
+    @apply bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 
     rounded-full transition-all duration-200 transform hover:translate-y-[-2px] hover:translate-x-[1px]
-    hover:shadow-[0_10px_25px_-5px_rgba(225,60,60,0.3)] focus:outline-none 
-    focus:ring-2 focus:ring-deadpunch-red focus:ring-opacity-50 active:translate-y-0 active:translate-x-0
+    hover:shadow-[0_10px_25px_-5px_rgba(59,130,246,0.3)] focus:outline-none 
+    focus:ring-2 focus:ring-primary focus:ring-opacity-50 active:translate-y-0 active:translate-x-0
     hover:scale-105 shadow-md;
   }
   
   .btn-outline {
-    @apply border-2 border-deadpunch-red text-deadpunch-red bg-transparent hover:bg-deadpunch-red
+    @apply border-2 border-primary text-primary bg-transparent hover:bg-primary
     hover:text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 
-    transform hover:translate-y-[-2px] hover:translate-x-[1px] hover:shadow-[0_10px_25px_-5px_rgba(225,60,60,0.2)] 
-    focus:outline-none focus:ring-2 focus:ring-deadpunch-red focus:ring-opacity-50 active:translate-y-0
+    transform hover:translate-y-[-2px] hover:translate-x-[1px] hover:shadow-[0_10px_25px_-5px_rgba(59,130,246,0.2)] 
+    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 active:translate-y-0
     active:translate-x-0 hover:scale-105 shadow-sm;
   }
   
@@ -155,13 +156,13 @@
     @apply backdrop-blur-md bg-white/5 border border-white/10 shadow-lg;
   }
   
-  .red-glow {
-    @apply shadow-[0_0_15px_rgba(225,60,60,0.5)];
+  .blue-glow {
+    @apply shadow-[0_0_15px_rgba(59,130,246,0.5)];
   }
   
   .input-field {
     @apply bg-[#111111] border-deadpunch-gray-dark rounded-md py-3 px-4 text-white 
-    placeholder:text-deadpunch-gray-light focus:outline-none focus:ring-2 focus:ring-deadpunch-red 
+    placeholder:text-deadpunch-gray-light focus:outline-none focus:ring-2 focus:ring-primary 
     focus:border-transparent transition-all duration-200;
   }
   
@@ -175,15 +176,15 @@
 }
 
 .logo-container {
-  filter: drop-shadow(0 0 25px rgba(120, 190, 255, 0.7));
+  filter: drop-shadow(0 0 30px rgba(100, 190, 255, 0.9));
 }
 
 .theme-day .logo-container {
-  filter: drop-shadow(0 0 25px rgba(100, 170, 255, 0.8));
+  filter: drop-shadow(0 0 30px rgba(100, 180, 255, 0.9));
 }
 
 .theme-night .logo-container {
-  filter: drop-shadow(0 0 25px rgba(140, 200, 255, 0.7));
+  filter: drop-shadow(0 0 30px rgba(120, 200, 255, 0.9));
 }
 
 .noise-overlay {
@@ -200,13 +201,13 @@
 }
 
 .sun {
-  @apply w-16 h-16 bg-yellow-400 rounded-full absolute animate-pulse;
-  box-shadow: 0 0 50px 15px rgba(255, 236, 95, 0.7);
+  @apply w-16 h-16 bg-blue-300 rounded-full absolute animate-pulse;
+  box-shadow: 0 0 50px 15px rgba(100, 180, 255, 0.7);
 }
 
 .moon {
   @apply w-16 h-16 bg-gray-100 rounded-full absolute;
-  box-shadow: 0 0 50px 10px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 50px 10px rgba(180, 220, 255, 0.5);
 }
 
 .stars {

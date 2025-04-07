@@ -29,7 +29,10 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
             size="icon" 
             variant="outline"
             onClick={() => onChange(Math.max(1, value - 1))}
-            className="hover:border-white/50 hover:bg-deadpunch-dark/50"
+            className={cn(
+              "hover:border-white/50",
+              themeMode === 'day' ? "hover:bg-slate-200/50" : "hover:bg-deadpunch-dark/50"
+            )}
           >
             <Minus size={16} />
           </Button>
@@ -38,7 +41,7 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
         <div className={cn(
           "mx-3 text-4xl font-display font-bold",
           themeMode === 'day' 
-            ? "text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]" // Keep neon green in both themes
+            ? "text-blue-600 drop-shadow-[0_0_8px_rgba(59,130,246,0.7)]" 
             : "text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]" 
         )}>
           {value}
@@ -48,7 +51,9 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
           <Button 
             size="icon"
             onClick={() => onChange(value + 1)}
-            className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
+            className={cn(
+              themeMode === 'day' ? "bg-blue-500 hover:bg-blue-600" : "bg-deadpunch-red hover:bg-deadpunch-red-hover"
+            )}
           >
             <Plus size={16} />
           </Button>

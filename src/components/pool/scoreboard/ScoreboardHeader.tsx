@@ -15,12 +15,12 @@ export const ScoreboardHeader = () => {
     <CardHeader>
       <CardTitle className="text-2xl flex items-center">
         <span className={cn(
-          themeMode === 'day' ? "text-deadpunch-red" : "text-deadpunch-red"
+          themeMode === 'day' ? "text-blue-600" : "text-deadpunch-red"
         )}>Scoreboard</span>
         <span className={cn(
           "text-sm px-2 py-1 rounded-full ml-auto",
           themeMode === 'day' 
-            ? "bg-deadpunch-red/20 text-deadpunch-red" 
+            ? "bg-blue-100 text-blue-600" 
             : "bg-deadpunch-red/20 text-deadpunch-red"
         )}>
           Pool
