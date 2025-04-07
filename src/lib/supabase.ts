@@ -101,6 +101,41 @@ const sendWelcomeEmail = async (
 };
 
 /**
+ * Triggers the Motion task creation for a new email subscription
+ * 
+ * @param {string} email - The subscriber's email address
+ * @param {EmailMetadata} metadata - Optional metadata about the subscription
+ * @returns {Promise<boolean>} Success status of the operation
+ */
+const createMotionTask = async (
+  email: string,
+  metadata: EmailMetadata = {}
+): Promise<boolean> => {
+  try {
+    console.log('[Email Service] Creating Motion task for:', email);
+    
+    const { error } = await supabase.functions.invoke('motion-task', {
+      body: { 
+        email, 
+        name: metadata.name || email,
+        metadata 
+      },
+    });
+    
+    if (error) {
+      console.error('[Email Service] Error creating Motion task:', error);
+      return false;
+    }
+    
+    console.log('[Email Service] Motion task created successfully for:', email);
+    return true;
+  } catch (error) {
+    console.error('[Email Service] Unexpected error creating Motion task:', error);
+    return false;
+  }
+};
+
+/**
  * Saves an email subscription directly to the Supabase database
  * 
  * This function handles saving the email to the database and checking for duplicates.
@@ -166,7 +201,14 @@ export const saveEmailSubscription = async (
       };
     }
     
-    // Send welcome email for new subscriptions
+    // Directly trigger the Motion task creation after successful database insertion
+    const motionTaskCreated = await createMotionTask(email, metadata);
+    if (!motionTaskCreated) {
+      console.warn('[Email Service] Failed to create Motion task for:', email);
+      // We don't return an error since the subscription was saved successfully
+    }
+    
+    // Also try to send welcome email for new subscriptions
     const emailSent = await sendWelcomeEmail(email, metadata);
     if (!emailSent) {
       console.warn('[Email Service] Failed to send welcome email to:', email);

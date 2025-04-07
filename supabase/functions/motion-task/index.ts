@@ -20,16 +20,33 @@ interface Handler {
 const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks';
 const MOTION_API_KEY = Deno.env.get("MOTION_API_KEY");
 
+// CORS headers for cross-origin requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 export const handler: Handler = async (event, context) => {
+  console.log("Motion task function triggered with event:", JSON.stringify(event));
+  
+  // Handle CORS preflight requests
+  if (event && typeof event === 'object' && 'method' in event && event.method === 'OPTIONS') {
+    return {
+      statusCode: 204,
+      body: '',
+    };
+  }
+  
   try {
-    console.log("Motion task function triggered");
-    
     // Check if MOTION_API_KEY is available
     if (!MOTION_API_KEY) {
       console.error("MOTION_API_KEY environment variable is not set");
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "MOTION_API_KEY environment variable is not set" }),
+        body: JSON.stringify({ 
+          error: "MOTION_API_KEY environment variable is not set",
+          success: false
+        }),
       };
     }
 
@@ -37,37 +54,53 @@ export const handler: Handler = async (event, context) => {
     const body = event.body ? JSON.parse(event.body) : {};
     console.log("Received payload:", JSON.stringify(body));
     
-    // Assume the new record is under body.record or body.payload.new
-    const record = body.record || (body.payload && body.payload.new) || null;
-    if (!record) {
-      console.error("No record found in event payload:", JSON.stringify(body));
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'No record found in event payload. Expected "record" or "payload.new" property.' }),
-      };
+    // Check different possible locations for the email data
+    // This makes the function more robust to different trigger sources
+    let email = '';
+    let name = '';
+    
+    // Try to extract data from different possible payload structures
+    if (body.record) {
+      // Direct webhook format
+      email = body.record.email;
+      name = body.record.name || body.record.metadata?.name || email;
+    } else if (body.payload && body.payload.new) {
+      // Database trigger format
+      email = body.payload.new.email;
+      name = body.payload.new.name || body.payload.new.metadata?.name || email;
+    } else if (body.email) {
+      // Direct API call format
+      email = body.email;
+      name = body.name || body.metadata?.name || email;
     }
-
-    // Extract email and name; if name is not provided, default to email
-    const email: string = record.email;
-    const name: string = record.name || email;
-
+    
+    // Validate we have the minimum required data
     if (!email) {
-      console.error("No email found in record:", JSON.stringify(record));
+      console.error("No email found in payload:", JSON.stringify(body));
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'No email found in record' }),
+        body: JSON.stringify({ 
+          error: 'No email found in payload. Check the structure of your trigger data.',
+          success: false
+        }),
       };
     }
 
-    console.log(`Processing record for email: ${email}`);
+    console.log(`Processing record for email: ${email}, name: ${name}`);
 
     // Prepare the task payload for Motion
     const taskPayload = {
-      title: "Send Welcome Email",
+      title: `Send Welcome Email to ${name}`,
       description: `Please send a welcome email to ${name}. (Email: ${email})`,
-      dueDate: new Date().toISOString(), // setting as ASAP (current time)
+      dueDate: new Date().toISOString(),
       status: "TODO",
-      priority: "MEDIUM"
+      priority: "MEDIUM",
+      // Adding metadata to help with tracking
+      metadata: {
+        source: "deadpunch_email_capture",
+        sourceEmail: email,
+        timestamp: new Date().toISOString()
+      }
     };
 
     console.log("Sending request to Motion API:", JSON.stringify(taskPayload));
@@ -82,18 +115,20 @@ export const handler: Handler = async (event, context) => {
       body: JSON.stringify(taskPayload),
     });
 
-    // Check for a successful response
+    // Get response text for logging
     const responseText = await response.text();
     console.log(`Motion API response status: ${response.status}`);
     console.log(`Motion API response body: ${responseText}`);
 
+    // Check for a successful response
     if (!response.ok) {
       return {
         statusCode: response.status,
         body: JSON.stringify({ 
           error: "Failed to create Motion task", 
           details: responseText,
-          status: response.status 
+          status: response.status,
+          success: false
         }),
       };
     }
@@ -110,7 +145,8 @@ export const handler: Handler = async (event, context) => {
       statusCode: 200,
       body: JSON.stringify({ 
         message: 'Motion task created successfully', 
-        data: responseData 
+        data: responseData,
+        success: true
       }),
     };
   } catch (error: unknown) {
@@ -122,7 +158,8 @@ export const handler: Handler = async (event, context) => {
         statusCode: 500,
         body: JSON.stringify({ 
           error: error.message,
-          stack: error.stack
+          stack: error.stack,
+          success: false
         }),
       };
     }
@@ -131,7 +168,8 @@ export const handler: Handler = async (event, context) => {
       statusCode: 500,
       body: JSON.stringify({ 
         error: 'An unknown error occurred',
-        details: String(error)
+        details: String(error),
+        success: false
       }),
     };
   }
