@@ -6,12 +6,7 @@
  * It creates a Motion task to send a welcome email.
  */
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-
-// CORS headers for cross-origin requests
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import { corsHeaders } from "../_shared/cors.ts";
 
 // Motion API configuration
 const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks';
