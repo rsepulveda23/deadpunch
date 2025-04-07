@@ -8,9 +8,9 @@ const TimeIndicator: React.FC = () => {
   const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   
   return (
-    <div className={`fixed top-20 right-4 z-40 flex items-center space-x-2 px-3 py-2 rounded-full backdrop-blur-md ${themeMode === 'day' ? 'bg-white/50 border border-black/10' : 'bg-background/50 border border-border'} shadow-lg`}>
+    <div className={`fixed top-20 right-4 z-40 flex items-center space-x-2 px-3 py-2 rounded-full backdrop-blur-md ${themeMode === 'day' ? 'bg-white/50 border border-black/10 shadow-[0_0_15px_rgba(100,170,255,0.3)]' : 'bg-background/50 border border-border shadow-[0_0_15px_rgba(140,200,255,0.3)]'}`}>
       {themeMode === 'day' ? (
-        <Sun className="h-5 w-5 text-yellow-500" />
+        <Sun className="h-5 w-5 text-blue-500" />
       ) : (
         <Moon className="h-5 w-5 text-blue-300" />
       )}
