@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -87,6 +86,14 @@ const HeroSection = () => {
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
             <span className="block mb-2">COMING SOON</span>
+            
+            {/* Definition Block - Added Here */}
+            <div className="max-w-2xl mx-auto my-4 px-5 py-3 bg-deadpunch-dark-lighter/50 border border-deadpunch-red/20 rounded-md backdrop-blur-sm">
+              <p className="text-base md:text-lg text-deadpunch-gray-light italic">
+                <span className="text-deadpunch-red font-medium">The zone</span> is a state of complete focus and peak performance. In the billiards world, this heightened state of consciousness is known as <span className="text-deadpunch-red font-medium">deadpunch</span>.
+              </p>
+            </div>
+            
             <span className="block text-deadpunch-red text-3xl md:text-4xl lg:text-5xl">Get ready. The game is about to change.</span>
           </h1>
           <p className="text-deadpunch-gray-light text-lg md:text-xl mb-8 max-w-2xl mx-auto">
