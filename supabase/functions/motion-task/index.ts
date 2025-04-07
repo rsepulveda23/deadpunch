@@ -5,20 +5,7 @@
  * This function is triggered when a new email capture event occurs.
  * It creates a Motion task to send a welcome email.
  */
-
-// Define a custom Handler interface for our function
-interface HandlerResponse {
-  statusCode: number;
-  body: string;
-}
-
-interface Handler {
-  (event: { body: string | null }, context?: Record<string, unknown>): Promise<HandlerResponse>;
-}
-
-// Motion API configuration
-const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks';
-const MOTION_API_KEY = Deno.env.get("MOTION_API_KEY");
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 // CORS headers for cross-origin requests
 const corsHeaders = {
@@ -26,32 +13,53 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-export const handler: Handler = async (event, context) => {
-  console.log("Motion task function triggered with event:", JSON.stringify(event));
+// Motion API configuration
+const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks';
+const MOTION_API_KEY = Deno.env.get("MOTION_API_KEY");
+
+const handler = async (req: Request): Promise<Response> => {
+  console.log("Motion task function triggered");
   
   // Handle CORS preflight requests
-  if (event && typeof event === 'object' && 'method' in event && event.method === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      body: '',
-    };
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders
+    });
   }
   
   try {
     // Check if MOTION_API_KEY is available
     if (!MOTION_API_KEY) {
       console.error("MOTION_API_KEY environment variable is not set");
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ 
+      return new Response(
+        JSON.stringify({ 
           error: "MOTION_API_KEY environment variable is not set",
           success: false
         }),
-      };
+        {
+          status: 500,
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          }
+        }
+      );
     }
 
-    // Parse the event body from Supabase's webhook or trigger payload
-    const body = event.body ? JSON.parse(event.body) : {};
+    // Parse the request body
+    let body;
+    let reqText;
+    
+    try {
+      reqText = await req.text();
+      console.log("Raw request body:", reqText);
+      body = reqText ? JSON.parse(reqText) : {};
+    } catch (error) {
+      console.error("Error parsing request body:", error);
+      body = {};
+    }
+    
     console.log("Received payload:", JSON.stringify(body));
     
     // Check different possible locations for the email data
@@ -77,13 +85,20 @@ export const handler: Handler = async (event, context) => {
     // Validate we have the minimum required data
     if (!email) {
       console.error("No email found in payload:", JSON.stringify(body));
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ 
+      return new Response(
+        JSON.stringify({ 
           error: 'No email found in payload. Check the structure of your trigger data.',
+          payload: body,
           success: false
         }),
-      };
+        {
+          status: 400,
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          }
+        }
+      );
     }
 
     console.log(`Processing record for email: ${email}, name: ${name}`);
@@ -122,15 +137,21 @@ export const handler: Handler = async (event, context) => {
 
     // Check for a successful response
     if (!response.ok) {
-      return {
-        statusCode: response.status,
-        body: JSON.stringify({ 
+      return new Response(
+        JSON.stringify({ 
           error: "Failed to create Motion task", 
           details: responseText,
           status: response.status,
           success: false
         }),
-      };
+        {
+          status: response.status,
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          }
+        }
+      );
     }
 
     // Parse the response as JSON if possible
@@ -141,36 +162,43 @@ export const handler: Handler = async (event, context) => {
       responseData = { raw: responseText };
     }
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ 
+    return new Response(
+      JSON.stringify({ 
         message: 'Motion task created successfully', 
         data: responseData,
         success: true
       }),
-    };
+      {
+        status: 200,
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        }
+      }
+    );
   } catch (error: unknown) {
     // Improved error handling
     console.error("Unexpected error in motion-task function:", error);
     
-    if (error instanceof Error) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ 
-          error: error.message,
-          stack: error.stack,
-          success: false
-        }),
-      };
-    }
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : 'No stack trace available';
     
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ 
-        error: 'An unknown error occurred',
-        details: String(error),
+    return new Response(
+      JSON.stringify({ 
+        error: errorMessage,
+        stack: errorStack,
         success: false
       }),
-    };
+      {
+        status: 500,
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        }
+      }
+    );
   }
 };
+
+// Start the server
+serve(handler);
