@@ -100,7 +100,7 @@ const HeroSection = () => {
             Be the first to know. Sign up to receive exclusive updates on early access when Deadpunch launches.
           </p>
           <div className="flex justify-center items-center">
-            <a href="#notify" className="btn-primary animate-reveal delay-300">
+            <a href="#notify" className="btn-primary animate-reveal delay-300 bg-deadpunch-red hover:bg-deadpunch-red-hover">
               Notify Me
             </a>
           </div>
