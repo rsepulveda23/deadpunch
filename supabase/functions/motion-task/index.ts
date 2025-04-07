@@ -110,17 +110,10 @@ const handler = async (req: Request): Promise<Response> => {
       dueDate: new Date().toISOString(),
       priority: "MEDIUM", // Options: HIGH, MEDIUM, LOW
       status: "NOT_STARTED", // Options: NOT_STARTED, IN_PROGRESS, COMPLETED
-      // Optional fields
-      isPrivate: false,
-      // Adding metadata as a custom field since it's not part of the standard API
-      customFields: {
-        source: "deadpunch_email_capture",
-        sourceEmail: email,
-        timestamp: new Date().toISOString()
-      }
     };
 
     console.log("Sending request to Motion API:", JSON.stringify(taskPayload));
+    console.log("Using API key:", `Bearer ${MOTION_API_KEY.substring(0, 5)}...`);
 
     // Make the API request to Motion
     const response = await fetch(MOTION_API_ENDPOINT, {
