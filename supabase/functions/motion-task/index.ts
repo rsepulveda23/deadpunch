@@ -16,6 +16,8 @@ const corsHeaders = {
 // Motion API configuration
 const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks';
 const MOTION_API_KEY = Deno.env.get("Motion");
+// Get the workspace ID from environment variables or use a default
+const MOTION_WORKSPACE_ID = Deno.env.get("MOTION_WORKSPACE_ID") || "default";
 
 const handler = async (req: Request): Promise<Response> => {
   console.log("Motion task function triggered");
@@ -103,13 +105,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Processing record for email: ${email}, name: ${name}`);
 
-    // Create a simplified task payload according to Motion API documentation
+    // Create a task payload according to Motion API documentation
+    // Including the required workspaceId parameter
     const taskPayload = {
       name: `Send Welcome Email to ${name}`,
       description: `Please send a welcome email to ${name}. Email: ${email}`,
       dueDate: new Date().toISOString(),
       priority: "MEDIUM",
       status: "NOT_STARTED",
+      workspaceId: MOTION_WORKSPACE_ID, // Add the required workspaceId parameter
     };
 
     console.log("Sending request to Motion API:", JSON.stringify(taskPayload));
