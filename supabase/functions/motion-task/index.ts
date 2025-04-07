@@ -15,7 +15,7 @@ const corsHeaders = {
 
 // Motion API configuration
 const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks';
-const MOTION_API_KEY = Deno.env.get("MOTION_API_KEY");
+const MOTION_API_KEY = Deno.env.get("Motion");
 
 const handler = async (req: Request): Promise<Response> => {
   console.log("Motion task function triggered");
@@ -31,10 +31,10 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     // Check if MOTION_API_KEY is available
     if (!MOTION_API_KEY) {
-      console.error("MOTION_API_KEY environment variable is not set");
+      console.error("Motion API key environment variable is not set");
       return new Response(
         JSON.stringify({ 
-          error: "MOTION_API_KEY environment variable is not set",
+          error: "Motion API key environment variable is not set",
           success: false
         }),
         {
