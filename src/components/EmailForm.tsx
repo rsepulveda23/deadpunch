@@ -128,7 +128,7 @@ const EmailForm = () => {
               />
               <button
                 type="submit"
-                className={`btn-primary min-w-[150px] flex items-center justify-center gap-2 ${
+                className={`btn-primary min-w-[150px] flex items-center justify-center gap-2 bg-deadpunch-red hover:bg-deadpunch-red-hover ${
                   isSuccess ? 'bg-green-600 hover:bg-green-700' : ''
                 }`}
                 disabled={isSubmitting || isSuccess}
