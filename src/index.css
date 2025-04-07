@@ -7,35 +7,95 @@
 
 @layer base {
   :root {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 77% 56%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-
+    /* Base colors shared between themes */
     --radius: 0.5rem;
+    
+    /* Day theme colors */
+    --day-background: 210 40% 98%;
+    --day-foreground: 222.2 84% 4.9%;
+    --day-card: 0 0% 100%;
+    --day-card-foreground: 222.2 84% 4.9%;
+    --day-popover: 0 0% 100%;
+    --day-popover-foreground: 222.2 84% 4.9%;
+    --day-primary: 0 77% 56%;
+    --day-primary-foreground: 210 40% 98%;
+    --day-secondary: 210 40% 96.1%;
+    --day-secondary-foreground: 222.2 47.4% 11.2%;
+    --day-muted: 210 40% 96.1%;
+    --day-muted-foreground: 215.4 16.3% 46.9%;
+    --day-accent: 210 40% 96.1%;
+    --day-accent-foreground: 222.2 47.4% 11.2%;
+    --day-destructive: 0 84.2% 60.2%;
+    --day-destructive-foreground: 210 40% 98%;
+    --day-border: 214.3 31.8% 91.4%;
+    --day-input: 214.3 31.8% 91.4%;
+    --day-ring: 0 77% 56%;
+    
+    /* Night theme colors */
+    --night-background: 0 0% 7%;
+    --night-foreground: 0 0% 98%;
+    --night-card: 240 10% 3.9%;
+    --night-card-foreground: 0 0% 98%;
+    --night-popover: 240 10% 3.9%;
+    --night-popover-foreground: 0 0% 98%;
+    --night-primary: 0 77% 56%;
+    --night-primary-foreground: 210 40% 98%;
+    --night-secondary: 240 3.7% 15.9%;
+    --night-secondary-foreground: 0 0% 98%;
+    --night-muted: 240 3.7% 15.9%;
+    --night-muted-foreground: 240 5% 64.9%;
+    --night-accent: 240 3.7% 15.9%;
+    --night-accent-foreground: 0 0% 98%;
+    --night-destructive: 0 62.8% 30.6%;
+    --night-destructive-foreground: 0 0% 98%;
+    --night-border: 240 3.7% 15.9%;
+    --night-input: 240 3.7% 15.9%;
+    --night-ring: 240 4.9% 83.9%;
+  }
+  
+  /* Apply theme variables */
+  .theme-day {
+    --background: var(--day-background);
+    --foreground: var(--day-foreground);
+    --card: var(--day-card);
+    --card-foreground: var(--day-card-foreground);
+    --popover: var(--day-popover);
+    --popover-foreground: var(--day-popover-foreground);
+    --primary: var(--day-primary);
+    --primary-foreground: var(--day-primary-foreground);
+    --secondary: var(--day-secondary);
+    --secondary-foreground: var(--day-secondary-foreground);
+    --muted: var(--day-muted);
+    --muted-foreground: var(--day-muted-foreground);
+    --accent: var(--day-accent);
+    --accent-foreground: var(--day-accent-foreground);
+    --destructive: var(--day-destructive);
+    --destructive-foreground: var(--day-destructive-foreground);
+    --border: var(--day-border);
+    --input: var(--day-input);
+    --ring: var(--day-ring);
+  }
+  
+  .theme-night {
+    --background: var(--night-background);
+    --foreground: var(--night-foreground);
+    --card: var(--night-card);
+    --card-foreground: var(--night-card-foreground);
+    --popover: var(--night-popover);
+    --popover-foreground: var(--night-popover-foreground);
+    --primary: var(--night-primary);
+    --primary-foreground: var(--night-primary-foreground);
+    --secondary: var(--night-secondary);
+    --secondary-foreground: var(--night-secondary-foreground);
+    --muted: var(--night-muted);
+    --muted-foreground: var(--night-muted-foreground);
+    --accent: var(--night-accent);
+    --accent-foreground: var(--night-accent-foreground);
+    --destructive: var(--night-destructive);
+    --destructive-foreground: var(--night-destructive-foreground);
+    --border: var(--night-border);
+    --input: var(--night-input);
+    --ring: var(--night-ring);
   }
 }
 
@@ -49,7 +109,18 @@
   }
   
   body {
-    @apply bg-deadpunch-dark text-foreground antialiased overflow-x-hidden;
+    @apply bg-background text-foreground antialiased overflow-x-hidden;
+  }
+  
+  /* Day-specific styling */
+  .theme-day body {
+    background-image: 
+      radial-gradient(circle at 15% 30%, rgba(100, 149, 237, 0.05) 0%, transparent 25%),
+      radial-gradient(circle at 85% 80%, rgba(100, 149, 237, 0.05) 0%, transparent 30%);
+  }
+  
+  /* Night-specific styling */
+  .theme-night body {
     background-image: 
       radial-gradient(circle at 15% 30%, rgba(225, 60, 60, 0.05) 0%, transparent 25%),
       radial-gradient(circle at 85% 80%, rgba(225, 60, 60, 0.05) 0%, transparent 30%);
@@ -108,6 +179,10 @@
   filter: drop-shadow(0 0 15px rgba(225, 60, 60, 0.3));
 }
 
+.theme-day .logo-container {
+  filter: drop-shadow(0 0 15px rgba(0, 120, 255, 0.3));
+}
+
 .noise-overlay {
   position: fixed;
   inset: 0;
@@ -119,4 +194,23 @@
 
 .parallax-layer {
   will-change: transform;
+}
+
+/* Daytime and nighttime decorative elements */
+.sun {
+  @apply w-16 h-16 bg-yellow-400 rounded-full absolute animate-pulse;
+  box-shadow: 0 0 50px 15px rgba(255, 236, 95, 0.7);
+}
+
+.moon {
+  @apply w-16 h-16 bg-gray-100 rounded-full absolute;
+  box-shadow: 0 0 50px 10px rgba(255, 255, 255, 0.3);
+}
+
+.stars {
+  @apply fixed inset-0 pointer-events-none z-0 opacity-0 transition-opacity duration-1000;
+}
+
+.theme-night .stars {
+  @apply opacity-100;
 }

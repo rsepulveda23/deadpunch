@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import Index from './pages/Index';
 import PoolTools from './pages/PoolTools';
 import ComingSoon from './pages/ComingSoon';
@@ -11,26 +12,28 @@ import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/training-tools/pool-tools" element={<PoolTools />} />
-          
-          {/* Redirect routes */}
-          <Route path="/men/:category" element={<ComingSoon />} />
-          <Route path="/women/:category" element={<ComingSoon />} />
-          <Route path="/new-arrivals/:category" element={<ComingSoon />} />
-          <Route path="/training-tools/:tool" element={<ComingSoon />} />
-          
-          {/* 404 route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Toaster />
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/training-tools/pool-tools" element={<PoolTools />} />
+            
+            {/* Redirect routes */}
+            <Route path="/men/:category" element={<ComingSoon />} />
+            <Route path="/women/:category" element={<ComingSoon />} />
+            <Route path="/new-arrivals/:category" element={<ComingSoon />} />
+            <Route path="/training-tools/:tool" element={<ComingSoon />} />
+            
+            {/* 404 route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

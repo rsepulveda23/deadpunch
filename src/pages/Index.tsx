@@ -1,12 +1,14 @@
 
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '@/contexts/ThemeContext';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
 import ProductTeasers from '@/components/ProductTeasers';
 import EmailForm from '@/components/EmailForm';
 import ChatInterface from '@/components/Chat/ChatInterface';
+import TimeIndicator from '@/components/TimeIndicator';
 import TikTokIcon from '@/components/icons/TikTokIcon';
 import { Mail, Phone, Target } from 'lucide-react';
 import {
@@ -17,6 +19,8 @@ import {
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
+  const { isDayTime, isNightTime } = useTheme();
+  
   useEffect(() => {
     // Scroll reveal animations
     const observerOptions = {
@@ -39,12 +43,54 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Generate stars for night time
+  const renderStars = () => {
+    if (!isNightTime) return null;
+    
+    return (
+      <div className="stars">
+        {Array.from({ length: 50 }).map((_, i) => {
+          const size = Math.random() * 3 + 1;
+          const top = Math.random() * 100;
+          const left = Math.random() * 100;
+          const animationDelay = Math.random() * 5;
+          
+          return (
+            <div 
+              key={i} 
+              className="absolute bg-white rounded-full animate-pulse"
+              style={{
+                width: `${size}px`,
+                height: `${size}px`,
+                top: `${top}%`,
+                left: `${left}%`,
+                opacity: Math.random() * 0.7 + 0.3,
+                animationDelay: `${animationDelay}s`,
+                animationDuration: '3s'
+              }}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+  
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className={`relative min-h-screen overflow-hidden ${isDayTime ? 'theme-day' : 'theme-night'}`}>
+      {/* Celestial elements */}
+      {isDayTime && (
+        <div className="fixed top-20 right-20 sun z-0" />
+      )}
+      {isNightTime && (
+        <div className="fixed top-20 right-20 moon z-0" />
+      )}
+      {renderStars()}
+      
       {/* Noise texture overlay */}
       <div className="noise-overlay"></div>
       
       <Navbar />
+      <TimeIndicator />
       <HeroSection />
       <AboutSection />
       <ProductTeasers />
@@ -53,7 +99,7 @@ const Index = () => {
       {/* Add the ChatInterface component */}
       <ChatInterface />
       
-      <footer className="py-6 border-t border-deadpunch-dark-lighter">
+      <footer className="py-6 border-t border-border">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <img 
