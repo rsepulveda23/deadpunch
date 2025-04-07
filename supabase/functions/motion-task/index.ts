@@ -1,3 +1,4 @@
+
 /**
  * Motion Task Function
  *
@@ -20,7 +21,7 @@ interface Handler {
 }
 
 const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks'; // Replace with the actual Motion API endpoint
-const MOTION_API_KEY = process.env.MOTION_API_KEY;
+const MOTION_API_KEY = Deno.env.get("MOTION_API_KEY");
 
 export const handler: Handler = async (event, context) => {
   try {
@@ -45,6 +46,15 @@ export const handler: Handler = async (event, context) => {
       description: `Please send a welcome email to ${name}. (Email: ${email})`,
       dueDate: new Date().toISOString(), // setting as ASAP (current time); adjust as needed
     };
+
+    // Check if MOTION_API_KEY is available
+    if (!MOTION_API_KEY) {
+      console.error("MOTION_API_KEY environment variable is not set");
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "MOTION_API_KEY environment variable is not set" }),
+      };
+    }
 
     const response = await fetch(MOTION_API_ENDPOINT, {
       method: 'POST',
