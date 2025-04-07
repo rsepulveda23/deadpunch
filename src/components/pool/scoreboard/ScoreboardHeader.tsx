@@ -1,5 +1,7 @@
 
 import { CardHeader, CardTitle } from "@/components/ui/card";
+import { useTheme } from "@/contexts/ThemeContext";
+import { cn } from "@/lib/utils";
 
 /**
  * ScoreboardHeader Component
@@ -7,11 +9,20 @@ import { CardHeader, CardTitle } from "@/components/ui/card";
  * Displays the title of the scoreboard with styling consistent with the application theme.
  */
 export const ScoreboardHeader = () => {
+  const { themeMode } = useTheme();
+
   return (
     <CardHeader>
       <CardTitle className="text-2xl flex items-center">
-        <span className="text-deadpunch-red mr-2">Scoreboard</span>
-        <span className="text-sm bg-deadpunch-red/20 text-deadpunch-red px-2 py-1 rounded-full ml-auto">
+        <span className={cn(
+          themeMode === 'day' ? "text-deadpunch-red" : "text-deadpunch-red"
+        )}>Scoreboard</span>
+        <span className={cn(
+          "text-sm px-2 py-1 rounded-full ml-auto",
+          themeMode === 'day' 
+            ? "bg-deadpunch-red/20 text-deadpunch-red" 
+            : "bg-deadpunch-red/20 text-deadpunch-red"
+        )}>
           Pool
         </span>
       </CardTitle>

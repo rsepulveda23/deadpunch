@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Minus, Plus } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Player {
   name: string;
@@ -23,6 +24,7 @@ interface PlayerScoreProps {
  */
 export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScoreProps) => {
   const hasWon = player.score >= raceValue;
+  const { themeMode } = useTheme();
   
   return (
     <div className={cn(

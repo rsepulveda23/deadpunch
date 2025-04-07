@@ -24,6 +24,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // Consider daytime between 6am and 6pm
       const isDaytime = currentHour >= 6 && currentHour < 18;
       setThemeMode(isDaytime ? 'day' : 'night');
+      
+      // Apply theme class to document
+      document.documentElement.classList.remove('theme-day', 'theme-night');
+      document.documentElement.classList.add(isDaytime ? 'theme-day' : 'theme-night');
     };
     
     // Check time immediately

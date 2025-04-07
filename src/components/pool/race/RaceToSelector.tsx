@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Minus, Plus } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface RaceToSelectorProps {
   value: number;
@@ -16,6 +17,8 @@ interface RaceToSelectorProps {
  * needed to win the game.
  */
 export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
+  const { themeMode } = useTheme();
+  
   return (
     <div className="text-center">
       <Label htmlFor="raceValue" className="text-lg font-semibold block mb-2">Race To</Label>
@@ -34,7 +37,9 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
         
         <div className={cn(
           "mx-3 text-4xl font-display font-bold",
-          "text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]" // Neon green color with glow effect
+          themeMode === 'day' 
+            ? "text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]" // Keep neon green in both themes
+            : "text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]" 
         )}>
           {value}
         </div>
