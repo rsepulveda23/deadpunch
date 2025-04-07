@@ -103,24 +103,30 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Processing record for email: ${email}, name: ${name}`);
 
-    // Prepare the task payload for Motion according to their API documentation
+    // Create a simplified task payload according to Motion API documentation
     const taskPayload = {
       name: `Send Welcome Email to ${name}`,
-      description: `Please send a welcome email to ${name}. (Email: ${email})`,
+      description: `Please send a welcome email to ${name}. Email: ${email}`,
       dueDate: new Date().toISOString(),
-      priority: "MEDIUM", // Options: HIGH, MEDIUM, LOW
-      status: "NOT_STARTED", // Options: NOT_STARTED, IN_PROGRESS, COMPLETED
+      priority: "MEDIUM",
+      status: "NOT_STARTED",
     };
 
     console.log("Sending request to Motion API:", JSON.stringify(taskPayload));
-    console.log("Using API key:", `Bearer ${MOTION_API_KEY.substring(0, 5)}...`);
+    
+    // Log partial API key for debugging (first 3 chars only)
+    if (MOTION_API_KEY) {
+      const keyPrefix = MOTION_API_KEY.substring(0, 3);
+      const keyLength = MOTION_API_KEY.length;
+      console.log(`Using API key: [${keyPrefix}...] (total length: ${keyLength})`);
+    }
 
-    // Make the API request to Motion
+    // Make the API request to Motion with the correct X-API-Key header
     const response = await fetch(MOTION_API_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${MOTION_API_KEY}`,
+        'X-API-Key': MOTION_API_KEY,
       },
       body: JSON.stringify(taskPayload),
     });
