@@ -39,11 +39,13 @@ const MobileMenu = ({ categories, isMenuOpen, setIsMenuOpen, setNotifyDialogOpen
         className="bg-deadpunch-dark border-deadpunch-gray-dark w-[300px] p-0 overflow-y-auto"
       >
         <div className="p-4 border-b border-deadpunch-gray-dark">
-          <img 
-            src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
-            alt="Deadpunch" 
-            className="h-8 object-contain mx-auto" 
-          />
+          <div className="logo-container mx-auto w-32">
+            <img 
+              src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+              alt="Deadpunch" 
+              className="h-8 object-contain mx-auto" 
+            />
+          </div>
         </div>
         
         <div className="p-4 space-y-4">

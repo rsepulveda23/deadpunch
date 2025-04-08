@@ -102,11 +102,13 @@ const Index = () => {
       <footer className="py-6 border-t border-border">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
-            <img 
-              src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
-              alt="Deadpunch" 
-              className="h-8 object-contain mr-4" 
-            />
+            <div className="logo-container mr-4">
+              <img 
+                src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
+                alt="Deadpunch" 
+                className="h-8 object-contain" 
+              />
+            </div>
             
             {/* Social Media Links moved next to logo */}
             <HoverCard>
