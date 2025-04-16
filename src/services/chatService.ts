@@ -1,3 +1,4 @@
+
 /**
  * Chat Service
  * 
@@ -5,7 +6,7 @@
  * It provides the interface between the frontend chat components and the backend AI services.
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { ChatSettings } from '@/types/chat';
 
 /**
