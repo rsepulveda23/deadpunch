@@ -11,7 +11,7 @@ import { corsHeaders } from "../_shared/cors.ts";
 // Motion API configuration
 const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks';
 const MOTION_API_KEY = Deno.env.get("Motion");
-// Get the workspace ID from environment variables or use a default
+// Get the workspace ID from environment variables
 const MOTION_WORKSPACE_ID = Deno.env.get("MOTION_WORKSPACE_ID") || "default";
 
 const handler = async (req: Request): Promise<Response> => {
@@ -46,18 +46,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Parse the request body
     let body;
-    let reqText;
     
     try {
-      reqText = await req.text();
-      console.log("Raw request body:", reqText);
-      body = reqText ? JSON.parse(reqText) : {};
+      body = await req.json();
+      console.log("Received payload:", JSON.stringify(body));
     } catch (error) {
       console.error("Error parsing request body:", error);
       body = {};
     }
-    
-    console.log("Received payload:", JSON.stringify(body));
     
     // Check different possible locations for the email data
     // This makes the function more robust to different trigger sources
@@ -112,13 +108,6 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     console.log("Sending request to Motion API:", JSON.stringify(taskPayload));
-    
-    // Log partial API key for debugging (first 3 chars only)
-    if (MOTION_API_KEY) {
-      const keyPrefix = MOTION_API_KEY.substring(0, 3);
-      const keyLength = MOTION_API_KEY.length;
-      console.log(`Using API key: [${keyPrefix}...] (total length: ${keyLength})`);
-    }
 
     // Make the API request to Motion with the correct X-API-Key header
     const response = await fetch(MOTION_API_ENDPOINT, {

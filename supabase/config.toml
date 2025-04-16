@@ -89,31 +89,16 @@ double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
 enable_confirmations = false
 
-# Configure one of the providers below.
-# [auth.email.passwordless]
-# enabled = false
-# [auth.email.saml]
-# enabled = false
-# [auth.sms]
-# enabled = false
-
-# Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
-# `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin`, `notion`, `twitch`,
-# `twitter`, `slack`, `spotify`, `workos`, `zoom`.
-# [auth.external.apple]
-# enabled = false
-# # client_id - The client ID of your external provider OAuth app.
-# client_id = ""
-# # secret - The client secret of your external provider OAuth app.
-# secret = ""
-# # Overrides the default auth redirectUrl.
-# redirect_uri = ""
-# # Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,
-# # or any other third-party OIDC providers.
-# url = ""
-
-[analytics]
-enabled = false
-# Configure one of the backends below.
-# [analytics.clickhouse]
-# enabled = false
+# Add security configuration for functions
+[functions]
+# Set proper verification for edge functions
+verify_jwt = true
+# Set the motion-task function to be public if it's used in webhooks
+[functions.motion-task]
+verify_jwt = false
+# Set the send-welcome-email function to be public if needed
+[functions.send-welcome-email]
+verify_jwt = false
+# Set the openai-chat function to be secured
+[functions.openai-chat]
+verify_jwt = true
