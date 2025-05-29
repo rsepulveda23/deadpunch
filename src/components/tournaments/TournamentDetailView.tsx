@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -29,6 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import TournamentEditForm from './TournamentEditForm';
 
 interface Tournament {
   id: string;
@@ -57,10 +57,12 @@ interface TournamentDetailViewProps {
   tournament: Tournament;
   isOwner?: boolean;
   onDelete: () => void;
+  onUpdate: () => void;
 }
 
-const TournamentDetailView = ({ tournament, isOwner, onDelete }: TournamentDetailViewProps) => {
+const TournamentDetailView = ({ tournament, isOwner, onDelete, onUpdate }: TournamentDetailViewProps) => {
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -81,6 +83,21 @@ const TournamentDetailView = ({ tournament, isOwner, onDelete }: TournamentDetai
     });
   };
 
+  if (isEditing) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <TournamentEditForm
+          tournament={tournament}
+          onClose={() => setIsEditing(false)}
+          onUpdate={() => {
+            onUpdate();
+            setIsEditing(false);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
@@ -98,6 +115,7 @@ const TournamentDetailView = ({ tournament, isOwner, onDelete }: TournamentDetai
           <div className="flex space-x-2">
             <Button 
               variant="outline"
+              onClick={() => setIsEditing(true)}
               className="border-deadpunch-gray-dark text-white hover:bg-deadpunch-dark-lighter"
             >
               <Edit className="mr-2 h-4 w-4" />

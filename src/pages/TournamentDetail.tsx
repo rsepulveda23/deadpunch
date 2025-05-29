@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -49,7 +48,7 @@ const TournamentDetail = () => {
     try {
       console.log('Fetching tournament with ID:', tournamentId);
       const { data, error } = await supabase
-        .from('tournaments' as any)
+        .from('tournaments')
         .select('*')
         .eq('id', tournamentId)
         .single();
@@ -66,7 +65,7 @@ const TournamentDetail = () => {
       }
 
       console.log('Tournament fetched:', data);
-      setTournament(data as Tournament);
+      setTournament(data);
     } catch (error) {
       console.error('Error:', error);
       toast({
@@ -88,7 +87,7 @@ const TournamentDetail = () => {
     try {
       console.log('Deleting tournament:', tournament.id);
       const { error } = await supabase
-        .from('tournaments' as any)
+        .from('tournaments')
         .delete()
         .eq('id', tournament.id);
 
@@ -160,6 +159,7 @@ const TournamentDetail = () => {
           tournament={tournament} 
           isOwner={isOwner}
           onDelete={handleDelete}
+          onUpdate={fetchTournament}
         />
       </div>
     </div>

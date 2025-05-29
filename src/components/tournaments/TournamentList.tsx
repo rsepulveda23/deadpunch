@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -33,7 +32,7 @@ const TournamentList = () => {
     try {
       console.log('Fetching tournaments...');
       const { data, error } = await supabase
-        .from('tournaments' as any)
+        .from('tournaments')
         .select(`
           id,
           name,
