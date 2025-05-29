@@ -15,6 +15,7 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const PoolTools = lazy(() => import('./pages/PoolTools'));
 const Tournaments = lazy(() => import('./pages/Tournaments'));
 const TournamentDetail = lazy(() => import('./pages/TournamentDetail'));
+const Profile = lazy(() => import('./pages/Profile'));
 const ProfileEdit = lazy(() => import('./pages/ProfileEdit'));
 const OrganizerProfile = lazy(() => import('./pages/OrganizerProfile'));
 const ComingSoon = lazy(() => import('./pages/ComingSoon'));
@@ -44,7 +45,7 @@ function App() {
                 <Route path="/pool-tools" element={<PoolTools />} />
                 <Route path="/tournaments" element={<Tournaments />} />
                 <Route path="/tournaments/:tournamentId" element={<TournamentDetail />} />
-                <Route path="/profile" element={<ComingSoon />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/profile/edit" element={<ProfileEdit />} />
                 <Route path="/organizer/:organizerId" element={<OrganizerProfile />} />
                 <Route path="/settings" element={<ComingSoon />} />
