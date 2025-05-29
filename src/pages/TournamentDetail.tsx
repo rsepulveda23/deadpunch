@@ -47,8 +47,9 @@ const TournamentDetail = () => {
 
   const fetchTournament = async () => {
     try {
+      console.log('Fetching tournament with ID:', tournamentId);
       const { data, error } = await supabase
-        .from('tournaments')
+        .from('tournaments' as any)
         .select('*')
         .eq('id', tournamentId)
         .single();
@@ -64,7 +65,8 @@ const TournamentDetail = () => {
         return;
       }
 
-      setTournament(data);
+      console.log('Tournament fetched:', data);
+      setTournament(data as Tournament);
     } catch (error) {
       console.error('Error:', error);
       toast({
@@ -84,8 +86,9 @@ const TournamentDetail = () => {
     }
 
     try {
+      console.log('Deleting tournament:', tournament.id);
       const { error } = await supabase
-        .from('tournaments')
+        .from('tournaments' as any)
         .delete()
         .eq('id', tournament.id);
 

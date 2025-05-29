@@ -60,17 +60,20 @@ const TournamentSubmissionForm = ({ onSuccess }: TournamentSubmissionFormProps) 
     }
 
     try {
+      console.log('Submitting tournament data:', data);
       const { error } = await supabase
-        .from('tournaments')
+        .from('tournaments' as any)
         .insert({
           ...data,
           user_id: user.id,
         });
 
       if (error) {
+        console.error('Supabase error:', error);
         throw error;
       }
 
+      console.log('Tournament submitted successfully');
       toast({
         title: "Success",
         description: "Tournament submitted successfully!",

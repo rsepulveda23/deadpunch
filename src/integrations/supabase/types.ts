@@ -30,66 +30,72 @@ export type Database = {
         }
         Relationships: []
       }
-      reimbursable_expenses: {
+      tournaments: {
         Row: {
-          amount: number | null
-          category: string | null
+          address: string
+          city: string
           created_at: string
-          date: string | null
+          date: string
+          description: string | null
+          entry_fee: number
+          flyer_image_url: string | null
+          game_type: string
           id: string
-          item: string | null
-          note: string | null
-          paid_with: string | null
-          reimbursed: boolean | null
-          reimbursed_on: string | null
-          status: string | null
+          location_name: string
+          name: string
+          organizer_email: string
+          organizer_name: string
+          organizer_phone: string
+          prize_pool: string | null
+          state: string
+          time: string
+          user_id: string
+          website_link: string | null
+          zip_code: string
         }
         Insert: {
-          amount?: number | null
-          category?: string | null
+          address: string
+          city: string
           created_at?: string
-          date?: string | null
+          date: string
+          description?: string | null
+          entry_fee?: number
+          flyer_image_url?: string | null
+          game_type: string
           id?: string
-          item?: string | null
-          note?: string | null
-          paid_with?: string | null
-          reimbursed?: boolean | null
-          reimbursed_on?: string | null
-          status?: string | null
+          location_name: string
+          name: string
+          organizer_email: string
+          organizer_name: string
+          organizer_phone: string
+          prize_pool?: string | null
+          state: string
+          time: string
+          user_id: string
+          website_link?: string | null
+          zip_code: string
         }
         Update: {
-          amount?: number | null
-          category?: string | null
+          address?: string
+          city?: string
           created_at?: string
-          date?: string | null
+          date?: string
+          description?: string | null
+          entry_fee?: number
+          flyer_image_url?: string | null
+          game_type?: string
           id?: string
-          item?: string | null
-          note?: string | null
-          paid_with?: string | null
-          reimbursed?: boolean | null
-          reimbursed_on?: string | null
-          status?: string | null
-        }
-        Relationships: []
-      }
-      sales: {
-        Row: {
-          amount: number | null
-          created_at: string
-          id: string
-          item: string | null
-        }
-        Insert: {
-          amount?: number | null
-          created_at?: string
-          id?: string
-          item?: string | null
-        }
-        Update: {
-          amount?: number | null
-          created_at?: string
-          id?: string
-          item?: string | null
+          location_name?: string
+          name?: string
+          organizer_email?: string
+          organizer_name?: string
+          organizer_phone?: string
+          prize_pool?: string | null
+          state?: string
+          time?: string
+          user_id?: string
+          website_link?: string | null
+          zip_code?: string
         }
         Relationships: []
       }

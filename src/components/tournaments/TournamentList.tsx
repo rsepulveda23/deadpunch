@@ -31,8 +31,9 @@ const TournamentList = () => {
 
   const fetchTournaments = async () => {
     try {
+      console.log('Fetching tournaments...');
       const { data, error } = await supabase
-        .from('tournaments')
+        .from('tournaments' as any)
         .select(`
           id,
           name,
@@ -58,6 +59,7 @@ const TournamentList = () => {
         return;
       }
 
+      console.log('Tournaments fetched:', data);
       setTournaments(data || []);
     } catch (error) {
       console.error('Error:', error);
