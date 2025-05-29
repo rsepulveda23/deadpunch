@@ -139,17 +139,19 @@ const TournamentEditForm: React.FC<TournamentEditFormProps> = ({ tournament, onS
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Tournament Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Tournament Name</FormLabel>
+                    <FormLabel className="text-white">Tournament Name *</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                        placeholder="Weekly 8-Ball Tournament"
                       />
                     </FormControl>
                     <FormMessage />
@@ -162,7 +164,7 @@ const TournamentEditForm: React.FC<TournamentEditFormProps> = ({ tournament, onS
                 name="game_type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Game Type</FormLabel>
+                    <FormLabel className="text-white">Game Type *</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
@@ -185,13 +187,14 @@ const TournamentEditForm: React.FC<TournamentEditFormProps> = ({ tournament, onS
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Date, Time, Entry Fee */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <FormField
                 control={form.control}
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Date</FormLabel>
+                    <FormLabel className="text-white">Date *</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -209,7 +212,7 @@ const TournamentEditForm: React.FC<TournamentEditFormProps> = ({ tournament, onS
                 name="time"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Time</FormLabel>
+                    <FormLabel className="text-white">Time *</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -221,28 +224,269 @@ const TournamentEditForm: React.FC<TournamentEditFormProps> = ({ tournament, onS
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="entry_fee"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Entry Fee ($) *</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                        placeholder="25.00"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
-            <FormField
-              control={form.control}
-              name="entry_fee"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Entry Fee ($)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                      className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Location Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Location Information</h3>
+              
+              <FormField
+                control={form.control}
+                name="location_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Venue Name *</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                        placeholder="Enter venue name"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Address *</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                        placeholder="Enter street address"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">City *</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="Enter city"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">State *</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="Enter state"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="zip_code"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">ZIP Code *</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="Enter ZIP"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Organizer Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Organizer Information</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="organizer_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Organizer Name *</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="Enter organizer name"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="organizer_email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Contact Email *</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="email"
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="Enter contact email"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="organizer_phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Contact Phone *</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="Enter phone number"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="website_link"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Website</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="https://example.com"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Additional Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Additional Information</h3>
+              
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white min-h-24"
+                        placeholder="Enter tournament description, rules, or additional information..."
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="prize_pool"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Prize Pool</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="e.g., $500 Winner Takes All"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="flyer_image_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Flyer Image URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                          placeholder="https://example.com/flyer.jpg"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
 
             <div className="flex gap-4 pt-6">
               <Button
