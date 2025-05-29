@@ -30,6 +30,69 @@ export type Database = {
         }
         Relationships: []
       }
+      reimbursable_expenses: {
+        Row: {
+          amount: number | null
+          category: string | null
+          created_at: string
+          date: string | null
+          id: string
+          item: string | null
+          note: string | null
+          paid_with: string | null
+          reimbursed: boolean | null
+          reimbursed_on: string | null
+          status: string | null
+        }
+        Insert: {
+          amount?: number | null
+          category?: string | null
+          created_at?: string
+          date?: string | null
+          id?: string
+          item?: string | null
+          note?: string | null
+          paid_with?: string | null
+          reimbursed?: boolean | null
+          reimbursed_on?: string | null
+          status?: string | null
+        }
+        Update: {
+          amount?: number | null
+          category?: string | null
+          created_at?: string
+          date?: string | null
+          id?: string
+          item?: string | null
+          note?: string | null
+          paid_with?: string | null
+          reimbursed?: boolean | null
+          reimbursed_on?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          amount: number | null
+          created_at: string
+          id: string
+          item: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string
+          id?: string
+          item?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string
+          id?: string
+          item?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

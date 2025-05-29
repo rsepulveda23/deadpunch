@@ -9,6 +9,8 @@ import ComingSoon from './pages/ComingSoon';
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import ForgotPassword from './pages/ForgotPassword';
+import Tournaments from './pages/Tournaments';
+import TournamentDetail from './pages/TournamentDetail';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/tournaments" element={<Tournaments />} />
+            <Route path="/tournaments/:tournamentId" element={<TournamentDetail />} />
             <Route path="/training-tools/pool-tools" element={<PoolTools />} />
             
             {/* Redirect routes */}

@@ -1,6 +1,13 @@
 
 export const navCategories = [
   {
+    name: "Tournaments",
+    subcategories: [
+      { name: "View Tournaments", path: "/tournaments", isActive: true },
+      { name: "Submit Tournament", path: "/tournaments#submit", isActive: true }
+    ]
+  },
+  {
     name: "Men",
     subcategories: [
       { name: "Hats", path: "/men/hats" },
