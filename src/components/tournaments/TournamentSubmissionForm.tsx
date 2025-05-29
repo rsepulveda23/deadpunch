@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Trophy } from 'lucide-react';
+import { Trophy, Loader2 } from 'lucide-react';
 
 const tournamentSchema = z.object({
   name: z.string().min(1, 'Tournament name is required'),
@@ -24,25 +24,24 @@ const tournamentSchema = z.object({
   zip_code: z.string().min(1, 'ZIP code is required'),
   game_type: z.string().min(1, 'Game type is required'),
   entry_fee: z.number().min(0, 'Entry fee must be 0 or greater'),
-  prize_pool: z.string().optional(),
   description: z.string().optional(),
+  prize_pool: z.string().optional(),
   organizer_name: z.string().min(1, 'Organizer name is required'),
   organizer_email: z.string().email('Valid email is required'),
   organizer_phone: z.string().min(1, 'Phone number is required'),
-  website_link: z.string().optional(),
-  flyer_image_url: z.string().optional(),
+  website_link: z.string().url('Valid URL required').optional().or(z.literal('')),
+  flyer_image_url: z.string().url('Valid URL required').optional().or(z.literal('')),
 });
 
 type TournamentFormData = z.infer<typeof tournamentSchema>;
 
 interface TournamentSubmissionFormProps {
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
-const TournamentSubmissionForm = ({ onSuccess }: TournamentSubmissionFormProps) => {
+const TournamentSubmissionForm: React.FC<TournamentSubmissionFormProps> = ({ onSuccess }) => {
   const { user } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<TournamentFormData>({
     resolver: zodResolver(tournamentSchema),
@@ -57,8 +56,8 @@ const TournamentSubmissionForm = ({ onSuccess }: TournamentSubmissionFormProps) 
       zip_code: '',
       game_type: '',
       entry_fee: 0,
-      prize_pool: '',
       description: '',
+      prize_pool: '',
       organizer_name: '',
       organizer_email: user?.email || '',
       organizer_phone: '',
@@ -67,94 +66,96 @@ const TournamentSubmissionForm = ({ onSuccess }: TournamentSubmissionFormProps) 
     },
   });
 
+  // Load organizer profile data to pre-fill form
   useEffect(() => {
-    if (user) {
-      loadOrganizerProfile();
-    }
-  }, [user]);
+    const loadOrganizerProfile = async () => {
+      if (!user?.id) return;
 
-  const loadOrganizerProfile = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('organizer_profiles')
-        .select('organizer_name, contact_email, contact_phone, website_url')
-        .eq('user_id', user?.id)
-        .maybeSingle();
+      try {
+        const { data: profile, error } = await supabase
+          .from('organizer_profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
 
-      if (data) {
-        // Pre-fill form with profile data, but allow overrides
-        form.setValue('organizer_name', data.organizer_name);
-        form.setValue('organizer_email', data.contact_email);
-        if (data.contact_phone) {
-          form.setValue('organizer_phone', data.contact_phone);
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error loading organizer profile:', error);
+          return;
         }
-        if (data.website_url) {
-          form.setValue('website_link', data.website_url);
+
+        if (profile) {
+          form.reset({
+            ...form.getValues(),
+            organizer_name: profile.organizer_name,
+            organizer_email: profile.contact_email,
+            organizer_phone: profile.contact_phone || '',
+          });
         }
+      } catch (error) {
+        console.error('Error:', error);
       }
-    } catch (error) {
-      console.error('Error loading organizer profile:', error);
-    } finally {
-      setLoadingProfile(false);
-    }
-  };
+    };
+
+    loadOrganizerProfile();
+  }, [user?.id, form]);
 
   const onSubmit = async (data: TournamentFormData) => {
     if (!user) {
       toast({
         title: "Authentication required",
-        description: "Please sign in to submit a tournament.",
+        description: "Please sign in to submit a tournament",
         variant: "destructive",
       });
       return;
     }
 
-    setIsSubmitting(true);
-    
+    setSubmitting(true);
     try {
-      console.log('Submitting tournament data:', data);
-      
       const tournamentData = {
-        ...data,
         user_id: user.id,
-        entry_fee: Number(data.entry_fee),
+        name: data.name,
+        date: data.date,
+        time: data.time,
+        location_name: data.location_name,
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        zip_code: data.zip_code,
+        game_type: data.game_type,
+        entry_fee: data.entry_fee,
+        description: data.description || null,
+        prize_pool: data.prize_pool || null,
+        organizer_name: data.organizer_name,
+        organizer_email: data.organizer_email,
+        organizer_phone: data.organizer_phone,
+        website_link: data.website_link || null,
+        flyer_image_url: data.flyer_image_url || null,
       };
 
       const { error } = await supabase
         .from('tournaments')
         .insert([tournamentData]);
 
-      if (error) {
-        console.error('Error submitting tournament:', error);
-        throw error;
-      }
+      if (error) throw error;
 
       toast({
         title: "Success!",
-        description: "Your tournament has been submitted successfully.",
+        description: "Tournament submitted successfully",
       });
 
       form.reset();
-      onSuccess?.();
+      onSuccess();
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error submitting tournament:', error);
       toast({
         title: "Error",
         description: "Failed to submit tournament. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
   };
-
-  if (loadingProfile) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-6 w-6 animate-spin text-deadpunch-red" />
-      </div>
-    );
-  }
 
   return (
     <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
@@ -164,16 +165,14 @@ const TournamentSubmissionForm = ({ onSuccess }: TournamentSubmissionFormProps) 
           Submit Tournament
         </CardTitle>
         <CardDescription className="text-deadpunch-gray-light">
-          Fill out the form below to submit your tournament for listing
+          Fill out the form below to list your tournament
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Tournament Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">Tournament Information</h3>
-              
+            {/* Tournament Basic Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="name"
@@ -184,7 +183,7 @@ const TournamentSubmissionForm = ({ onSuccess }: TournamentSubmissionFormProps) 
                       <Input
                         {...field}
                         className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-                        placeholder="Enter tournament name"
+                        placeholder="Weekly 8-Ball Tournament"
                       />
                     </FormControl>
                     <FormMessage />
@@ -192,105 +191,87 @@ const TournamentSubmissionForm = ({ onSuccess }: TournamentSubmissionFormProps) 
                 )}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">Date *</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="date"
-                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="time"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">Time *</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="time"
-                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="game_type"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">Game Type *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
-                            <SelectValue placeholder="Select game type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
-                          <SelectItem value="8-ball">8-Ball</SelectItem>
-                          <SelectItem value="9-ball">9-Ball</SelectItem>
-                          <SelectItem value="10-ball">10-Ball</SelectItem>
-                          <SelectItem value="straight-pool">Straight Pool</SelectItem>
-                          <SelectItem value="one-pocket">One Pocket</SelectItem>
-                          <SelectItem value="bank-pool">Bank Pool</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="entry_fee"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">Entry Fee ($) *</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-                          placeholder="0.00"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
               <FormField
                 control={form.control}
-                name="prize_pool"
+                name="game_type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Prize Pool</FormLabel>
+                    <FormLabel className="text-white">Game Type *</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
+                          <SelectValue placeholder="Select game type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-deadpunch-dark border-deadpunch-gray-dark">
+                        <SelectItem value="8-Ball" className="text-white">8-Ball</SelectItem>
+                        <SelectItem value="9-Ball" className="text-white">9-Ball</SelectItem>
+                        <SelectItem value="10-Ball" className="text-white">10-Ball</SelectItem>
+                        <SelectItem value="Straight Pool" className="text-white">Straight Pool</SelectItem>
+                        <SelectItem value="One Pocket" className="text-white">One Pocket</SelectItem>
+                        <SelectItem value="Bank Pool" className="text-white">Bank Pool</SelectItem>
+                        <SelectItem value="Other" className="text-white">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Date, Time, Entry Fee */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Date *</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
+                        type="date"
                         className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-                        placeholder="e.g., $500 added, 80% payout, etc."
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="time"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Time *</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="time"
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="entry_fee"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Entry Fee ($) *</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                        placeholder="25.00"
                       />
                     </FormControl>
                     <FormMessage />
@@ -519,20 +500,22 @@ const TournamentSubmissionForm = ({ onSuccess }: TournamentSubmissionFormProps) 
               />
             </div>
 
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                'Submit Tournament'
-              )}
-            </Button>
+            <div className="flex gap-4 pt-6">
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="bg-deadpunch-red hover:bg-deadpunch-red-hover flex-1"
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit Tournament'
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>

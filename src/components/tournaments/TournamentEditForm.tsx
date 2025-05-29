@@ -1,111 +1,124 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Loader2, Save, X } from 'lucide-react';
 
-interface Tournament {
-  id: string;
-  name: string;
-  date: string;
-  time: string;
-  location_name: string;
-  address: string;
-  city: string;
-  state: string;
-  zip_code: string;
-  game_type: string;
-  entry_fee: number;
-  prize_pool: string;
-  description: string;
-  organizer_name: string;
-  organizer_email: string;
-  organizer_phone: string;
-  website_link: string;
-  flyer_image_url: string;
-  user_id: string;
-  created_at: string;
-}
+const tournamentSchema = z.object({
+  name: z.string().min(1, 'Tournament name is required'),
+  date: z.string().min(1, 'Date is required'),
+  time: z.string().min(1, 'Time is required'),
+  location_name: z.string().min(1, 'Location name is required'),
+  address: z.string().min(1, 'Address is required'),
+  city: z.string().min(1, 'City is required'),
+  state: z.string().min(1, 'State is required'),
+  zip_code: z.string().min(1, 'ZIP code is required'),
+  game_type: z.string().min(1, 'Game type is required'),
+  entry_fee: z.number().min(0, 'Entry fee must be 0 or greater'),
+  description: z.string().optional(),
+  prize_pool: z.string().optional(),
+  organizer_name: z.string().min(1, 'Organizer name is required'),
+  organizer_email: z.string().email('Valid email is required'),
+  organizer_phone: z.string().min(1, 'Phone number is required'),
+  website_link: z.string().url('Valid URL required').optional().or(z.literal('')),
+  flyer_image_url: z.string().url('Valid URL required').optional().or(z.literal('')),
+});
 
-interface TournamentEditFormProps {
-  tournament: Tournament;
-  onClose: () => void;
-  onUpdate: () => void;
-}
+type TournamentFormData = z.infer<typeof tournamentSchema>;
 
-const TournamentEditForm = ({ tournament, onClose, onUpdate }: TournamentEditFormProps) => {
-  const [formData, setFormData] = useState({
-    name: tournament.name,
-    date: tournament.date,
-    time: tournament.time,
-    location_name: tournament.location_name,
-    address: tournament.address,
-    city: tournament.city,
-    state: tournament.state,
-    zip_code: tournament.zip_code,
-    game_type: tournament.game_type,
-    entry_fee: tournament.entry_fee.toString(),
-    prize_pool: tournament.prize_pool || '',
-    description: tournament.description || '',
-    organizer_name: tournament.organizer_name,
-    organizer_email: tournament.organizer_email,
-    organizer_phone: tournament.organizer_phone,
-    website_link: tournament.website_link || '',
-    flyer_image_url: tournament.flyer_image_url || '',
-  });
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+export interface TournamentEditFormProps {
+  tournament: {
+    id: string;
+    name: string;
+    date: string;
+    time: string;
+    location_name: string;
+    address: string;
+    city: string;
+    state: string;
+    zip_code: string;
+    game_type: string;
+    entry_fee: number;
+    description: string | null;
+    prize_pool: string | null;
+    organizer_name: string;
+    organizer_email: string;
+    organizer_phone: string;
+    website_link: string | null;
+    flyer_image_url: string | null;
   };
+  onSuccess: () => void;
+  onCancel: () => void;
+}
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+const TournamentEditForm: React.FC<TournamentEditFormProps> = ({ tournament, onSuccess, onCancel }) => {
+  const [submitting, setSubmitting] = useState(false);
 
+  const form = useForm<TournamentFormData>({
+    resolver: zodResolver(tournamentSchema),
+    defaultValues: {
+      name: tournament.name,
+      date: tournament.date,
+      time: tournament.time,
+      location_name: tournament.location_name,
+      address: tournament.address,
+      city: tournament.city,
+      state: tournament.state,
+      zip_code: tournament.zip_code,
+      game_type: tournament.game_type,
+      entry_fee: tournament.entry_fee,
+      description: tournament.description || '',
+      prize_pool: tournament.prize_pool || '',
+      organizer_name: tournament.organizer_name,
+      organizer_email: tournament.organizer_email,
+      organizer_phone: tournament.organizer_phone,
+      website_link: tournament.website_link || '',
+      flyer_image_url: tournament.flyer_image_url || '',
+    },
+  });
+
+  const onSubmit = async (data: TournamentFormData) => {
+    setSubmitting(true);
     try {
       const { error } = await supabase
         .from('tournaments')
         .update({
-          name: formData.name,
-          date: formData.date,
-          time: formData.time,
-          location_name: formData.location_name,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          zip_code: formData.zip_code,
-          game_type: formData.game_type,
-          entry_fee: parseFloat(formData.entry_fee) || 0,
-          prize_pool: formData.prize_pool || null,
-          description: formData.description || null,
-          organizer_name: formData.organizer_name,
-          organizer_email: formData.organizer_email,
-          organizer_phone: formData.organizer_phone,
-          website_link: formData.website_link || null,
-          flyer_image_url: formData.flyer_image_url || null,
+          name: data.name,
+          date: data.date,
+          time: data.time,
+          location_name: data.location_name,
+          address: data.address,
+          city: data.city,
+          state: data.state,
+          zip_code: data.zip_code,
+          game_type: data.game_type,
+          entry_fee: data.entry_fee,
+          description: data.description || null,
+          prize_pool: data.prize_pool || null,
+          organizer_name: data.organizer_name,
+          organizer_email: data.organizer_email,
+          organizer_phone: data.organizer_phone,
+          website_link: data.website_link || null,
+          flyer_image_url: data.flyer_image_url || null,
         })
         .eq('id', tournament.id);
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       toast({
         title: "Success",
         description: "Tournament updated successfully",
       });
-      onUpdate();
-      onClose();
+      onSuccess();
     } catch (error) {
       console.error('Error updating tournament:', error);
       toast({
@@ -114,277 +127,153 @@ const TournamentEditForm = ({ tournament, onClose, onUpdate }: TournamentEditFor
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
   return (
     <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-white">Edit Tournament</CardTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-white hover:bg-deadpunch-gray-dark"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
+        <CardTitle className="text-white">Edit Tournament</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="name" className="text-white">Tournament Name *</Label>
-              <Input
-                id="name"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
                 name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Tournament Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            
-            <div>
-              <Label htmlFor="game_type" className="text-white">Game Type *</Label>
-              <select
-                id="game_type"
+
+              <FormField
+                control={form.control}
                 name="game_type"
-                value={formData.game_type}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 bg-deadpunch-dark border border-deadpunch-gray-dark rounded-md text-white"
-              >
-                <option value="">Select game type</option>
-                <option value="8-Ball">8-Ball</option>
-                <option value="9-Ball">9-Ball</option>
-                <option value="10-Ball">10-Ball</option>
-                <option value="Straight Pool">Straight Pool</option>
-                <option value="One Pocket">One Pocket</option>
-                <option value="Bank Pool">Bank Pool</option>
-                <option value="Other">Other</option>
-              </select>
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Game Type</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
+                          <SelectValue placeholder="Select game type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-deadpunch-dark border-deadpunch-gray-dark">
+                        <SelectItem value="8-Ball" className="text-white">8-Ball</SelectItem>
+                        <SelectItem value="9-Ball" className="text-white">9-Ball</SelectItem>
+                        <SelectItem value="10-Ball" className="text-white">10-Ball</SelectItem>
+                        <SelectItem value="Straight Pool" className="text-white">Straight Pool</SelectItem>
+                        <SelectItem value="One Pocket" className="text-white">One Pocket</SelectItem>
+                        <SelectItem value="Bank Pool" className="text-white">Bank Pool</SelectItem>
+                        <SelectItem value="Other" className="text-white">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="date" className="text-white">Date *</Label>
-              <Input
-                id="date"
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
                 name="date"
-                type="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Date</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="date"
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            
-            <div>
-              <Label htmlFor="time" className="text-white">Time *</Label>
-              <Input
-                id="time"
+
+              <FormField
+                control={form.control}
                 name="time"
-                type="time"
-                value={formData.time}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="time"
+                        className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-          </div>
 
-          <div>
-            <Label htmlFor="location_name" className="text-white">Venue Name *</Label>
-            <Input
-              id="location_name"
-              name="location_name"
-              value={formData.location_name}
-              onChange={handleChange}
-              required
-              className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+            <FormField
+              control={form.control}
+              name="entry_fee"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">Entry Fee ($)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                      className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div>
-            <Label htmlFor="address" className="text-white">Address *</Label>
-            <Input
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-              className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <Label htmlFor="city" className="text-white">City *</Label>
-              <Input
-                id="city"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-              />
+            <div className="flex gap-4 pt-6">
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="bg-deadpunch-red hover:bg-deadpunch-red-hover flex-1"
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Update Tournament
+                  </>
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCancel}
+                className="border-deadpunch-gray-dark text-white hover:bg-deadpunch-dark-lighter"
+              >
+                <X className="mr-2 h-4 w-4" />
+                Cancel
+              </Button>
             </div>
-            
-            <div>
-              <Label htmlFor="state" className="text-white">State *</Label>
-              <Input
-                id="state"
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="zip_code" className="text-white">ZIP Code *</Label>
-              <Input
-                id="zip_code"
-                name="zip_code"
-                value={formData.zip_code}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="entry_fee" className="text-white">Entry Fee ($) *</Label>
-              <Input
-                id="entry_fee"
-                name="entry_fee"
-                type="number"
-                step="0.01"
-                min="0"
-                value={formData.entry_fee}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="prize_pool" className="text-white">Prize Pool</Label>
-              <Input
-                id="prize_pool"
-                name="prize_pool"
-                value={formData.prize_pool}
-                onChange={handleChange}
-                placeholder="e.g., $500 guaranteed"
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="description" className="text-white">Description</Label>
-            <Textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Tournament details, rules, etc."
-              className="bg-deadpunch-dark border-deadpunch-gray-dark text-white min-h-[100px]"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <Label htmlFor="organizer_name" className="text-white">Organizer Name *</Label>
-              <Input
-                id="organizer_name"
-                name="organizer_name"
-                value={formData.organizer_name}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="organizer_email" className="text-white">Organizer Email *</Label>
-              <Input
-                id="organizer_email"
-                name="organizer_email"
-                type="email"
-                value={formData.organizer_email}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="organizer_phone" className="text-white">Organizer Phone *</Label>
-              <Input
-                id="organizer_phone"
-                name="organizer_phone"
-                type="tel"
-                value={formData.organizer_phone}
-                onChange={handleChange}
-                required
-                className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="website_link" className="text-white">Website Link</Label>
-            <Input
-              id="website_link"
-              name="website_link"
-              type="url"
-              value={formData.website_link}
-              onChange={handleChange}
-              placeholder="https://..."
-              className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="flyer_image_url" className="text-white">Flyer Image URL</Label>
-            <Input
-              id="flyer_image_url"
-              name="flyer_image_url"
-              type="url"
-              value={formData.flyer_image_url}
-              onChange={handleChange}
-              placeholder="https://..."
-              className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
-            />
-          </div>
-
-          <div className="flex space-x-2 pt-4">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
-            >
-              {loading ? 'Updating...' : 'Update Tournament'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              className="border-deadpunch-gray-dark text-white hover:bg-deadpunch-dark-lighter"
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

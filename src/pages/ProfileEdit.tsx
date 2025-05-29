@@ -86,6 +86,12 @@ const ProfileEdit = () => {
 
       if (data) {
         setHasProfile(true);
+        
+        // Handle the social_media_links conversion from Json to our expected type
+        const socialLinks = typeof data.social_media_links === 'object' && data.social_media_links !== null
+          ? data.social_media_links as Record<string, string>
+          : { facebook: '', twitter: '', instagram: '' };
+
         form.reset({
           organizer_name: data.organizer_name,
           contact_email: data.contact_email,
@@ -94,10 +100,10 @@ const ProfileEdit = () => {
           profile_image_url: data.profile_image_url || '',
           about_bio: data.about_bio || '',
           region: data.region || '',
-          social_media_links: data.social_media_links || {
-            facebook: '',
-            twitter: '',
-            instagram: '',
+          social_media_links: {
+            facebook: socialLinks.facebook || '',
+            twitter: socialLinks.twitter || '',
+            instagram: socialLinks.instagram || '',
           },
         });
       }

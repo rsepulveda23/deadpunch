@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -81,7 +80,15 @@ const OrganizerProfile = () => {
         return;
       }
 
-      setProfile(profileData);
+      // Handle the social_media_links conversion from Json to Record<string, string>
+      const processedProfile: OrganizerProfile = {
+        ...profileData,
+        social_media_links: typeof profileData.social_media_links === 'object' && profileData.social_media_links !== null
+          ? profileData.social_media_links as Record<string, string>
+          : null
+      };
+
+      setProfile(processedProfile);
 
       // Fetch organizer's tournaments
       const { data: tournamentsData, error: tournamentsError } = await supabase
