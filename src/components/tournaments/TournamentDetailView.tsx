@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -52,7 +51,9 @@ const TournamentDetailView: React.FC<TournamentDetailViewProps> = ({ tournament,
   const isOwner = user?.id === tournament.user_id;
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    // Parse the date string directly as YYYY-MM-DD and create a local date
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed in JavaScript
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
