@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/hooks/use-toast';
-import { LogOut, User, Settings } from 'lucide-react';
+import { LogOut, User, Settings, Edit } from 'lucide-react';
 
 const UserMenu = () => {
   const { user } = useAuth();
@@ -68,6 +68,10 @@ const UserMenu = () => {
         <DropdownMenuItem className="text-white cursor-pointer hover:bg-deadpunch-dark" onClick={() => navigate('/profile')}>
           <User className="mr-2 h-4 w-4" />
           Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem className="text-white cursor-pointer hover:bg-deadpunch-dark" onClick={() => navigate('/profile/edit')}>
+          <Edit className="mr-2 h-4 w-4" />
+          Edit Organizer Profile
         </DropdownMenuItem>
         <DropdownMenuItem className="text-white cursor-pointer hover:bg-deadpunch-dark" onClick={() => navigate('/settings')}>
           <Settings className="mr-2 h-4 w-4" />

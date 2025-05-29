@@ -30,6 +30,48 @@ export type Database = {
         }
         Relationships: []
       }
+      organizer_profiles: {
+        Row: {
+          about_bio: string | null
+          contact_email: string
+          contact_phone: string | null
+          created_at: string
+          organizer_name: string
+          profile_image_url: string | null
+          region: string | null
+          social_media_links: Json | null
+          updated_at: string
+          user_id: string
+          website_url: string | null
+        }
+        Insert: {
+          about_bio?: string | null
+          contact_email: string
+          contact_phone?: string | null
+          created_at?: string
+          organizer_name: string
+          profile_image_url?: string | null
+          region?: string | null
+          social_media_links?: Json | null
+          updated_at?: string
+          user_id: string
+          website_url?: string | null
+        }
+        Update: {
+          about_bio?: string | null
+          contact_email?: string
+          contact_phone?: string | null
+          created_at?: string
+          organizer_name?: string
+          profile_image_url?: string | null
+          region?: string | null
+          social_media_links?: Json | null
+          updated_at?: string
+          user_id?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       tournaments: {
         Row: {
           address: string

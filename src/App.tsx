@@ -1,43 +1,60 @@
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from "@/components/ui/toaster";
+import { Suspense, lazy } from 'react';
+import { Toaster } from '@/components/ui/toaster';
+import { Toaster as Sonner } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import Index from './pages/Index';
-import PoolTools from './pages/PoolTools';
-import ComingSoon from './pages/ComingSoon';
-import NotFound from './pages/NotFound';
-import Auth from './pages/Auth';
-import ForgotPassword from './pages/ForgotPassword';
-import Tournaments from './pages/Tournaments';
-import TournamentDetail from './pages/TournamentDetail';
+import { Loader2 } from 'lucide-react';
+
+// Lazy load components
+const Index = lazy(() => import('./pages/Index'));
+const Auth = lazy(() => import('./pages/Auth'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const PoolTools = lazy(() => import('./pages/PoolTools'));
+const Tournaments = lazy(() => import('./pages/Tournaments'));
+const TournamentDetail = lazy(() => import('./pages/TournamentDetail'));
+const ProfileEdit = lazy(() => import('./pages/ProfileEdit'));
+const OrganizerProfile = lazy(() => import('./pages/OrganizerProfile'));
+const ComingSoon = lazy(() => import('./pages/ComingSoon'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+const queryClient = new QueryClient();
+
+const LoadingSpinner = () => (
+  <div className="min-h-screen bg-deadpunch-dark flex items-center justify-center">
+    <Loader2 className="h-8 w-8 animate-spin text-deadpunch-red" />
+  </div>
+);
 
 function App() {
   return (
-    <ThemeProvider>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/tournaments" element={<Tournaments />} />
-            <Route path="/tournaments/:tournamentId" element={<TournamentDetail />} />
-            <Route path="/training-tools/pool-tools" element={<PoolTools />} />
-            
-            {/* Redirect routes */}
-            <Route path="/men/:category" element={<ComingSoon />} />
-            <Route path="/women/:category" element={<ComingSoon />} />
-            <Route path="/new-arrivals/:category" element={<ComingSoon />} />
-            <Route path="/training-tools/:tool" element={<ComingSoon />} />
-            
-            {/* 404 route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+        <TooltipProvider>
           <Toaster />
-        </Router>
+          <Sonner />
+          <BrowserRouter>
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/pool-tools" element={<PoolTools />} />
+                <Route path="/tournaments" element={<Tournaments />} />
+                <Route path="/tournaments/:tournamentId" element={<TournamentDetail />} />
+                <Route path="/profile" element={<ComingSoon />} />
+                <Route path="/profile/edit" element={<ProfileEdit />} />
+                <Route path="/organizer/:organizerId" element={<OrganizerProfile />} />
+                <Route path="/settings" element={<ComingSoon />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </TooltipProvider>
       </AuthProvider>
-    </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
