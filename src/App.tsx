@@ -1,4 +1,3 @@
-
 import { Suspense, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
@@ -20,6 +19,12 @@ const ProfileEdit = lazy(() => import('./pages/ProfileEdit'));
 const OrganizerProfile = lazy(() => import('./pages/OrganizerProfile'));
 const ComingSoon = lazy(() => import('./pages/ComingSoon'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+
+// Add new lazy imports
+const Settings = lazy(() => import('./pages/Settings'));
+const SettingsAccount = lazy(() => import('./pages/settings/Account'));
+const SettingsSubscription = lazy(() => import('./pages/settings/Subscription'));
+const SettingsNotifications = lazy(() => import('./pages/settings/Notifications'));
 
 const queryClient = new QueryClient();
 
@@ -48,7 +53,13 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/profile/edit" element={<ProfileEdit />} />
                 <Route path="/organizer/:organizerId" element={<OrganizerProfile />} />
-                <Route path="/settings" element={<ComingSoon />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/settings/account" element={<SettingsAccount />} />
+                <Route path="/settings/subscription" element={<SettingsSubscription />} />
+                <Route path="/settings/notifications" element={<SettingsNotifications />} />
+                <Route path="/settings/tournaments" element={<ComingSoon />} />
+                <Route path="/settings/privacy" element={<ComingSoon />} />
+                <Route path="/settings/appearance" element={<ComingSoon />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
