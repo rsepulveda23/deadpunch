@@ -25,6 +25,7 @@ interface Tournament {
   entry_fee: number;
   prize_pool: string;
   created_at: string;
+  zip_code?: string;
   latitude?: number;
   longitude?: number;
 }
@@ -49,6 +50,7 @@ export const useTournamentSearch = () => {
           location_name,
           city,
           state,
+          zip_code,
           game_type,
           entry_fee,
           prize_pool,
@@ -77,17 +79,20 @@ export const useTournamentSearch = () => {
         query = query.lte('entry_fee', parseFloat(filters.maxEntryFee));
       }
 
-      // Location-based filtering (simplified for now)
+      // Enhanced location-based filtering
       if (filters.location) {
-        const locationTerms = filters.location.toLowerCase().split(/[\s,]+/);
+        const locationTerm = filters.location.trim();
         
-        // Create a filter that searches in city, state, or location_name
-        const locationFilter = locationTerms.map(term => {
-          return `city.ilike.%${term}%,state.ilike.%${term}%,location_name.ilike.%${term}%`;
-        }).join(',');
+        // Check if it looks like a ZIP code (5 digits or 5+4 format)
+        const isZipCode = /^\d{5}(-\d{4})?$/.test(locationTerm);
         
-        // For now, we'll use a simple text search. In production, you'd want to use geocoding
-        query = query.or(`city.ilike.%${filters.location}%,state.ilike.%${filters.location}%,location_name.ilike.%${filters.location}%`);
+        if (isZipCode) {
+          // Search specifically in zip_code field
+          query = query.eq('zip_code', locationTerm.substring(0, 5)); // Use first 5 digits for ZIP+4
+        } else {
+          // Search in city, state, and location_name for text-based searches
+          query = query.or(`city.ilike.%${locationTerm}%,state.ilike.%${locationTerm}%,location_name.ilike.%${locationTerm}%`);
+        }
       }
 
       const { data, error } = await query;
@@ -139,6 +144,7 @@ export const useTournamentSearch = () => {
           location_name,
           city,
           state,
+          zip_code,
           game_type,
           entry_fee,
           prize_pool,
