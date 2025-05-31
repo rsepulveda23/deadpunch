@@ -8,7 +8,6 @@ interface GeocodingResult {
 // Free geocoding service using Nominatim (OpenStreetMap)
 export const geocodeLocation = async (location: string): Promise<GeocodingResult | null> => {
   try {
-    // Clean up the location string
     const cleanLocation = location.trim();
     console.log('🔍 Geocoding location:', cleanLocation);
     
@@ -29,7 +28,7 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
     console.log('🌐 Geocoding query:', query);
     
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=3&countrycodes=us&addressdetails=1`,
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=us&addressdetails=1`,
       {
         headers: {
           'User-Agent': 'DeadPunch Tournament Finder'
@@ -46,17 +45,55 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
     console.log('📍 Geocoding API response:', data);
     
     if (data.length > 0) {
-      // For ZIP codes, try to find the most specific match
       let result = data[0];
+      
+      // For ZIP codes, implement intelligent result selection
       if (isZipCode && data.length > 1) {
-        // Look for a result that includes the ZIP code in the address
-        const zipMatch = data.find(item => 
-          item.display_name && item.display_name.includes(cleanLocation)
+        console.log('🎯 Analyzing multiple results for ZIP code:', cleanLocation);
+        
+        // Priority order for ZIP code matching:
+        // 1. Exact ZIP code match in display_name with 'postcode' type
+        // 2. Exact ZIP code match in display_name with highest importance
+        // 3. Result with matching postcode in address details
+        // 4. First result that contains the ZIP code
+        
+        const zipNumber = cleanLocation.substring(0, 5);
+        
+        // First try to find exact postcode type matches
+        const postcodeMatches = data.filter(item => 
+          item.type === 'postcode' && 
+          (item.display_name?.includes(zipNumber) || item.address?.postcode === zipNumber)
         );
-        if (zipMatch) {
-          result = zipMatch;
-          console.log('🎯 Found better ZIP code match:', result);
+        
+        if (postcodeMatches.length > 0) {
+          result = postcodeMatches[0];
+          console.log('🎯 Found postcode type match:', result);
+        } else {
+          // Look for ZIP in display name with highest importance
+          const displayNameMatches = data
+            .filter(item => item.display_name?.includes(zipNumber))
+            .sort((a, b) => parseFloat(b.importance || '0') - parseFloat(a.importance || '0'));
+          
+          if (displayNameMatches.length > 0) {
+            result = displayNameMatches[0];
+            console.log('🎯 Found display name match with importance:', result.importance, result);
+          } else {
+            // Fallback to address postcode match
+            const addressMatches = data.filter(item => item.address?.postcode === zipNumber);
+            if (addressMatches.length > 0) {
+              result = addressMatches[0];
+              console.log('🎯 Found address postcode match:', result);
+            }
+          }
         }
+        
+        console.log('🎯 Selected result for ZIP', zipNumber, ':', {
+          lat: result.lat,
+          lon: result.lon,
+          type: result.type,
+          importance: result.importance,
+          display_name: result.display_name
+        });
       }
       
       const coords = {
@@ -65,9 +102,15 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
         formatted_address: result.display_name
       };
       
-      // Validate coordinates
+      // Enhanced coordinate validation
       if (isNaN(coords.latitude) || isNaN(coords.longitude)) {
-        console.error('❌ Invalid coordinates received:', coords);
+        console.error('❌ Invalid coordinates received:', coords, 'from result:', result);
+        return null;
+      }
+      
+      // Validate coordinates are within reasonable bounds for US
+      if (coords.latitude < 24 || coords.latitude > 49 || coords.longitude < -125 || coords.longitude > -66) {
+        console.error('❌ Coordinates outside US bounds:', coords);
         return null;
       }
       
@@ -106,7 +149,7 @@ export const calculateDistance = (
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c; // Distance in miles
   
-  console.log(`📏 Distance: ${distance.toFixed(1)} miles between (${lat1}, ${lon1}) and (${lat2}, ${lon2})`);
+  console.log(`📏 Distance: ${distance.toFixed(1)} miles between (${lat1.toFixed(4)}, ${lon1.toFixed(4)}) and (${lat2.toFixed(4)}, ${lon2.toFixed(4)})`);
   return distance;
 };
 

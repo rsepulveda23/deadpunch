@@ -176,64 +176,60 @@ export class TournamentSearchService {
   }
 
   private filterByRadius(tournaments: Tournament[], searchCoords: any, radiusMiles: number, locationTerm: string): Tournament[] {
+    console.log(`🎯 Filtering tournaments by radius from coordinates: ${searchCoords.latitude.toFixed(4)}, ${searchCoords.longitude.toFixed(4)}`);
+    
+    // Only consider tournaments that have valid coordinates for radius search
     const tournamentsWithCoords = tournaments.filter(t => 
-      t.latitude !== null && t.longitude !== null
+      t.latitude !== null && t.longitude !== null && 
+      !isNaN(t.latitude) && !isNaN(t.longitude)
     );
-    console.log(`🏟️ ${tournamentsWithCoords.length} of ${tournaments.length} tournaments have coordinates`);
+    
+    const tournamentsWithoutCoords = tournaments.length - tournamentsWithCoords.length;
+    
+    console.log(`🏟️ ${tournamentsWithCoords.length} of ${tournaments.length} tournaments have valid coordinates`);
+    if (tournamentsWithoutCoords > 0) {
+      console.log(`⚠️ ${tournamentsWithoutCoords} tournaments missing coordinates will be excluded from radius search`);
+    }
     
     const tournamentsWithDistance: Tournament[] = [];
     
-    tournaments.forEach(tournament => {
-      if (tournament.latitude !== null && tournament.longitude !== null) {
-        const distance = calculateDistance(
-          searchCoords.latitude,
-          searchCoords.longitude,
-          tournament.latitude,
-          tournament.longitude
-        );
-        
-        if (distance <= radiusMiles && distance !== Infinity) {
-          console.log(`✅ Tournament "${tournament.name}" included: ${distance.toFixed(1)} miles`);
-          tournamentsWithDistance.push({ ...tournament, distance });
-        } else {
-          console.log(`❌ Tournament "${tournament.name}" excluded: ${distance.toFixed(1)} miles (> ${radiusMiles})`);
-        }
+    tournamentsWithCoords.forEach(tournament => {
+      const distance = calculateDistance(
+        searchCoords.latitude,
+        searchCoords.longitude,
+        tournament.latitude!,
+        tournament.longitude!
+      );
+      
+      if (distance !== Infinity && distance <= radiusMiles) {
+        console.log(`✅ Tournament "${tournament.name}" included: ${distance.toFixed(1)} miles (${tournament.city}, ${tournament.state})`);
+        tournamentsWithDistance.push({ ...tournament, distance });
       } else {
-        // For tournaments without coordinates, check ZIP code match
-        const isZipCode = /^\d{5}(-\d{4})?$/.test(locationTerm);
-        if (isZipCode && tournament.zip_code === locationTerm.substring(0, 5)) {
-          console.log(`📮 Tournament "${tournament.name}" included by ZIP match:`, tournament.zip_code);
-          tournamentsWithDistance.push(tournament);
-        }
+        console.log(`❌ Tournament "${tournament.name}" excluded: ${distance === Infinity ? 'Invalid distance' : distance.toFixed(1) + ' miles'} (> ${radiusMiles}) - ${tournament.city}, ${tournament.state}`);
       }
     });
     
+    // Sort by distance, then by date
     const sortedTournaments = tournamentsWithDistance.sort((a, b) => {
       if (a.distance !== undefined && b.distance !== undefined) {
         return a.distance - b.distance;
       }
-      if (a.distance !== undefined && b.distance === undefined) {
-        return -1;
-      }
-      if (a.distance === undefined && b.distance !== undefined) {
-        return 1;
-      }
       return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
     
-    console.log(`✅ Final radius search results: ${sortedTournaments.length} tournaments`);
+    console.log(`✅ Final radius search results: ${sortedTournaments.length} tournaments within ${radiusMiles} miles`);
     
+    // Enhanced error reporting
     if (sortedTournaments.length === 0) {
-      // Show more detailed error message with debugging info
-      const tournamentsWithoutCoords = tournaments.filter(t => !t.latitude || !t.longitude).length;
       toast({
         title: "No Results Within Radius",
-        description: `No tournaments found within ${radiusMiles} miles of ${locationTerm}. Found ${tournaments.length} total tournaments, ${tournamentsWithoutCoords} need coordinates. Try using "Add Map Coordinates" button or increase your search radius.`,
+        description: `No tournaments found within ${radiusMiles} miles of ${locationTerm}. Found ${tournaments.length} total tournaments, ${tournamentsWithoutCoords} missing coordinates. Try "Add Map Coordinates" or increase radius.`,
+        variant: "destructive",
       });
     } else {
       toast({
         title: "Radius Search Complete",
-        description: `Found ${sortedTournaments.length} tournament(s) within ${radiusMiles} miles of ${locationTerm}.`,
+        description: `Found ${sortedTournaments.length} tournament(s) within ${radiusMiles} miles of ${locationTerm}. ${tournamentsWithoutCoords} tournaments excluded due to missing coordinates.`,
       });
     }
     
@@ -252,7 +248,7 @@ export class TournamentSearchService {
       if (filteredTournaments.length > 0) {
         toast({
           title: "ZIP Code Search",
-          description: `Location geocoding failed. Showing ${filteredTournaments.length} tournament(s) with ZIP code ${locationTerm}.`,
+          description: `Geocoding failed. Showing ${filteredTournaments.length} tournament(s) with ZIP code ${locationTerm}. Note: This is not a radius search.`,
         });
       } else {
         toast({
