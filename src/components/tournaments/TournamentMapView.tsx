@@ -78,8 +78,8 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
             markers.current.push(marker);
           });
 
-          // Fit map to show all tournaments
-          const group = new L.featureGroup(markers.current);
+          // Fit map to show all tournaments - Fixed the TypeScript error
+          const group = L.featureGroup(markers.current);
           map.current.fitBounds(group.getBounds().pad(0.1));
         }
       });
