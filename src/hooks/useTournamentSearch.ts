@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -13,7 +14,8 @@ interface SearchFilters {
   maxEntryFee: string;
 }
 
-interface Tournament {
+// Type for data coming from Supabase
+interface TournamentFromDB {
   id: string;
   name: string;
   date: string;
@@ -21,14 +23,18 @@ interface Tournament {
   location_name: string;
   city: string;
   state: string;
+  zip_code: string;
   game_type: string;
   entry_fee: number;
-  prize_pool: string;
+  prize_pool: string | null;
   created_at: string;
-  zip_code?: string;
-  latitude?: number;
-  longitude?: number;
-  distance?: number; // Add distance for sorting
+  latitude: number | null;
+  longitude: number | null;
+}
+
+// Extended type with optional distance for display
+interface Tournament extends TournamentFromDB {
+  distance?: number;
 }
 
 export const useTournamentSearch = () => {
@@ -95,7 +101,7 @@ export const useTournamentSearch = () => {
         return;
       }
 
-      let filteredTournaments = data || [];
+      let filteredTournaments: Tournament[] = (data || []) as Tournament[];
 
       // Apply location-based filtering if specified
       if (filters.location && filteredTournaments.length > 0) {
@@ -238,7 +244,7 @@ export const useTournamentSearch = () => {
         return;
       }
 
-      setTournaments(data || []);
+      setTournaments((data || []) as Tournament[]);
     } catch (error) {
       console.error('Error:', error);
     } finally {
