@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -103,6 +102,9 @@ export const useTournamentSearch = () => {
         const locationTerm = filters.location.trim();
         const radiusMiles = parseFloat(filters.radius) || 25;
         
+        console.log('Location search term:', locationTerm);
+        console.log('Search radius:', radiusMiles);
+        
         // Check if it looks like a ZIP code (5 digits or 5+4 format)
         const isZipCode = /^\d{5}(-\d{4})?$/.test(locationTerm);
         
@@ -112,38 +114,44 @@ export const useTournamentSearch = () => {
           const searchCoords = await geocodeLocation(locationTerm);
           
           if (searchCoords) {
-            console.log('Search coordinates:', searchCoords);
+            console.log('Search coordinates found:', searchCoords);
             
             // Filter tournaments within radius and calculate distances
-            filteredTournaments = filteredTournaments
-              .map(tournament => {
-                if (tournament.latitude && tournament.longitude) {
-                  const distance = calculateDistance(
-                    searchCoords.latitude,
-                    searchCoords.longitude,
-                    tournament.latitude,
-                    tournament.longitude
-                  );
-                  return { ...tournament, distance };
+            const tournamentsWithDistance: Tournament[] = [];
+            
+            filteredTournaments.forEach(tournament => {
+              if (tournament.latitude && tournament.longitude) {
+                const distance = calculateDistance(
+                  searchCoords.latitude,
+                  searchCoords.longitude,
+                  tournament.latitude,
+                  tournament.longitude
+                );
+                
+                console.log(`Tournament ${tournament.name} distance: ${distance} miles`);
+                
+                if (distance <= radiusMiles) {
+                  tournamentsWithDistance.push({ ...tournament, distance });
                 }
-                return tournament;
-              })
-              .filter(tournament => {
-                // Include tournaments within radius or those without coordinates
-                if (tournament.distance !== undefined) {
-                  return tournament.distance <= radiusMiles;
-                }
+              } else {
                 // Fallback: include tournaments that match the exact ZIP code
-                return tournament.zip_code === locationTerm.substring(0, 5);
-              })
-              .sort((a, b) => {
-                // Sort by distance if available, otherwise by date
-                if (a.distance !== undefined && b.distance !== undefined) {
-                  return a.distance - b.distance;
+                if (tournament.zip_code === locationTerm.substring(0, 5)) {
+                  tournamentsWithDistance.push(tournament);
                 }
-                return new Date(a.date).getTime() - new Date(b.date).getTime();
-              });
+              }
+            });
+            
+            // Sort by distance
+            filteredTournaments = tournamentsWithDistance.sort((a, b) => {
+              if (a.distance !== undefined && b.distance !== undefined) {
+                return a.distance - b.distance;
+              }
+              return new Date(a.date).getTime() - new Date(b.date).getTime();
+            });
+            
+            console.log('Tournaments within radius:', filteredTournaments.length);
           } else {
+            console.log('Geocoding failed, falling back to exact ZIP match');
             // Fallback to exact ZIP code match if geocoding fails
             if (isZipCode) {
               filteredTournaments = filteredTournaments.filter(tournament => 
@@ -168,7 +176,7 @@ export const useTournamentSearch = () => {
         }
       }
 
-      console.log('Search results:', filteredTournaments);
+      console.log('Final search results:', filteredTournaments);
       setTournaments(filteredTournaments);
       setSearchApplied(true);
       
