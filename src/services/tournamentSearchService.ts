@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { geocodeLocation, calculateDistance } from '@/services/geocodingService';
@@ -198,6 +199,7 @@ export class TournamentSearchService {
           console.log(`❌ Tournament "${tournament.name}" excluded: ${distance.toFixed(1)} miles (> ${radiusMiles})`);
         }
       } else {
+        // For tournaments without coordinates, check ZIP code match
         const isZipCode = /^\d{5}(-\d{4})?$/.test(locationTerm);
         if (isZipCode && tournament.zip_code === locationTerm.substring(0, 5)) {
           console.log(`📮 Tournament "${tournament.name}" included by ZIP match:`, tournament.zip_code);
@@ -222,9 +224,11 @@ export class TournamentSearchService {
     console.log(`✅ Final radius search results: ${sortedTournaments.length} tournaments`);
     
     if (sortedTournaments.length === 0) {
+      // Show more detailed error message with debugging info
+      const tournamentsWithoutCoords = tournaments.filter(t => !t.latitude || !t.longitude).length;
       toast({
         title: "No Results Within Radius",
-        description: `No tournaments found within ${radiusMiles} miles of ${locationTerm}. Try increasing your search radius.`,
+        description: `No tournaments found within ${radiusMiles} miles of ${locationTerm}. Found ${tournaments.length} total tournaments, ${tournamentsWithoutCoords} need coordinates. Try using "Add Map Coordinates" button or increase your search radius.`,
       });
     } else {
       toast({
@@ -250,6 +254,12 @@ export class TournamentSearchService {
           title: "ZIP Code Search",
           description: `Location geocoding failed. Showing ${filteredTournaments.length} tournament(s) with ZIP code ${locationTerm}.`,
         });
+      } else {
+        toast({
+          title: "No Results",
+          description: `No tournaments found with ZIP code ${locationTerm}. The search location could not be geocoded.`,
+          variant: "destructive",
+        });
       }
       return filteredTournaments;
     } else {
@@ -269,6 +279,12 @@ export class TournamentSearchService {
       toast({
         title: "Text Search Complete",
         description: `Found ${filteredTournaments.length} tournament(s) matching "${locationTerm}".`,
+      });
+    } else {
+      toast({
+        title: "No Results",
+        description: `No tournaments found matching "${locationTerm}".`,
+        variant: "destructive",
       });
     }
     

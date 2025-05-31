@@ -29,7 +29,7 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
     console.log('🌐 Geocoding query:', query);
     
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&countrycodes=us`,
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=3&countrycodes=us&addressdetails=1`,
       {
         headers: {
           'User-Agent': 'DeadPunch Tournament Finder'
@@ -46,7 +46,19 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
     console.log('📍 Geocoding API response:', data);
     
     if (data.length > 0) {
-      const result = data[0];
+      // For ZIP codes, try to find the most specific match
+      let result = data[0];
+      if (isZipCode && data.length > 1) {
+        // Look for a result that includes the ZIP code in the address
+        const zipMatch = data.find(item => 
+          item.display_name && item.display_name.includes(cleanLocation)
+        );
+        if (zipMatch) {
+          result = zipMatch;
+          console.log('🎯 Found better ZIP code match:', result);
+        }
+      }
+      
       const coords = {
         latitude: parseFloat(result.lat),
         longitude: parseFloat(result.lon),
