@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, MapPin, DollarSign, Trophy, Loader2, Map, List } from 'lucide-react';
 import TournamentSearch from './TournamentSearch';
 import TournamentMapView from './TournamentMapView';
+import TournamentSearchDiagnostics from './TournamentSearchDiagnostics';
 import { useTournamentSearch } from '@/hooks/useTournamentSearch';
 
 interface SearchFilters {
@@ -22,6 +23,7 @@ interface SearchFilters {
 const TournamentList = () => {
   const { tournaments, loading, searchApplied, searchTournaments, clearSearch } = useTournamentSearch();
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const [showDiagnostics, setShowDiagnostics] = useState(false);
 
   useEffect(() => {
     // Load all tournaments on initial mount
@@ -87,6 +89,21 @@ const TournamentList = () => {
         onClear={handleClearSearch}
         isLoading={loading}
       />
+
+      {/* Diagnostics Toggle */}
+      <div className="mb-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowDiagnostics(!showDiagnostics)}
+          className="text-deadpunch-gray-light hover:text-white"
+        >
+          {showDiagnostics ? 'Hide' : 'Show'} Search Diagnostics
+        </Button>
+      </div>
+
+      {/* Diagnostics Panel */}
+      {showDiagnostics && <TournamentSearchDiagnostics />}
 
       {/* View Toggle */}
       <div className="flex items-center justify-between mb-6">

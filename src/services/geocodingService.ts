@@ -10,7 +10,12 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
   try {
     // Clean up the location string
     const cleanLocation = location.trim();
-    console.log('Geocoding location:', cleanLocation);
+    console.log('🔍 Geocoding location:', cleanLocation);
+    
+    if (!cleanLocation) {
+      console.log('❌ Empty location provided');
+      return null;
+    }
     
     // Check if it's a ZIP code
     const isZipCode = /^\d{5}(-\d{4})?$/.test(cleanLocation);
@@ -21,7 +26,7 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
       query = `${cleanLocation}, USA`;
     }
     
-    console.log('Geocoding query:', query);
+    console.log('🌐 Geocoding query:', query);
     
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&countrycodes=us`,
@@ -33,12 +38,12 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
     );
     
     if (!response.ok) {
-      console.error('Geocoding request failed:', response.status, response.statusText);
-      throw new Error('Geocoding request failed');
+      console.error('❌ Geocoding request failed:', response.status, response.statusText);
+      throw new Error(`Geocoding request failed: ${response.status}`);
     }
     
     const data = await response.json();
-    console.log('Geocoding response:', data);
+    console.log('📍 Geocoding API response:', data);
     
     if (data.length > 0) {
       const result = data[0];
@@ -47,14 +52,21 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
         longitude: parseFloat(result.lon),
         formatted_address: result.display_name
       };
-      console.log('Geocoding result:', coords);
+      
+      // Validate coordinates
+      if (isNaN(coords.latitude) || isNaN(coords.longitude)) {
+        console.error('❌ Invalid coordinates received:', coords);
+        return null;
+      }
+      
+      console.log('✅ Geocoding successful:', coords);
       return coords;
     }
     
-    console.log('No geocoding results found');
+    console.log('❌ No geocoding results found for:', query);
     return null;
   } catch (error) {
-    console.error('Geocoding error:', error);
+    console.error('❌ Geocoding error:', error);
     return null;
   }
 };
@@ -66,6 +78,12 @@ export const calculateDistance = (
   lat2: number,
   lon2: number
 ): number => {
+  // Validate input coordinates
+  if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) {
+    console.error('❌ Invalid coordinates for distance calculation:', { lat1, lon1, lat2, lon2 });
+    return Infinity;
+  }
+  
   const R = 3959; // Earth's radius in miles
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -76,7 +94,7 @@ export const calculateDistance = (
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c; // Distance in miles
   
-  console.log(`Distance calculated: ${distance} miles between (${lat1}, ${lon1}) and (${lat2}, ${lon2})`);
+  console.log(`📏 Distance: ${distance.toFixed(1)} miles between (${lat1}, ${lon1}) and (${lat2}, ${lon2})`);
   return distance;
 };
 
@@ -89,6 +107,6 @@ export const geocodeTournamentLocation = async (tournament: {
   zip_code: string;
 }): Promise<GeocodingResult | null> => {
   const fullAddress = `${tournament.address}, ${tournament.city}, ${tournament.state} ${tournament.zip_code}`;
-  console.log('Geocoding tournament address:', fullAddress);
+  console.log('🏟️ Geocoding tournament address:', fullAddress);
   return await geocodeLocation(fullAddress);
 };
