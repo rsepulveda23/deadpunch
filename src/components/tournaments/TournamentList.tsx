@@ -55,6 +55,11 @@ const TournamentList = () => {
     });
   };
 
+  const formatDistance = (distance?: number) => {
+    if (distance === undefined) return null;
+    return distance < 1 ? '< 1 mile' : `${distance.toFixed(1)} miles`;
+  };
+
   const handleTournamentSelect = (tournament: any) => {
     // Navigate to tournament detail or show in sidebar
     console.log('Selected tournament:', tournament);
@@ -153,6 +158,11 @@ const TournamentList = () => {
                         <div className="flex items-center">
                           <MapPin className="h-4 w-4 mr-2" />
                           {tournament.city}, {tournament.state}
+                          {tournament.distance !== undefined && (
+                            <span className="ml-2 text-deadpunch-red font-medium">
+                              ({formatDistance(tournament.distance)})
+                            </span>
+                          )}
                         </div>
                       </CardDescription>
                     </CardHeader>

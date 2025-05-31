@@ -1,0 +1,82 @@
+
+interface GeocodingResult {
+  latitude: number;
+  longitude: number;
+  formatted_address?: string;
+}
+
+// Free geocoding service using Nominatim (OpenStreetMap)
+export const geocodeLocation = async (location: string): Promise<GeocodingResult | null> => {
+  try {
+    // Clean up the location string
+    const cleanLocation = location.trim();
+    
+    // Check if it's a ZIP code
+    const isZipCode = /^\d{5}(-\d{4})?$/.test(cleanLocation);
+    
+    let query = cleanLocation;
+    if (isZipCode) {
+      // For ZIP codes, add "USA" to get better results
+      query = `${cleanLocation}, USA`;
+    }
+    
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&countrycodes=us`,
+      {
+        headers: {
+          'User-Agent': 'DeadPunch Tournament Finder'
+        }
+      }
+    );
+    
+    if (!response.ok) {
+      throw new Error('Geocoding request failed');
+    }
+    
+    const data = await response.json();
+    
+    if (data.length > 0) {
+      const result = data[0];
+      return {
+        latitude: parseFloat(result.lat),
+        longitude: parseFloat(result.lon),
+        formatted_address: result.display_name
+      };
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    return null;
+  }
+};
+
+// Calculate distance between two points using Haversine formula
+export const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number => {
+  const R = 3959; // Earth's radius in miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in miles
+};
+
+// Geocode a tournament's location and update it in the database
+export const geocodeTournamentLocation = async (tournament: {
+  id: string;
+  address: string;
+  city: string;
+  state: string;
+  zip_code: string;
+}): Promise<GeocodingResult | null> => {
+  const fullAddress = `${tournament.address}, ${tournament.city}, ${tournament.state} ${tournament.zip_code}`;
+  return await geocodeLocation(fullAddress);
+};

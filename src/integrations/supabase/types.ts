@@ -83,7 +83,9 @@ export type Database = {
           flyer_image_url: string | null
           game_type: string
           id: string
+          latitude: number | null
           location_name: string
+          longitude: number | null
           name: string
           organizer_email: string
           organizer_name: string
@@ -105,7 +107,9 @@ export type Database = {
           flyer_image_url?: string | null
           game_type: string
           id?: string
+          latitude?: number | null
           location_name: string
+          longitude?: number | null
           name: string
           organizer_email: string
           organizer_name: string
@@ -127,7 +131,9 @@ export type Database = {
           flyer_image_url?: string | null
           game_type?: string
           id?: string
+          latitude?: number | null
           location_name?: string
+          longitude?: number | null
           name?: string
           organizer_email?: string
           organizer_name?: string
