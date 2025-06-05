@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -37,7 +36,9 @@ const TournamentSearch = ({ onSearch, onClear, isLoading = false }: TournamentSe
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleFilterChange = (key: keyof SearchFilters, value: string) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    // Convert "all" back to empty string for the filter logic
+    const filterValue = value === "all" ? "" : value;
+    setFilters(prev => ({ ...prev, [key]: filterValue }));
   };
 
   const handleSearch = () => {
@@ -119,12 +120,12 @@ const TournamentSearch = ({ onSearch, onClear, isLoading = false }: TournamentSe
                   <label className="block text-sm font-medium text-deadpunch-gray-light mb-2">
                     Game Type
                   </label>
-                  <Select value={filters.gameType} onValueChange={(value) => handleFilterChange('gameType', value)}>
+                  <Select value={filters.gameType || "all"} onValueChange={(value) => handleFilterChange('gameType', value)}>
                     <SelectTrigger className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
                       <SelectValue placeholder="All games" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All games</SelectItem>
+                      <SelectItem value="all">All games</SelectItem>
                       <SelectItem value="8-Ball">8-Ball</SelectItem>
                       <SelectItem value="9-Ball">9-Ball</SelectItem>
                       <SelectItem value="10-Ball">10-Ball</SelectItem>

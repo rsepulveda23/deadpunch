@@ -26,7 +26,9 @@ const SearchFiltersComponent = ({
   searchApplied 
 }: SearchFiltersProps) => {
   const updateFilter = (key: keyof SearchFilters, value: string) => {
-    onFiltersChange({ ...filters, [key]: value });
+    // Convert "all" back to empty string for the filter logic
+    const filterValue = value === "all" ? "" : value;
+    onFiltersChange({ ...filters, [key]: filterValue });
   };
 
   return (
@@ -71,12 +73,12 @@ const SearchFiltersComponent = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="gameType" className="text-white">Game Type</Label>
-            <Select value={filters.gameType} onValueChange={(value) => updateFilter('gameType', value)}>
+            <Select value={filters.gameType || "all"} onValueChange={(value) => updateFilter('gameType', value)}>
               <SelectTrigger className="bg-deadpunch-dark border-deadpunch-gray-dark text-white">
                 <SelectValue placeholder="All game types" />
               </SelectTrigger>
               <SelectContent className="bg-deadpunch-dark border-deadpunch-gray-dark">
-                <SelectItem value="">All game types</SelectItem>
+                <SelectItem value="all">All game types</SelectItem>
                 <SelectItem value="8-Ball">8-Ball</SelectItem>
                 <SelectItem value="9-Ball">9-Ball</SelectItem>
                 <SelectItem value="10-Ball">10-Ball</SelectItem>
