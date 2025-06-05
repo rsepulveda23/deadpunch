@@ -27,18 +27,25 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
     
     console.log('🌐 Geocoding query:', query);
     
+    // Add timeout and better error handling
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=us&addressdetails=1`,
       {
         headers: {
           'User-Agent': 'DeadPunch Tournament Finder'
-        }
+        },
+        signal: controller.signal
       }
     );
     
+    clearTimeout(timeoutId);
+    
     if (!response.ok) {
       console.error('❌ Geocoding request failed:', response.status, response.statusText);
-      throw new Error(`Geocoding request failed: ${response.status}`);
+      return null;
     }
     
     const data = await response.json();
@@ -47,19 +54,11 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
     if (data.length > 0) {
       let result = data[0];
       
-      // For ZIP codes, implement intelligent result selection
+      // For ZIP codes, try to find the best match
       if (isZipCode && data.length > 1) {
-        console.log('🎯 Analyzing multiple results for ZIP code:', cleanLocation);
-        
-        // Priority order for ZIP code matching:
-        // 1. Exact ZIP code match in display_name with 'postcode' type
-        // 2. Exact ZIP code match in display_name with highest importance
-        // 3. Result with matching postcode in address details
-        // 4. First result that contains the ZIP code
-        
         const zipNumber = cleanLocation.substring(0, 5);
         
-        // First try to find exact postcode type matches
+        // Look for postcode type matches first
         const postcodeMatches = data.filter(item => 
           item.type === 'postcode' && 
           (item.display_name?.includes(zipNumber) || item.address?.postcode === zipNumber)
@@ -68,32 +67,7 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
         if (postcodeMatches.length > 0) {
           result = postcodeMatches[0];
           console.log('🎯 Found postcode type match:', result);
-        } else {
-          // Look for ZIP in display name with highest importance
-          const displayNameMatches = data
-            .filter(item => item.display_name?.includes(zipNumber))
-            .sort((a, b) => parseFloat(b.importance || '0') - parseFloat(a.importance || '0'));
-          
-          if (displayNameMatches.length > 0) {
-            result = displayNameMatches[0];
-            console.log('🎯 Found display name match with importance:', result.importance, result);
-          } else {
-            // Fallback to address postcode match
-            const addressMatches = data.filter(item => item.address?.postcode === zipNumber);
-            if (addressMatches.length > 0) {
-              result = addressMatches[0];
-              console.log('🎯 Found address postcode match:', result);
-            }
-          }
         }
-        
-        console.log('🎯 Selected result for ZIP', zipNumber, ':', {
-          lat: result.lat,
-          lon: result.lon,
-          type: result.type,
-          importance: result.importance,
-          display_name: result.display_name
-        });
       }
       
       const coords = {
@@ -102,9 +76,9 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
         formatted_address: result.display_name
       };
       
-      // Enhanced coordinate validation
+      // Validate coordinates
       if (isNaN(coords.latitude) || isNaN(coords.longitude)) {
-        console.error('❌ Invalid coordinates received:', coords, 'from result:', result);
+        console.error('❌ Invalid coordinates received:', coords);
         return null;
       }
       
@@ -121,7 +95,11 @@ export const geocodeLocation = async (location: string): Promise<GeocodingResult
     console.log('❌ No geocoding results found for:', query);
     return null;
   } catch (error) {
-    console.error('❌ Geocoding error:', error);
+    if (error.name === 'AbortError') {
+      console.error('❌ Geocoding request timed out');
+    } else {
+      console.error('❌ Geocoding error:', error);
+    }
     return null;
   }
 };

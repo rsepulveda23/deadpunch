@@ -29,7 +29,7 @@ export class TournamentSearchService {
         `)
         .order('date', { ascending: true });
 
-      // Apply non-location filters
+      // Apply non-location filters first
       query = this.applyNonLocationFilters(query, filters);
 
       const { data, error } = await query;
@@ -48,19 +48,12 @@ export class TournamentSearchService {
       console.log(`📊 Found ${filteredTournaments.length} tournaments before location filtering`);
 
       // Apply location-based filtering if specified
-      if (filters.location && filteredTournaments.length > 0) {
+      if (filters.location?.trim()) {
         filteredTournaments = await this.applyLocationFilter(filteredTournaments, filters);
       }
 
       console.log('🏁 Final search results:', filteredTournaments.length, 'tournaments');
       
-      if (filteredTournaments.length === 0 && (!filters.location || filters.location.trim() === '')) {
-        toast({
-          title: "No Results",
-          description: "No tournaments found matching your search criteria.",
-        });
-      }
-
       return filteredTournaments;
     } catch (error) {
       console.error('❌ Search error:', error);
@@ -152,134 +145,112 @@ export class TournamentSearchService {
     console.log('📍 Location search term:', locationTerm);
     console.log('📏 Search radius:', radiusMiles, 'miles');
     
+    // Check if it's a ZIP code (5 digits with optional +4)
     const isZipCode = /^\d{5}(-\d{4})?$/.test(locationTerm);
     console.log('📮 Is ZIP code:', isZipCode);
     
+    // For ZIP codes or addresses with commas, try radius search first
     if (isZipCode || locationTerm.includes(',')) {
-      return await this.performRadiusSearch(tournaments, locationTerm, radiusMiles);
-    } else {
+      const radiusResults = await this.performRadiusSearch(tournaments, locationTerm, radiusMiles);
+      if (radiusResults.length > 0) {
+        return radiusResults;
+      }
+      // If radius search fails, fall back to text search
+      console.log('🔄 Radius search failed, trying text search fallback');
       return this.performTextSearch(tournaments, locationTerm);
     }
+    
+    // For simple text searches (city/state names), do text search first
+    const textResults = this.performTextSearch(tournaments, locationTerm);
+    if (textResults.length > 0) {
+      return textResults;
+    }
+    
+    // If text search fails, try radius search as fallback
+    console.log('🔄 Text search failed, trying radius search fallback');
+    return await this.performRadiusSearch(tournaments, locationTerm, radiusMiles);
   }
 
   private async performRadiusSearch(tournaments: Tournament[], locationTerm: string, radiusMiles: number): Promise<Tournament[]> {
-    console.log('🌐 Attempting to geocode location for radius search...');
-    const searchCoords = await geocodeLocation(locationTerm);
+    console.log('🌐 Attempting radius search for:', locationTerm);
     
-    if (searchCoords) {
-      console.log('✅ Successfully geocoded search location:', searchCoords);
-      return this.filterByRadius(tournaments, searchCoords, radiusMiles, locationTerm);
-    } else {
-      console.log('❌ Geocoding failed, falling back to text/ZIP search');
-      return this.performFallbackSearch(tournaments, locationTerm);
-    }
-  }
-
-  private filterByRadius(tournaments: Tournament[], searchCoords: any, radiusMiles: number, locationTerm: string): Tournament[] {
-    console.log(`🎯 Filtering tournaments by radius from coordinates: ${searchCoords.latitude.toFixed(4)}, ${searchCoords.longitude.toFixed(4)}`);
-    
-    // Only consider tournaments that have valid coordinates for radius search
-    const tournamentsWithCoords = tournaments.filter(t => 
-      t.latitude !== null && t.longitude !== null && 
-      !isNaN(t.latitude) && !isNaN(t.longitude)
-    );
-    
-    const tournamentsWithoutCoords = tournaments.length - tournamentsWithCoords.length;
-    
-    console.log(`🏟️ ${tournamentsWithCoords.length} of ${tournaments.length} tournaments have valid coordinates`);
-    if (tournamentsWithoutCoords > 0) {
-      console.log(`⚠️ ${tournamentsWithoutCoords} tournaments missing coordinates will be excluded from radius search`);
-    }
-    
-    const tournamentsWithDistance: Tournament[] = [];
-    
-    tournamentsWithCoords.forEach(tournament => {
-      const distance = calculateDistance(
-        searchCoords.latitude,
-        searchCoords.longitude,
-        tournament.latitude!,
-        tournament.longitude!
+    try {
+      const searchCoords = await geocodeLocation(locationTerm);
+      
+      if (!searchCoords) {
+        console.log('❌ Geocoding failed for:', locationTerm);
+        return [];
+      }
+      
+      console.log('✅ Geocoded location:', searchCoords);
+      
+      // Filter tournaments by radius
+      const tournamentsWithCoords = tournaments.filter(t => 
+        t.latitude !== null && t.longitude !== null && 
+        !isNaN(t.latitude) && !isNaN(t.longitude)
       );
       
-      if (distance !== Infinity && distance <= radiusMiles) {
-        console.log(`✅ Tournament "${tournament.name}" included: ${distance.toFixed(1)} miles (${tournament.city}, ${tournament.state})`);
-        tournamentsWithDistance.push({ ...tournament, distance });
-      } else {
-        console.log(`❌ Tournament "${tournament.name}" excluded: ${distance === Infinity ? 'Invalid distance' : distance.toFixed(1) + ' miles'} (> ${radiusMiles}) - ${tournament.city}, ${tournament.state}`);
-      }
-    });
-    
-    // Sort by distance, then by date
-    const sortedTournaments = tournamentsWithDistance.sort((a, b) => {
-      if (a.distance !== undefined && b.distance !== undefined) {
-        return a.distance - b.distance;
-      }
-      return new Date(a.date).getTime() - new Date(b.date).getTime();
-    });
-    
-    console.log(`✅ Final radius search results: ${sortedTournaments.length} tournaments within ${radiusMiles} miles`);
-    
-    // Enhanced error reporting
-    if (sortedTournaments.length === 0) {
-      toast({
-        title: "No Results Within Radius",
-        description: `No tournaments found within ${radiusMiles} miles of ${locationTerm}. Found ${tournaments.length} total tournaments, ${tournamentsWithoutCoords} missing coordinates. Try "Add Map Coordinates" or increase radius.`,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Radius Search Complete",
-        description: `Found ${sortedTournaments.length} tournament(s) within ${radiusMiles} miles of ${locationTerm}. ${tournamentsWithoutCoords} tournaments excluded due to missing coordinates.`,
-      });
-    }
-    
-    return sortedTournaments;
-  }
-
-  private performFallbackSearch(tournaments: Tournament[], locationTerm: string): Tournament[] {
-    const isZipCode = /^\d{5}(-\d{4})?$/.test(locationTerm);
-    
-    if (isZipCode) {
-      const filteredTournaments = tournaments.filter(tournament => 
-        tournament.zip_code === locationTerm.substring(0, 5)
-      );
-      console.log(`📮 ZIP fallback search results: ${filteredTournaments.length} tournaments`);
+      const tournamentsInRadius: Tournament[] = [];
       
-      if (filteredTournaments.length > 0) {
+      for (const tournament of tournamentsWithCoords) {
+        const distance = calculateDistance(
+          searchCoords.latitude,
+          searchCoords.longitude,
+          tournament.latitude!,
+          tournament.longitude!
+        );
+        
+        if (distance !== Infinity && distance <= radiusMiles) {
+          tournamentsInRadius.push({ ...tournament, distance });
+        }
+      }
+      
+      // Sort by distance
+      tournamentsInRadius.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+      
+      console.log(`✅ Radius search found ${tournamentsInRadius.length} tournaments within ${radiusMiles} miles`);
+      
+      if (tournamentsInRadius.length > 0) {
         toast({
-          title: "ZIP Code Search",
-          description: `Geocoding failed. Showing ${filteredTournaments.length} tournament(s) with ZIP code ${locationTerm}. Note: This is not a radius search.`,
-        });
-      } else {
-        toast({
-          title: "No Results",
-          description: `No tournaments found with ZIP code ${locationTerm}. The search location could not be geocoded.`,
-          variant: "destructive",
+          title: "Location Search",
+          description: `Found ${tournamentsInRadius.length} tournament(s) within ${radiusMiles} miles of ${locationTerm}`,
         });
       }
-      return filteredTournaments;
-    } else {
-      return this.performTextSearch(tournaments, locationTerm);
+      
+      return tournamentsInRadius;
+      
+    } catch (error) {
+      console.error('❌ Radius search error:', error);
+      return [];
     }
   }
 
   private performTextSearch(tournaments: Tournament[], locationTerm: string): Tournament[] {
-    const filteredTournaments = tournaments.filter(tournament =>
-      tournament.city.toLowerCase().includes(locationTerm.toLowerCase()) ||
-      tournament.state.toLowerCase().includes(locationTerm.toLowerCase()) ||
-      tournament.location_name.toLowerCase().includes(locationTerm.toLowerCase())
-    );
-    console.log(`🔤 Text search results: ${filteredTournaments.length} tournaments`);
+    console.log('🔤 Performing text search for:', locationTerm);
+    
+    const searchLower = locationTerm.toLowerCase();
+    
+    const filteredTournaments = tournaments.filter(tournament => {
+      // Check city, state, location name, and ZIP code
+      const cityMatch = tournament.city.toLowerCase().includes(searchLower);
+      const stateMatch = tournament.state.toLowerCase().includes(searchLower);
+      const locationMatch = tournament.location_name.toLowerCase().includes(searchLower);
+      const zipMatch = tournament.zip_code.includes(locationTerm);
+      
+      return cityMatch || stateMatch || locationMatch || zipMatch;
+    });
+    
+    console.log(`🔤 Text search found ${filteredTournaments.length} tournaments`);
     
     if (filteredTournaments.length > 0) {
       toast({
-        title: "Text Search Complete",
-        description: `Found ${filteredTournaments.length} tournament(s) matching "${locationTerm}".`,
+        title: "Text Search",
+        description: `Found ${filteredTournaments.length} tournament(s) matching "${locationTerm}"`,
       });
     } else {
       toast({
         title: "No Results",
-        description: `No tournaments found matching "${locationTerm}".`,
+        description: `No tournaments found matching "${locationTerm}". Try a different search term or check the radius.`,
         variant: "destructive",
       });
     }
