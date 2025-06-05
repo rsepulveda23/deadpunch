@@ -12,7 +12,6 @@ import { Loader2 } from 'lucide-react';
 const Index = lazy(() => import('./pages/Index'));
 const Auth = lazy(() => import('./pages/Auth'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
-const ProfileSetup = lazy(() => import('./pages/ProfileSetup'));
 const PoolTools = lazy(() => import('./pages/PoolTools'));
 const Tournaments = lazy(() => import('./pages/Tournaments'));
 const TournamentDetail = lazy(() => import('./pages/TournamentDetail'));
@@ -49,7 +48,6 @@ function App() {
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/profile/setup" element={<ProfileSetup />} />
                 <Route path="/pool-tools" element={<PoolTools />} />
                 <Route path="/tournaments" element={<Tournaments />} />
                 <Route path="/tournaments/:tournamentId" element={<TournamentDetail />} />
