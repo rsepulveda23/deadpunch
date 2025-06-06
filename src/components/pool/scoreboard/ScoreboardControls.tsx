@@ -19,7 +19,7 @@ export const ScoreboardControls = ({
   return (
     <>
       <div className="mt-6">
-        <Separator className="bg-deadpunch-gray-dark mb-4" />
+        <Separator className="bg-gray-700 mb-4" />
         <RaceToSelector value={raceValue} onChange={onRaceValueChange} />
       </div>
 
@@ -27,14 +27,14 @@ export const ScoreboardControls = ({
         <Button 
           onClick={onResetScores}
           variant="outline"
-          className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-white hover:bg-deadpunch-dark bg-deadpunch-dark-lighter"
+          className="border-gray-700 text-white hover:border-deadpunch-red hover:text-white hover:bg-gray-700 bg-gray-800"
         >
           Reset Scores
         </Button>
         <Button 
           onClick={onResetAll}
           variant="outline"
-          className="border-deadpunch-red text-deadpunch-red hover:border-deadpunch-red hover:bg-deadpunch-red hover:text-white bg-deadpunch-dark-lighter"
+          className="border-deadpunch-red text-deadpunch-red hover:border-deadpunch-red hover:bg-deadpunch-red hover:text-white bg-gray-800"
         >
           Reset All
         </Button>

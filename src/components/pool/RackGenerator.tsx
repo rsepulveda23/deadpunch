@@ -37,7 +37,7 @@ export const RackGenerator = () => {
   };
 
   return (
-    <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark hover:border-white/30 transition-all duration-300">
+    <Card className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-all duration-300">
       <CardHeader>
         <CardTitle className="text-2xl text-deadpunch-red">Rack Generator</CardTitle>
       </CardHeader>
@@ -61,7 +61,7 @@ export const RackGenerator = () => {
         <RackDisplay key={key} gameType={gameType} rack={rack} />
 
         {/* Game rules information */}
-        <div className="bg-deadpunch-red/10 border border-deadpunch-red/30 rounded-lg p-3 text-sm text-deadpunch-gray-light">
+        <div className="bg-deadpunch-red/10 border border-deadpunch-red/30 rounded-lg p-3 text-sm text-gray-400">
           <p>
             <strong className="text-white">Game Rules:</strong><br />
             {getGameRules(gameType)}

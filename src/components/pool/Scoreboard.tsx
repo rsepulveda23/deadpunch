@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from 'sonner';
@@ -124,7 +125,7 @@ export const Scoreboard = ({
   };
 
   return (
-    <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark hover:border-white/30 transition-all duration-300">
+    <Card className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-all duration-300">
       <ScoreboardHeader />
       <CardContent className="space-y-6">
         {/* Player name inputs */}

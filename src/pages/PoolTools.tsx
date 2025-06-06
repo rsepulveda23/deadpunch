@@ -21,7 +21,7 @@ import TimeIndicator from "@/components/TimeIndicator";
  */
 const PoolTools = () => {
   return (
-    <div className="min-h-screen bg-deadpunch-dark">
+    <div className="min-h-screen bg-black">
       <Helmet>
         <title>Pool Tools | DEADPUNCH</title>
       </Helmet>
@@ -32,7 +32,7 @@ const PoolTools = () => {
         <div className="text-center mb-12 mt-4">
           <div className="flex justify-center mb-4">
             <Link to="/">
-              <Button variant="outline" className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-deadpunch-red bg-deadpunch-dark-lighter">
+              <Button variant="outline" className="border-gray-700 text-white hover:border-deadpunch-red hover:text-deadpunch-red bg-gray-800">
                 <Home size={18} className="mr-2" />
                 Back to Home
               </Button>
@@ -46,7 +46,7 @@ const PoolTools = () => {
           <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
             Pool Game <span className="text-deadpunch-red">Tools</span>
           </h1>
-          <p className="max-w-2xl mx-auto text-deadpunch-gray-light">
+          <p className="max-w-2xl mx-auto text-gray-400">
             Enhance your pool game with our interactive score tracking system and tournament-legal rack generator. 
             Perfect for practice sessions, friendly matches, and competitive play in 8-ball, 9-ball, and 10-ball formats.
           </p>
