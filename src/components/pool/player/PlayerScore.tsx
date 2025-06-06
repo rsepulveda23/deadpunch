@@ -14,20 +14,13 @@ interface PlayerScoreProps {
   onScoreChange: (change: number) => void;
 }
 
-/**
- * PlayerScore Component
- * 
- * Displays a player's name and score, with controls to increment or decrement
- * the score. Shows a trophy icon when the player reaches the race target.
- * Disables the increment button when the player has reached the race value.
- */
 export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScoreProps) => {
   const hasWon = player.score >= raceValue;
   
   return (
     <div className={cn(
       "p-4 rounded-lg text-center relative overflow-hidden",
-      "glass border-2 border-deadpunch-gray-dark hover:border-deadpunch-red/30 transition-all duration-300 bg-deadpunch-dark-lighter",
+      "border-2 border-deadpunch-gray-dark hover:border-deadpunch-red/30 transition-all duration-300 bg-deadpunch-dark-lighter",
       hasWon ? "bg-deadpunch-red/20 animate-pulse-glow border-deadpunch-red" : ""
     )}>
       <h3 className="text-xl font-semibold mb-1 truncate text-white">{player.name}</h3>

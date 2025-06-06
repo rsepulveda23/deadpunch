@@ -9,12 +9,6 @@ interface RaceToSelectorProps {
   onChange: (newValue: number) => void;
 }
 
-/**
- * RaceToSelector Component
- * 
- * Allows users to adjust the "Race To" value, which is the target score
- * needed to win the game.
- */
 export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
   return (
     <div className="text-center">
@@ -32,7 +26,7 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
           </Button>
         </div>
         
-        <div className="mx-3 text-4xl font-display font-bold text-[#39FF14] drop-shadow-[0_0_8px_rgba(57,255,20,0.7)]">
+        <div className="mx-3 text-4xl font-display font-bold text-deadpunch-red drop-shadow-[0_0_8px_rgba(225,60,60,0.7)]">
           {value}
         </div>
         

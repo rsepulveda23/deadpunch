@@ -30,7 +30,7 @@ export const PlayerNameInputs = ({
           onChange={(e) => onNameChange("player1", e.target.value)}
           onFocus={() => onInputFocus("player1")}
           onClick={() => onInputFocus("player1")}
-          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white focus:border-deadpunch-red focus:ring-deadpunch-red placeholder:text-deadpunch-gray-light/60"
+          className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark text-white focus:border-deadpunch-red focus:ring-deadpunch-red placeholder:text-deadpunch-gray-light/60"
           placeholder="Enter name"
         />
       </div>
@@ -42,7 +42,7 @@ export const PlayerNameInputs = ({
           onChange={(e) => onNameChange("player2", e.target.value)}
           onFocus={() => onInputFocus("player2")}
           onClick={() => onInputFocus("player2")}
-          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white focus:border-deadpunch-red focus:ring-deadpunch-red placeholder:text-deadpunch-gray-light/60"
+          className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark text-white focus:border-deadpunch-red focus:ring-deadpunch-red placeholder:text-deadpunch-gray-light/60"
           placeholder="Enter name"
         />
       </div>
