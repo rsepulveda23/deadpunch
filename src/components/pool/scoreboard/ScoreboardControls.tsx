@@ -33,7 +33,7 @@ export const ScoreboardControls = ({
         <Button 
           onClick={onResetScores}
           variant="outline"
-          className="border-deadpunch-gray-dark text-deadpunch-gray-light hover:border-deadpunch-red hover:text-deadpunch-red bg-deadpunch-dark-lighter"
+          className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-deadpunch-red bg-deadpunch-dark-lighter"
         >
           Reset Scores
         </Button>

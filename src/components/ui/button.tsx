@@ -14,10 +14,10 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/90 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-white/30 active:translate-y-0",
         outline:
-          "border-2 border-deadpunch-gray-dark bg-deadpunch-dark-lighter text-deadpunch-gray-light shadow-sm hover:bg-deadpunch-gray hover:text-deadpunch-red hover:translate-y-[-2px] hover:scale-105 hover:shadow-md hover:border-deadpunch-red active:translate-y-0",
+          "border-2 border-deadpunch-gray-dark bg-deadpunch-dark-lighter text-white shadow-sm hover:bg-deadpunch-gray hover:text-deadpunch-red hover:translate-y-[-2px] hover:scale-105 hover:shadow-md hover:border-deadpunch-red active:translate-y-0",
         secondary:
-          "bg-deadpunch-gray text-deadpunch-gray-light shadow-md hover:bg-deadpunch-gray/80 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-deadpunch-red/20 active:translate-y-0",
-        ghost: "text-deadpunch-gray-light hover:bg-deadpunch-dark-lighter hover:text-deadpunch-red hover:translate-y-[-1px] hover:scale-105 hover:ring-1 hover:ring-deadpunch-red/20 active:translate-y-0",
+          "bg-deadpunch-gray text-white shadow-md hover:bg-deadpunch-gray/80 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-deadpunch-red/20 active:translate-y-0",
+        ghost: "text-white hover:bg-deadpunch-dark-lighter hover:text-deadpunch-red hover:translate-y-[-1px] hover:scale-105 hover:ring-1 hover:ring-deadpunch-red/20 active:translate-y-0",
         link: "text-deadpunch-red underline-offset-4 hover:underline hover:translate-y-[-1px] hover:text-deadpunch-red-hover active:translate-y-0",
       },
       size: {

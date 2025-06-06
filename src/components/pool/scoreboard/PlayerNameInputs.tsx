@@ -29,26 +29,26 @@ export const PlayerNameInputs = ({
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
-        <Label htmlFor="player1Name" className="text-deadpunch-gray-light">Player 1</Label>
+        <Label htmlFor="player1Name" className="text-white">Player 1</Label>
         <Input
           id="player1Name"
           value={player1.name}
           onChange={(e) => onNameChange("player1", e.target.value)}
           onFocus={() => onInputFocus("player1")}
           onClick={() => onInputFocus("player1")}
-          className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark text-deadpunch-gray-light focus:border-deadpunch-red focus:ring-deadpunch-red"
+          className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark text-white focus:border-deadpunch-red focus:ring-deadpunch-red"
           placeholder="Enter name"
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="player2Name" className="text-deadpunch-gray-light">Player 2</Label>
+        <Label htmlFor="player2Name" className="text-white">Player 2</Label>
         <Input
           id="player2Name"
           value={player2.name}
           onChange={(e) => onNameChange("player2", e.target.value)}
           onFocus={() => onInputFocus("player2")}
           onClick={() => onInputFocus("player2")}
-          className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark text-deadpunch-gray-light focus:border-deadpunch-red focus:ring-deadpunch-red"
+          className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark text-white focus:border-deadpunch-red focus:ring-deadpunch-red"
           placeholder="Enter name"
         />
       </div>
