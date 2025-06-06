@@ -43,7 +43,7 @@ export const navCategories = [
       { name: "Journals", path: "/training-tools/journals" },
       { name: "Stickers", path: "/training-tools/stickers" },
       { name: "Accessories", path: "/training-tools/accessories" },
-      { name: "Score Keeper & Rack Generator", path: "/training-tools/pool-tools", isActive: true }
+      { name: "Score Keeper & Rack Generator", path: "/pool-tools", isActive: true }
     ]
   }
 ];
