@@ -85,23 +85,23 @@ const HeroSection = () => {
               The Future of Sports
             </p>
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight text-deadpunch-gray-light">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight text-white">
             <span className="block mb-2">COMING SOON</span>
             
             {/* Definition Block - Added Here */}
             <div className="max-w-2xl mx-auto my-4 px-5 py-3 bg-deadpunch-dark-lighter/50 border border-deadpunch-red/20 rounded-md backdrop-blur-sm">
-              <p className="text-base md:text-lg text-deadpunch-gray-light italic">
+              <p className="text-base md:text-lg text-white italic">
                 <span className="text-deadpunch-red font-medium">The zone</span> is a state of complete focus and peak performance. In the billiards world, this heightened state of consciousness is known as <span className="text-deadpunch-red font-medium">deadpunch</span>.
               </p>
             </div>
             
             <span className="block text-deadpunch-red text-3xl md:text-4xl lg:text-5xl">Get ready. The game is about to change.</span>
           </h1>
-          <p className="text-deadpunch-gray-light text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+          <p className="text-white text-lg md:text-xl mb-8 max-w-2xl mx-auto">
             Be the first to know. Sign up to receive exclusive updates on early access when Deadpunch launches.
           </p>
           <div className="flex justify-center items-center">
-            <a href="#notify" className="btn-primary animate-reveal delay-300 bg-deadpunch-red hover:bg-deadpunch-red-hover text-deadpunch-gray-light">
+            <a href="#notify" className="btn-primary animate-reveal delay-300 bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
               Notify Me
             </a>
           </div>

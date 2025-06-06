@@ -58,7 +58,7 @@ const Index = () => {
           return (
             <div 
               key={i} 
-              className="absolute bg-deadpunch-gray-light rounded-full animate-pulse"
+              className="absolute bg-white rounded-full animate-pulse"
               style={{
                 width: `${size}px`,
                 height: `${size}px`,
@@ -117,7 +117,7 @@ const Index = () => {
                   href="https://www.tiktok.com/@deadpunch.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
+                  className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
                   aria-label="TikTok"
                 >
                   <TikTokIcon size={64} />
@@ -138,17 +138,17 @@ const Index = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
                       <TikTokIcon size={32} />
-                      <span className="text-deadpunch-gray-light text-sm font-medium ml-2">@deadpunch.com</span>
+                      <span className="text-white text-sm font-medium ml-2">@deadpunch.com</span>
                     </div>
                   </div>
                   <div className="p-4">
-                    <h4 className="text-deadpunch-gray-light font-medium mb-1">DEADPUNCH on TikTok</h4>
-                    <p className="text-deadpunch-gray-light text-sm mb-3">
+                    <h4 className="text-white font-medium mb-1">DEADPUNCH on TikTok</h4>
+                    <p className="text-white text-sm mb-3">
                       Check out our latest videos and updates on TikTok
                     </p>
                     <Button 
                       variant="default" 
-                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-deadpunch-gray-light"
+                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-white"
                       onClick={() => window.open('https://www.tiktok.com/@deadpunch.com', '_blank')}
                     >
                       Visit our TikTok
@@ -160,7 +160,7 @@ const Index = () => {
           </div>
           
           {/* Contact info in the middle */}
-          <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0 text-deadpunch-gray-light">
+          <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0 text-white">
             <a href="mailto:contact@deadpunch.com" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
               <Mail size={16} className="mr-2" />
               <span className="text-sm">contact@deadpunch.com</span>
@@ -176,7 +176,7 @@ const Index = () => {
           </div>
           
           <div className="flex flex-col items-center md:items-end">
-            <div className="text-deadpunch-gray-light text-sm">
+            <div className="text-white text-sm">
               &copy; {new Date().getFullYear()} Deadpunch™. All rights reserved.
             </div>
           </div>

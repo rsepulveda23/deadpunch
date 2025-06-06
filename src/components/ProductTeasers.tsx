@@ -44,13 +44,13 @@ const ProductTeasers = () => {
               Deadpunch Drops
             </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 animate-reveal text-deadpunch-gray-light">
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 animate-reveal text-white">
             What's <span className="text-deadpunch-red">Coming</span>
           </h2>
-          <p className="text-deadpunch-gray-light text-lg md:text-xl font-display font-medium mb-4 animate-reveal max-w-4xl mx-auto">
+          <p className="text-white text-lg md:text-xl font-display font-medium mb-4 animate-reveal max-w-4xl mx-auto">
             The ultimate gear and mindset brand for competitive pool players
           </p>
-          <p className="text-deadpunch-gray-light text-lg animate-reveal delay-100 max-w-2xl mx-auto">
+          <p className="text-white text-lg animate-reveal delay-100 max-w-2xl mx-auto">
             Preview our upcoming premium gear collection dropping soon.
           </p>
           
@@ -68,8 +68,8 @@ const ProductTeasers = () => {
                   <div className="w-20 h-20 flex items-center justify-center rounded-full bg-deadpunch-red/10 mb-6 mt-2 ring-2 ring-deadpunch-red/10 group-hover:ring-deadpunch-red/40 group-hover:bg-deadpunch-red/20 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(225,60,60,0.3)]">
                     {product.icon}
                   </div>
-                  <h3 className="text-xl font-display font-semibold mb-3 text-deadpunch-gray-light group-hover:text-deadpunch-gray-light group-hover:drop-shadow-[0_0_2px_rgba(225,60,60,0.5)] transition-all duration-300">{product.title}</h3>
-                  <p className="text-deadpunch-gray-light group-hover:text-deadpunch-gray-light transition-colors duration-300">{product.description}</p>
+                  <h3 className="text-xl font-display font-semibold mb-3 text-white group-hover:text-white group-hover:drop-shadow-[0_0_2px_rgba(225,60,60,0.5)] transition-all duration-300">{product.title}</h3>
+                  <p className="text-white group-hover:text-white transition-colors duration-300">{product.description}</p>
                 </CardContent>
               </Card>
             </div>

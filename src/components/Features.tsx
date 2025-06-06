@@ -14,8 +14,8 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, del
     <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-deadpunch-red/10 text-deadpunch-red mb-4 border border-deadpunch-red/10 group-hover:border-deadpunch-red/30 group-hover:shadow-[0_0_10px_rgba(225,60,60,0.2)] transition-all duration-300">
       {icon}
     </div>
-    <h3 className="text-xl font-display font-semibold mb-2 text-deadpunch-gray-light group-hover:text-deadpunch-gray-light transition-colors duration-300">{title}</h3>
-    <p className="text-deadpunch-gray-light group-hover:text-deadpunch-gray-light transition-colors duration-300">{description}</p>
+    <h3 className="text-xl font-display font-semibold mb-2 text-white group-hover:text-white transition-colors duration-300">{title}</h3>
+    <p className="text-white group-hover:text-white transition-colors duration-300">{description}</p>
   </div>
 );
 
@@ -51,10 +51,10 @@ const Features = () => {
               The DEADPUNCH Advantage
             </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 animate-reveal text-deadpunch-gray-light">
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 animate-reveal text-white">
             Unleash Your <span className="text-deadpunch-red">Next Level</span>
           </h2>
-          <p className="text-deadpunch-gray-light text-lg animate-reveal delay-100">
+          <p className="text-white text-lg animate-reveal delay-100">
             DEADPUNCH combines cutting-edge technology with uncompromising design to 
             deliver a sporting experience that pushes boundaries.
           </p>
