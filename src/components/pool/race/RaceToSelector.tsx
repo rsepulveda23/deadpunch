@@ -12,7 +12,7 @@ interface RaceToSelectorProps {
 export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
   return (
     <div className="text-center">
-      <Label htmlFor="raceValue" className="text-lg font-semibold block mb-2 text-white">Race To</Label>
+      <Label htmlFor="raceValue" className="text-lg font-semibold block mb-2">Race To</Label>
       
       <div className="flex items-center justify-center">
         <div className="flex-1 flex justify-end">
@@ -20,7 +20,6 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
             size="icon" 
             variant="outline"
             onClick={() => onChange(Math.max(1, value - 1))}
-            className="border-gray-700 text-white hover:border-deadpunch-red hover:text-white hover:bg-gray-700 bg-gray-800"
           >
             <Minus size={16} />
           </Button>
