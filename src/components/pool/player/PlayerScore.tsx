@@ -27,11 +27,11 @@ export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScorePro
   return (
     <div className={cn(
       "p-4 rounded-lg text-center relative overflow-hidden",
-      "glass border-2 border-white/10 hover:border-white/30 transition-all duration-300",
-      hasWon ? "bg-deadpunch-red/20 animate-pulse-glow" : ""
+      "glass border-2 border-deadpunch-gray-dark hover:border-deadpunch-red/30 transition-all duration-300 bg-deadpunch-dark-lighter",
+      hasWon ? "bg-deadpunch-red/20 animate-pulse-glow border-deadpunch-red" : ""
     )}>
-      <h3 className="text-xl font-semibold mb-1 truncate">{player.name}</h3>
-      <div className="text-4xl font-display font-bold mb-3 flex justify-center">
+      <h3 className="text-xl font-semibold mb-1 truncate text-deadpunch-gray-light">{player.name}</h3>
+      <div className="text-4xl font-display font-bold mb-3 flex justify-center text-deadpunch-gray-light">
         {player.score}
         {hasWon && (
           <span className="ml-2 text-deadpunch-red">🏆</span>
@@ -42,7 +42,7 @@ export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScorePro
           size="icon" 
           variant="outline"
           onClick={() => onScoreChange(-1)}
-          className="hover:border-white/50 hover:bg-deadpunch-dark/50"
+          className="border-deadpunch-gray-dark text-deadpunch-gray-light hover:border-deadpunch-red hover:text-deadpunch-red hover:bg-deadpunch-dark bg-deadpunch-dark-lighter"
         >
           <Minus size={18} />
         </Button>
@@ -50,7 +50,7 @@ export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScorePro
           size="icon" 
           onClick={() => onScoreChange(1)}
           className={cn(
-            "bg-deadpunch-red hover:bg-deadpunch-red-hover",
+            "bg-deadpunch-red hover:bg-deadpunch-red-hover text-white",
             hasWon && "opacity-50 cursor-not-allowed"
           )}
           disabled={hasWon}

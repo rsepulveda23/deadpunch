@@ -10,15 +10,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-white/30 active:translate-y-0",
+        default: "bg-deadpunch-red text-white shadow-md hover:bg-deadpunch-red-hover hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-deadpunch-red/30 active:translate-y-0",
         destructive:
           "bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/90 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-white/30 active:translate-y-0",
         outline:
-          "border-2 border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover:translate-y-[-2px] hover:scale-105 hover:shadow-md hover:border-white/50 active:translate-y-0",
+          "border-2 border-deadpunch-gray-dark bg-deadpunch-dark-lighter text-deadpunch-gray-light shadow-sm hover:bg-deadpunch-gray hover:text-deadpunch-red hover:translate-y-[-2px] hover:scale-105 hover:shadow-md hover:border-deadpunch-red active:translate-y-0",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-md hover:bg-secondary/80 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-white/20 active:translate-y-0",
-        ghost: "hover:bg-accent hover:text-accent-foreground hover:translate-y-[-1px] hover:scale-105 hover:ring-1 hover:ring-white/20 active:translate-y-0",
-        link: "text-primary underline-offset-4 hover:underline hover:translate-y-[-1px] hover:text-white active:translate-y-0",
+          "bg-deadpunch-gray text-deadpunch-gray-light shadow-md hover:bg-deadpunch-gray/80 hover:translate-y-[-2px] hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-deadpunch-red/20 active:translate-y-0",
+        ghost: "text-deadpunch-gray-light hover:bg-deadpunch-dark-lighter hover:text-deadpunch-red hover:translate-y-[-1px] hover:scale-105 hover:ring-1 hover:ring-deadpunch-red/20 active:translate-y-0",
+        link: "text-deadpunch-red underline-offset-4 hover:underline hover:translate-y-[-1px] hover:text-deadpunch-red-hover active:translate-y-0",
       },
       size: {
         default: "h-10 px-6 py-2",
