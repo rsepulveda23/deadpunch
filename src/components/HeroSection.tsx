@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -84,7 +85,7 @@ const HeroSection = () => {
               The Future of Sports
             </p>
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight text-deadpunch-gray-light">
             <span className="block mb-2">COMING SOON</span>
             
             {/* Definition Block - Added Here */}
@@ -100,7 +101,7 @@ const HeroSection = () => {
             Be the first to know. Sign up to receive exclusive updates on early access when Deadpunch launches.
           </p>
           <div className="flex justify-center items-center">
-            <a href="#notify" className="btn-primary animate-reveal delay-300 bg-deadpunch-red hover:bg-deadpunch-red-hover">
+            <a href="#notify" className="btn-primary animate-reveal delay-300 bg-deadpunch-red hover:bg-deadpunch-red-hover text-deadpunch-gray-light">
               Notify Me
             </a>
           </div>

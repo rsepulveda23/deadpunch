@@ -43,7 +43,7 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Generate stars for night time
+  // Generate stars for night time - Fixed to use proper themed colors
   const renderStars = () => {
     if (!isNightTime) return null;
     
@@ -58,7 +58,7 @@ const Index = () => {
           return (
             <div 
               key={i} 
-              className="absolute bg-white rounded-full animate-pulse"
+              className="absolute bg-deadpunch-gray-light rounded-full animate-pulse"
               style={{
                 width: `${size}px`,
                 height: `${size}px`,
@@ -99,7 +99,7 @@ const Index = () => {
       {/* Add the ChatInterface component */}
       <ChatInterface />
       
-      <footer className="py-6 border-t border-border">
+      <footer className="py-6 border-t border-deadpunch-gray-dark bg-deadpunch-dark">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <div className="logo-container mr-4">
@@ -138,17 +138,17 @@ const Index = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
                       <TikTokIcon size={32} />
-                      <span className="text-white text-sm font-medium ml-2">@deadpunch.com</span>
+                      <span className="text-deadpunch-gray-light text-sm font-medium ml-2">@deadpunch.com</span>
                     </div>
                   </div>
                   <div className="p-4">
-                    <h4 className="text-white font-medium mb-1">DEADPUNCH on TikTok</h4>
+                    <h4 className="text-deadpunch-gray-light font-medium mb-1">DEADPUNCH on TikTok</h4>
                     <p className="text-deadpunch-gray-light text-sm mb-3">
                       Check out our latest videos and updates on TikTok
                     </p>
                     <Button 
                       variant="default" 
-                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover"
+                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-white"
                       onClick={() => window.open('https://www.tiktok.com/@deadpunch.com', '_blank')}
                     >
                       Visit our TikTok
@@ -172,7 +172,7 @@ const Index = () => {
             <Link to="/training-tools/pool-tools" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
               <Target size={16} className="mr-2" />
               <span className="text-sm">Pool Tools</span>
-            </Link>
+            </a>
           </div>
           
           <div className="flex flex-col items-center md:items-end">
