@@ -61,6 +61,33 @@ function App() {
                 <Route path="/settings/tournaments" element={<ComingSoon />} />
                 <Route path="/settings/privacy" element={<ComingSoon />} />
                 <Route path="/settings/appearance" element={<ComingSoon />} />
+                
+                {/* Men's category routes */}
+                <Route path="/men/hats" element={<ComingSoon />} />
+                <Route path="/men/hoodies-jackets" element={<ComingSoon />} />
+                <Route path="/men/t-shirts" element={<ComingSoon />} />
+                <Route path="/men/accessories" element={<ComingSoon />} />
+                <Route path="/men/stickers" element={<ComingSoon />} />
+                
+                {/* Women's category routes */}
+                <Route path="/women/hats" element={<ComingSoon />} />
+                <Route path="/women/hoodies-jackets" element={<ComingSoon />} />
+                <Route path="/women/t-shirts" element={<ComingSoon />} />
+                <Route path="/women/accessories" element={<ComingSoon />} />
+                <Route path="/women/stickers" element={<ComingSoon />} />
+                
+                {/* New Arrivals category routes */}
+                <Route path="/new-arrivals/hats" element={<ComingSoon />} />
+                <Route path="/new-arrivals/hoodies-jackets" element={<ComingSoon />} />
+                <Route path="/new-arrivals/t-shirts" element={<ComingSoon />} />
+                <Route path="/new-arrivals/accessories" element={<ComingSoon />} />
+                <Route path="/new-arrivals/stickers" element={<ComingSoon />} />
+                
+                {/* Training Tools category routes */}
+                <Route path="/training-tools/journals" element={<ComingSoon />} />
+                <Route path="/training-tools/stickers" element={<ComingSoon />} />
+                <Route path="/training-tools/accessories" element={<ComingSoon />} />
+                
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
