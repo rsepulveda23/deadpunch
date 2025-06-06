@@ -148,7 +148,7 @@ const Index = () => {
                     </p>
                     <Button 
                       variant="default" 
-                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-white"
+                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-deadpunch-gray-light"
                       onClick={() => window.open('https://www.tiktok.com/@deadpunch.com', '_blank')}
                     >
                       Visit our TikTok
@@ -172,7 +172,7 @@ const Index = () => {
             <Link to="/training-tools/pool-tools" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
               <Target size={16} className="mr-2" />
               <span className="text-sm">Pool Tools</span>
-            </a>
+            </Link>
           </div>
           
           <div className="flex flex-col items-center md:items-end">
