@@ -8,7 +8,6 @@ const AboutSection = () => {
       <div className="absolute inset-0 bg-gradient-radial from-deadpunch-red/5 to-transparent opacity-50"></div>
       
       <div className="container mx-auto px-4">
-        {/* Section Header */}
         <div className="text-center mb-20 max-w-3xl mx-auto">
           <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm">
             <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
@@ -20,7 +19,6 @@ const AboutSection = () => {
           </h2>
         </div>
         
-        {/* Main Content Box */}
         <div className="max-w-4xl mx-auto bg-deadpunch-dark-lighter/50 border border-deadpunch-red/20 backdrop-blur-sm p-8 md:p-12 rounded-xl mb-20 animate-reveal">
           <h3 className="text-3xl font-display font-bold mb-8 text-center tracking-wide text-deadpunch-gray-light">ABOUT DEADPUNCH</h3>
           
@@ -43,7 +41,6 @@ const AboutSection = () => {
           <div className="h-px w-full max-w-md mx-auto bg-gradient-to-r from-transparent via-deadpunch-red/30 to-transparent mb-8"></div>
         </div>
         
-        {/* Three Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div className="bg-deadpunch-dark-lighter/50 border border-deadpunch-red/20 backdrop-blur-sm p-8 rounded-xl relative animate-reveal delay-100 transform transition-all duration-300 hover:-translate-y-2">
             <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-deadpunch-red rounded-full flex items-center justify-center shadow-lg shadow-deadpunch-red/30">
