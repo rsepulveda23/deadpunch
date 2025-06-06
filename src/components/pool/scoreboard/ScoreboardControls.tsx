@@ -10,12 +10,6 @@ interface ScoreboardControlsProps {
   onResetAll: () => void;
 }
 
-/**
- * ScoreboardControls Component
- * 
- * Provides the race-to selector and reset buttons for the scoreboard.
- * Allows adjusting the winning score target and resetting scoreboard state.
- */
 export const ScoreboardControls = ({ 
   raceValue, 
   onRaceValueChange, 
@@ -33,7 +27,7 @@ export const ScoreboardControls = ({
         <Button 
           onClick={onResetScores}
           variant="outline"
-          className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-white bg-deadpunch-dark-lighter hover:bg-deadpunch-dark"
+          className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-white hover:bg-deadpunch-dark bg-deadpunch-dark-lighter"
         >
           Reset Scores
         </Button>

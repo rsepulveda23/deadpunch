@@ -24,7 +24,7 @@ export const GameTypeSelector = ({ gameType, onChange }: GameTypeSelectorProps) 
             id="r1" 
             className="border-deadpunch-gray-dark text-deadpunch-red data-[state=checked]:bg-deadpunch-red data-[state=checked]:border-deadpunch-red"
           />
-          <Label htmlFor="r1" className="text-white">9-Ball</Label>
+          <Label htmlFor="r1" className="text-white cursor-pointer">9-Ball</Label>
         </div>
         <div className="flex items-center space-x-2">
           <RadioGroupItem 
@@ -32,7 +32,7 @@ export const GameTypeSelector = ({ gameType, onChange }: GameTypeSelectorProps) 
             id="r2" 
             className="border-deadpunch-gray-dark text-deadpunch-red data-[state=checked]:bg-deadpunch-red data-[state=checked]:border-deadpunch-red"
           />
-          <Label htmlFor="r2" className="text-white">10-Ball</Label>
+          <Label htmlFor="r2" className="text-white cursor-pointer">10-Ball</Label>
         </div>
         <div className="flex items-center space-x-2">
           <RadioGroupItem 
@@ -40,7 +40,7 @@ export const GameTypeSelector = ({ gameType, onChange }: GameTypeSelectorProps) 
             id="r3" 
             className="border-deadpunch-gray-dark text-deadpunch-red data-[state=checked]:bg-deadpunch-red data-[state=checked]:border-deadpunch-red"
           />
-          <Label htmlFor="r3" className="text-white">8-Ball</Label>
+          <Label htmlFor="r3" className="text-white cursor-pointer">8-Ball</Label>
         </div>
       </RadioGroup>
     </div>
