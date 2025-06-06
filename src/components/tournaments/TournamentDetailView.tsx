@@ -5,6 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { 
   Calendar, 
   Clock, 
   MapPin, 
@@ -14,7 +25,8 @@ import {
   Phone, 
   Globe,
   Trophy,
-  Edit
+  Edit,
+  Trash
 } from 'lucide-react';
 import TournamentEditForm from './TournamentEditForm';
 
@@ -43,9 +55,10 @@ interface Tournament {
 interface TournamentDetailViewProps {
   tournament: Tournament;
   onUpdate: () => void;
+  onDelete: () => void;
 }
 
-const TournamentDetailView: React.FC<TournamentDetailViewProps> = ({ tournament, onUpdate }) => {
+const TournamentDetailView: React.FC<TournamentDetailViewProps> = ({ tournament, onUpdate, onDelete }) => {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const isOwner = user?.id === tournament.user_id;
@@ -113,13 +126,46 @@ const TournamentDetailView: React.FC<TournamentDetailViewProps> = ({ tournament,
             </div>
             
             {isOwner && (
-              <Button
-                onClick={() => setIsEditing(true)}
-                className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
-              >
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Tournament
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Tournament
+                </Button>
+                
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="destructive"
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      <Trash className="h-4 w-4 mr-2" />
+                      Delete
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-white">Delete Tournament</AlertDialogTitle>
+                      <AlertDialogDescription className="text-deadpunch-gray-light">
+                        Are you sure you want to delete "{tournament.name}"? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="bg-deadpunch-gray-dark text-white hover:bg-deadpunch-gray border-deadpunch-gray-dark">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={onDelete}
+                        className="bg-red-600 hover:bg-red-700 text-white"
+                      >
+                        Delete Tournament
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             )}
           </div>
         </CardHeader>

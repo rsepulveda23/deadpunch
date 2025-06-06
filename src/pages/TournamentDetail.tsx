@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -147,8 +148,6 @@ const TournamentDetail = () => {
     );
   }
 
-  const isOwner = user && tournament.user_id === user.id;
-
   return (
     <div className="min-h-screen bg-deadpunch-dark text-white">
       <Navbar />
@@ -158,6 +157,7 @@ const TournamentDetail = () => {
         <TournamentDetailView 
           tournament={tournament} 
           onUpdate={fetchTournament}
+          onDelete={handleDelete}
         />
       </div>
     </div>
