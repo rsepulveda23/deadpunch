@@ -46,28 +46,18 @@ const isStriped = (number: number) => number >= 9 && number <= 15;
  * Renders a visual representation of a pool ball with the appropriate:
  * - Color based on standard pool ball colors
  * - Pattern (solid or striped) based on ball number
- * - Number displayed in a white circle for readability
+ * - Number displayed without white background for dark theme consistency
  * 
  * Size can be controlled via the sizeClass prop for different game types.
  */
 export const PoolBall = ({ number, sizeClass = "w-10 h-10 md:w-11 md:h-11", className }: PoolBallProps) => {
   const striped = isStriped(number);
 
-  // Adjust the number circle size based on the overall ball size
-  const getNumberCircleSize = () => {
-    if (sizeClass.includes("w-12")) {
-      return "w-7 h-7 md:w-8 md:h-8"; // Larger number circle for larger balls
-    } else if (sizeClass.includes("w-11")) {
-      return "w-6 h-6 md:w-7 md:h-7"; // Medium number circle
-    }
-    return "w-6 h-6 md:w-6 md:h-6"; // Default number circle size
-  };
-
   return (
     <div className={cn(
       sizeClass,
       "rounded-full flex items-center justify-center",
-      "border border-white/20 shadow-lg",
+      "border-2 border-deadpunch-gray-dark shadow-lg",
       "relative overflow-hidden",
       ballColors[number],
       className
@@ -75,20 +65,15 @@ export const PoolBall = ({ number, sizeClass = "w-10 h-10 md:w-11 md:h-11", clas
       {/* Stripe pattern for balls 9-15 */}
       {striped && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="bg-white w-full h-1/3 absolute"></div>
+          <div className="bg-deadpunch-dark-lighter w-full h-1/3 absolute"></div>
         </div>
       )}
       
-      {/* Number display - consistent circular white background for all balls */}
+      {/* Number display - no white background, use ball's natural color */}
       <div className="z-10 relative flex items-center justify-center">
-        <div className={cn(
-          getNumberCircleSize(),
-          "bg-white rounded-full flex items-center justify-center"
-        )}>
-          <span className="font-bold text-sm md:text-base text-black">
-            {number}
-          </span>
-        </div>
+        <span className="font-bold text-lg md:text-xl drop-shadow-lg">
+          {number}
+        </span>
       </div>
     </div>
   );

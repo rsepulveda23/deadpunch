@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import TimeIndicator from "@/components/TimeIndicator";
-import { cn } from "@/lib/utils";
 
 /**
  * PoolTools Page
@@ -22,7 +21,7 @@ import { cn } from "@/lib/utils";
  */
 const PoolTools = () => {
   return (
-    <>
+    <div className="min-h-screen bg-deadpunch-dark">
       <Helmet>
         <title>Pool Tools | DEADPUNCH</title>
       </Helmet>
@@ -33,7 +32,7 @@ const PoolTools = () => {
         <div className="text-center mb-12 mt-4">
           <div className="flex justify-center mb-4">
             <Link to="/">
-              <Button variant="outline" className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-deadpunch-red">
+              <Button variant="outline" className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-deadpunch-red bg-deadpunch-dark-lighter">
                 <Home size={18} className="mr-2" />
                 Back to Home
               </Button>
@@ -44,7 +43,7 @@ const PoolTools = () => {
               Training Tools
             </p>
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
             Pool Game <span className="text-deadpunch-red">Tools</span>
           </h1>
           <p className="max-w-2xl mx-auto text-deadpunch-gray-light">
@@ -61,7 +60,7 @@ const PoolTools = () => {
           <RackGenerator />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
