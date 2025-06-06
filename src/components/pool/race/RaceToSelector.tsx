@@ -26,7 +26,7 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
             size="icon" 
             variant="outline"
             onClick={() => onChange(Math.max(1, value - 1))}
-            className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-deadpunch-red hover:bg-deadpunch-dark bg-deadpunch-dark-lighter"
+            className="border-deadpunch-gray-dark text-white hover:border-deadpunch-red hover:text-white hover:bg-deadpunch-dark bg-deadpunch-dark-lighter"
           >
             <Minus size={16} />
           </Button>
