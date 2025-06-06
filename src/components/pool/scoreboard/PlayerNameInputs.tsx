@@ -23,7 +23,7 @@ export const PlayerNameInputs = ({
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
-        <Label htmlFor="player1Name" className="font-medium">Player 1</Label>
+        <Label htmlFor="player1Name" className="font-medium text-gray-400">Player 1</Label>
         <Input
           id="player1Name"
           value={player1.name}
@@ -34,7 +34,7 @@ export const PlayerNameInputs = ({
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="player2Name" className="font-medium">Player 2</Label>
+        <Label htmlFor="player2Name" className="font-medium text-gray-400">Player 2</Label>
         <Input
           id="player2Name"
           value={player2.name}

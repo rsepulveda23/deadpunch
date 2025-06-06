@@ -20,11 +20,11 @@ export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScorePro
   return (
     <div className={cn(
       "p-4 rounded-lg text-center relative overflow-hidden",
-      "border-2 hover:border-deadpunch-red/30 transition-all duration-300 bg-card",
-      hasWon ? "bg-deadpunch-red/20 animate-pulse-glow border-deadpunch-red" : "border-border"
+      "border-2 hover:border-deadpunch-red/30 transition-all duration-300 bg-deadpunch-dark-lighter",
+      hasWon ? "bg-deadpunch-red/20 animate-pulse-glow border-deadpunch-red" : "border-deadpunch-gray-dark"
     )}>
-      <h3 className="text-xl font-semibold mb-1 truncate">{player.name}</h3>
-      <div className="text-4xl font-display font-bold mb-3 flex justify-center">
+      <h3 className="text-xl font-semibold mb-1 truncate text-gray-400">{player.name}</h3>
+      <div className="text-4xl font-display font-bold mb-3 flex justify-center text-gray-400">
         {player.score}
         {hasWon && (
           <span className="ml-2 text-deadpunch-red">🏆</span>
@@ -42,7 +42,7 @@ export const PlayerScore = ({ player, raceValue, onScoreChange }: PlayerScorePro
           size="icon" 
           onClick={() => onScoreChange(1)}
           className={cn(
-            "bg-deadpunch-red hover:bg-deadpunch-red-hover text-white",
+            "bg-deadpunch-red hover:bg-deadpunch-red-hover text-gray-400",
             hasWon && "opacity-50 cursor-not-allowed"
           )}
           disabled={hasWon}
