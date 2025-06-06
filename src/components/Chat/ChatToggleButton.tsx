@@ -18,7 +18,7 @@ const ChatToggleButton = ({ isOpen, showHint, onClick }: ChatToggleButtonProps) 
   return (
     <Button 
       onClick={onClick} 
-      className="rounded-full h-14 w-14 shadow-lg hover:shadow-xl bg-deadpunch-red hover:bg-deadpunch-red-hover transition-all duration-300 relative"
+      className="rounded-full h-14 w-14 shadow-lg hover:shadow-xl bg-deadpunch-red hover:bg-deadpunch-red-hover transition-all duration-300 relative text-white"
       aria-label="Toggle chat"
     >
       {isOpen ? (

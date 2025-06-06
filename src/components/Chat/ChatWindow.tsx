@@ -26,7 +26,7 @@ const ChatWindow = ({ messages, isLoading, messagesEndRef }: ChatWindowProps) =>
             className={`max-w-[80%] rounded-lg p-3 ${
               message.isUser
                 ? 'bg-deadpunch-red text-white'
-                : 'bg-deadpunch-dark-lighter text-white'
+                : 'bg-gray-900 text-white'
             }`}
           >
             <p className="break-words">{message.content}</p>
@@ -40,7 +40,7 @@ const ChatWindow = ({ messages, isLoading, messagesEndRef }: ChatWindowProps) =>
       {/* Loading indicator - only shows when waiting for API response */}
       {isLoading && (
         <div className="flex justify-start">
-          <div className="max-w-[80%] rounded-lg p-3 bg-deadpunch-dark-lighter text-white">
+          <div className="max-w-[80%] rounded-lg p-3 bg-gray-900 text-white">
             <div className="flex space-x-2 items-center">
               <div className="w-2 h-2 rounded-full bg-deadpunch-red animate-pulse"></div>
               <div className="w-2 h-2 rounded-full bg-deadpunch-red animate-pulse delay-75"></div>

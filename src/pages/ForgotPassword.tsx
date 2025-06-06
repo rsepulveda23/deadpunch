@@ -40,9 +40,9 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-deadpunch-dark p-4">
+    <div className="flex min-h-screen items-center justify-center bg-black p-4">
       <div className="w-full max-w-md">
-        <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
+        <Card className="bg-gray-900 border-gray-800">
           <CardHeader className="space-y-1">
             <div className="flex justify-center mb-6">
               <img 
@@ -52,7 +52,7 @@ const ForgotPassword = () => {
               />
             </div>
             <CardTitle className="text-2xl text-center font-bold text-white">Reset Your Password</CardTitle>
-            <CardDescription className="text-deadpunch-gray-light text-center">
+            <CardDescription className="text-gray-400 text-center">
               {isSubmitted 
                 ? "We've sent you an email with a link to reset your password" 
                 : "Enter your email to receive a password reset link"}
@@ -70,12 +70,12 @@ const ForgotPassword = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-deadpunch-dark border-deadpunch-gray text-white"
+                    className="bg-deadpunch-dark border-deadpunch-gray text-gray-400"
                   />
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover"
+                  className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-white"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Sending..." : "Send Reset Link"}
@@ -83,12 +83,12 @@ const ForgotPassword = () => {
               </form>
             ) : (
               <div className="space-y-4 py-4">
-                <p className="text-center text-deadpunch-gray-light">
+                <p className="text-center text-gray-400">
                   Check your email for the reset link. The link will expire in 24 hours.
                 </p>
                 <Button 
                   onClick={() => navigate('/auth')}
-                  className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover"
+                  className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-white"
                 >
                   Return to Sign In
                 </Button>

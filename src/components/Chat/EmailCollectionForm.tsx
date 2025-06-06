@@ -92,8 +92,8 @@ const EmailCollectionForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border-t border-deadpunch-gray-dark flex flex-col space-y-2">
-      <div className="flex items-center text-deadpunch-gray-light text-sm mb-1">
+    <form onSubmit={handleSubmit} className="p-4 border-t border-gray-800 flex flex-col space-y-2">
+      <div className="flex items-center text-gray-400 text-sm mb-1">
         <Mail className="h-4 w-4 mr-1" />
         <span>Please provide your email to continue</span>
       </div>
@@ -110,7 +110,7 @@ const EmailCollectionForm = ({
         <Button 
           type="submit" 
           disabled={isSubmitting}
-          className="bg-deadpunch-red hover:bg-deadpunch-red-hover whitespace-nowrap"
+          className="bg-deadpunch-red hover:bg-deadpunch-red-hover whitespace-nowrap text-white"
         >
           {isSubmitting ? (
             <div className="flex items-center space-x-1">
@@ -123,7 +123,7 @@ const EmailCollectionForm = ({
           )}
         </Button>
       </div>
-      <p className="text-xs text-deadpunch-gray-light mt-1">
+      <p className="text-xs text-gray-400 mt-1">
         We'll use this to keep you updated on DEADPUNCH products and updates.
       </p>
     </form>

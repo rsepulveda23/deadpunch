@@ -16,12 +16,12 @@ const ChatHint = ({ show }: ChatHintProps) => {
   
   return (
     <div className="absolute bottom-16 right-0 transform transition-all duration-300 ease-in-out">
-      <div className="bg-deadpunch-dark text-white rounded-lg p-3 shadow-lg mb-2 max-w-[200px] border border-deadpunch-gray-dark">
+      <div className="bg-black text-white rounded-lg p-3 shadow-lg mb-2 max-w-[200px] border border-gray-800">
         <div className="flex items-center gap-2 mb-1">
           <HelpCircle size={16} className="text-deadpunch-red" />
           <span className="font-medium text-sm">Have questions?</span>
         </div>
-        <p className="text-xs text-deadpunch-gray-light">Click to chat with us!</p>
+        <p className="text-xs text-gray-400">Click to chat with us!</p>
       </div>
     </div>
   );

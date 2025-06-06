@@ -30,7 +30,7 @@ const ComingSoon = ({ category: propCategory, subcategory: propSubcategory }: Co
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-deadpunch-dark flex flex-col">
+    <div className="min-h-screen bg-black flex flex-col">
       <Navbar />
       <ComingSoonContent 
         category={category}

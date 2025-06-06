@@ -26,7 +26,7 @@ const ChatInput = ({ onSubmit, isLoading }: ChatInputProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border-t border-deadpunch-gray-dark flex space-x-2">
+    <form onSubmit={handleSubmit} className="p-4 border-t border-gray-800 flex space-x-2">
       <Input
         type="text"
         value={inputValue}
@@ -38,7 +38,7 @@ const ChatInput = ({ onSubmit, isLoading }: ChatInputProps) => {
       <Button 
         type="submit" 
         disabled={isLoading}
-        className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
+        className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white"
       >
         <Send className="h-4 w-4" />
       </Button>

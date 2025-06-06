@@ -14,7 +14,7 @@ interface ChatHeaderProps {
  */
 const ChatHeader = ({ onClose }: ChatHeaderProps) => {
   return (
-    <div className="p-4 bg-deadpunch-dark-lighter border-b border-deadpunch-gray-dark flex justify-between items-center">
+    <div className="p-4 bg-gray-900 border-b border-gray-800 flex justify-between items-center">
       <div className="flex items-center space-x-2">
         <div className="logo-container">
           <img 
@@ -29,7 +29,7 @@ const ChatHeader = ({ onClose }: ChatHeaderProps) => {
         variant="ghost" 
         size="icon" 
         onClick={onClose}
-        className="text-deadpunch-gray-light hover:text-white"
+        className="text-gray-400 hover:text-white"
       >
         <X className="h-4 w-4" />
       </Button>

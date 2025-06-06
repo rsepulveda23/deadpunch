@@ -114,7 +114,7 @@ const ChatInterface = () => {
 
       {/* Chat window - only displayed when isOpen is true */}
       {isOpen && (
-        <div className="absolute bottom-16 right-0 w-80 sm:w-96 h-[500px] bg-deadpunch-dark rounded-lg shadow-2xl flex flex-col border border-deadpunch-gray-dark overflow-hidden transition-all duration-300 ease-in-out">
+        <div className="absolute bottom-16 right-0 w-80 sm:w-96 h-[500px] bg-black rounded-lg shadow-2xl flex flex-col border border-gray-800 overflow-hidden transition-all duration-300 ease-in-out">
           {/* Chat header with brand logo and close button */}
           <ChatHeader onClose={toggleChat} />
 

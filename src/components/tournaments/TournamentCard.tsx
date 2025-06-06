@@ -31,7 +31,7 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
 
   return (
     <Link to={`/tournaments/${tournament.id}`}>
-      <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark hover:border-deadpunch-red transition-all duration-300 hover:scale-105 cursor-pointer h-full">
+      <Card className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-all duration-300 hover:scale-105 cursor-pointer h-full">
         <CardContent className="p-6">
           <div className="space-y-4">
             {/* Header */}
@@ -48,7 +48,7 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
             </div>
 
             {/* Date and Time */}
-            <div className="flex items-center text-deadpunch-gray-light">
+            <div className="flex items-center text-gray-400">
               <Calendar className="h-4 w-4 mr-2" />
               <span className="text-sm">
                 {formatDate(tournament.date)} at {formatTime(tournament.time)}
@@ -56,13 +56,13 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
             </div>
 
             {/* Location */}
-            <div className="flex items-center text-deadpunch-gray-light">
+            <div className="flex items-center text-gray-400">
               <MapPin className="h-4 w-4 mr-2" />
               <span className="text-sm line-clamp-1">
                 {tournament.location_name}, {tournament.city}, {tournament.state}
               </span>
               {tournament.distance && (
-                <span className="ml-auto text-xs bg-deadpunch-dark px-2 py-1 rounded">
+                <span className="ml-auto text-xs bg-black px-2 py-1 rounded">
                   {tournament.distance.toFixed(1)} mi
                 </span>
               )}
@@ -70,7 +70,7 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
 
             {/* Entry Fee and Prize */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-deadpunch-gray-light">
+              <div className="flex items-center text-gray-400">
                 <DollarSign className="h-4 w-4 mr-1" />
                 <span className="text-sm">${tournament.entry_fee} entry</span>
               </div>

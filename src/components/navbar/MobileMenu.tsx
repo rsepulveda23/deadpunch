@@ -36,9 +36,9 @@ const MobileMenu = ({ categories, isMenuOpen, setIsMenuOpen, setNotifyDialogOpen
     <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
       <SheetContent 
         side="left" 
-        className="bg-deadpunch-dark border-deadpunch-gray-dark w-[300px] p-0 overflow-y-auto"
+        className="bg-black border-gray-800 w-[300px] p-0 overflow-y-auto"
       >
-        <div className="p-4 border-b border-deadpunch-gray-dark">
+        <div className="p-4 border-b border-gray-800">
           <div className="logo-container mx-auto w-32">
             <img 
               src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
@@ -50,14 +50,14 @@ const MobileMenu = ({ categories, isMenuOpen, setIsMenuOpen, setNotifyDialogOpen
         
         <div className="p-4 space-y-4">
           {categories.map((category) => (
-            <div key={category.name} className="border-b border-deadpunch-gray-dark pb-3">
+            <div key={category.name} className="border-b border-gray-800 pb-3">
               <div 
                 className="flex justify-between items-center py-2 cursor-pointer"
                 onClick={() => toggleCategory(category.name)}
               >
-                <span className="text-deadpunch-gray-light font-medium hover:text-deadpunch-red transition-colors duration-300">{category.name}</span>
+                <span className="text-gray-400 font-medium hover:text-deadpunch-red transition-colors duration-300">{category.name}</span>
                 <ChevronDown 
-                  className={`h-5 w-5 text-deadpunch-gray-light transition-transform hover:text-deadpunch-red ${
+                  className={`h-5 w-5 text-gray-400 transition-transform hover:text-deadpunch-red ${
                     expandedCategories.includes(category.name) ? 'rotate-180' : ''
                   }`} 
                 />
@@ -72,10 +72,10 @@ const MobileMenu = ({ categories, isMenuOpen, setIsMenuOpen, setNotifyDialogOpen
                   <div key={subcategory.name} className="py-1">
                     <Link 
                       to={subcategory.path} 
-                      className="block text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
+                      className="block text-gray-400 hover:text-deadpunch-red transition-colors duration-300"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <div className="text-deadpunch-gray-light hover:text-deadpunch-red">{subcategory.name}</div>
+                      <div className="text-gray-400 hover:text-deadpunch-red">{subcategory.name}</div>
                       {!subcategory.isActive && (
                         <p className="text-xs text-deadpunch-red">Coming Soon</p>
                       )}
@@ -88,7 +88,7 @@ const MobileMenu = ({ categories, isMenuOpen, setIsMenuOpen, setNotifyDialogOpen
           
           <Button 
             variant="default" 
-            className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-deadpunch-gray-light border-deadpunch-red w-full my-2"
+            className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white border-deadpunch-red w-full my-2"
             onClick={() => {
               setIsMenuOpen(false);
               setNotifyDialogOpen(true);

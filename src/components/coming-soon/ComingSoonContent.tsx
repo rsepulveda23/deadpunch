@@ -23,7 +23,7 @@ export const ComingSoonContent = ({
 }: ComingSoonContentProps) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4 mt-16">
-      <div className="w-full max-w-4xl mx-auto bg-deadpunch-dark-lighter rounded-lg shadow-2xl overflow-hidden">
+      <div className="w-full max-w-4xl mx-auto bg-gray-900 rounded-lg shadow-2xl overflow-hidden">
         <div className="p-8 md:p-12 text-center">
           <ComingSoonHeader category={category} subcategory={subcategory} />
           <ComingSoonActions 

@@ -32,7 +32,7 @@ const NavbarActions = ({
           trigger={
             <Button 
               variant="default" 
-              className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-deadpunch-gray-light border-deadpunch-red"
+              className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-white border-deadpunch-red"
             >
               Notify Me
             </Button>
@@ -50,7 +50,7 @@ const NavbarActions = ({
             <Button 
               variant="ghost"
               size="icon"
-              className="text-deadpunch-gray-light hover:text-deadpunch-red hover:bg-deadpunch-dark-lighter focus:outline-none transition-colors duration-300"
+              className="text-gray-400 hover:text-deadpunch-red hover:bg-gray-900 focus:outline-none transition-colors duration-300"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </Button>
