@@ -36,39 +36,57 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
       markers.current.forEach(marker => marker.remove());
       markers.current = [];
       map.current.remove();
+      map.current = null;
     }
 
     // Create map using Leaflet (free alternative to Mapbox)
-    if (typeof window !== 'undefined') {
-      import('leaflet').then(L => {
+    const initializeMap = async () => {
+      try {
+        const L = await import('leaflet');
+        
+        // Fix for default markers
+        delete (L as any).Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        });
+
         // Initialize map
         map.current = L.map(mapContainer.current!, {
           center: [39.8283, -98.5795], // Center of USA
           zoom: 4,
-          zoomControl: true
+          zoomControl: true,
+          attributionControl: false
         });
 
         // Add OpenStreetMap tiles (free)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors'
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 19
         }).addTo(map.current);
 
         // Add tournament markers
         const tournamentsWithCoords = tournaments.filter(t => 
           t.latitude !== null && t.longitude !== null && 
-          t.latitude !== undefined && t.longitude !== undefined
+          t.latitude !== undefined && t.longitude !== undefined &&
+          !isNaN(t.latitude) && !isNaN(t.longitude)
         );
 
+        console.log('Adding tournaments to map:', tournamentsWithCoords.length);
+
         if (tournamentsWithCoords.length > 0) {
+          const bounds = L.latLngBounds();
+
           tournamentsWithCoords.forEach(tournament => {
             const marker = L.marker([tournament.latitude!, tournament.longitude!])
               .addTo(map.current)
               .bindPopup(`
-                <div class="p-2">
-                  <h3 class="font-semibold text-sm">${tournament.name}</h3>
-                  <p class="text-xs text-gray-600">${tournament.city}, ${tournament.state}</p>
-                  <p class="text-xs">${new Date(tournament.date).toLocaleDateString()}</p>
-                  <p class="text-xs text-green-600">$${tournament.entry_fee}</p>
+                <div style="padding: 8px; min-width: 150px;">
+                  <h3 style="margin: 0 0 4px 0; font-weight: bold; font-size: 14px;">${tournament.name}</h3>
+                  <p style="margin: 2px 0; font-size: 12px; color: #666;">${tournament.city}, ${tournament.state}</p>
+                  <p style="margin: 2px 0; font-size: 12px;">${new Date(tournament.date).toLocaleDateString()}</p>
+                  <p style="margin: 2px 0; font-size: 12px; color: #22c55e;">$${tournament.entry_fee} entry</p>
                 </div>
               `)
               .on('click', () => {
@@ -76,14 +94,20 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
               });
 
             markers.current.push(marker);
+            bounds.extend([tournament.latitude!, tournament.longitude!]);
           });
 
-          // Fit map to show all tournaments - Fixed the TypeScript error
-          const group = L.featureGroup(markers.current);
-          map.current.fitBounds(group.getBounds().pad(0.1));
+          // Fit map to show all tournaments
+          if (bounds.isValid()) {
+            map.current.fitBounds(bounds, { padding: [20, 20] });
+          }
         }
-      });
-    }
+      } catch (error) {
+        console.error('Error initializing map:', error);
+      }
+    };
+
+    initializeMap();
 
     return () => {
       if (map.current) {
@@ -97,7 +121,8 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
 
   const tournamentsWithCoords = tournaments.filter(t => 
     t.latitude !== null && t.longitude !== null && 
-    t.latitude !== undefined && t.longitude !== undefined
+    t.latitude !== undefined && t.longitude !== undefined &&
+    !isNaN(t.latitude) && !isNaN(t.longitude)
   );
 
   const tournamentsWithoutCoords = tournaments.length - tournamentsWithCoords.length;
@@ -120,7 +145,8 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
         <CardContent className="p-0">
           <div 
             ref={mapContainer}
-            className="h-96 bg-deadpunch-dark rounded-lg"
+            className="w-full h-96 bg-deadpunch-dark rounded-lg overflow-hidden"
+            style={{ minHeight: '400px' }}
           />
         </CardContent>
       </Card>
@@ -142,7 +168,7 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
         <div>
           <h4 className="text-lg font-medium text-white mb-3">Tournaments without map locations:</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {tournaments.filter(t => !t.latitude || !t.longitude).slice(0, 6).map((tournament) => (
+            {tournaments.filter(t => !t.latitude || !t.longitude || isNaN(t.latitude) || isNaN(t.longitude)).slice(0, 6).map((tournament) => (
               <Card
                 key={tournament.id}
                 className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark hover:border-deadpunch-red cursor-pointer transition-colors"
