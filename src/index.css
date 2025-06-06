@@ -131,7 +131,7 @@
 
 /* Original night theme styles */
 .theme-night {
-  background: linear-gradient(135deg, hsl(var(--deadpunch-dark)) 0%, hsl(var(--deadpunch-dark-lighter)) 100%);
+  background: linear-gradient(135deg, black 0%, #121212 100%);
   color: white;
 }
 

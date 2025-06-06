@@ -23,7 +23,7 @@ const Tournaments = () => {
   }, [location]);
 
   return (
-    <div className="min-h-screen bg-deadpunch-dark text-white">
+    <div className="min-h-screen bg-black text-white">
       <Navbar />
       <TimeIndicator />
       
@@ -36,7 +36,7 @@ const Tournaments = () => {
               Pool <span className="text-deadpunch-red">Tournaments</span>
             </h1>
           </div>
-          <p className="text-xl text-deadpunch-gray-light max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Discover and participate in pool tournaments near you. Tournament directors can submit their events to reach players nationwide.
           </p>
         </div>
@@ -44,13 +44,13 @@ const Tournaments = () => {
         {/* Submit Tournament Section */}
         {user && (
           <div className="mb-12">
-            <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
+            <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Calendar className="h-6 w-6 text-deadpunch-red mr-2" />
                   Tournament Director?
                 </CardTitle>
-                <CardDescription className="text-deadpunch-gray-light">
+                <CardDescription className="text-gray-400">
                   Submit your tournament to reach players across the country
                 </CardDescription>
               </CardHeader>
@@ -67,7 +67,7 @@ const Tournaments = () => {
                     <Button 
                       variant="outline" 
                       onClick={() => setShowSubmissionForm(false)}
-                      className="mb-4 border-deadpunch-gray-dark text-white hover:bg-deadpunch-dark-lighter"
+                      className="mb-4 border-gray-800 text-white hover:bg-gray-900"
                     >
                       Hide Form
                     </Button>
@@ -81,13 +81,13 @@ const Tournaments = () => {
 
         {!user && (
           <div className="mb-12">
-            <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark">
+            <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <MapPin className="h-6 w-6 text-deadpunch-red mr-2" />
                   Tournament Director?
                 </CardTitle>
-                <CardDescription className="text-deadpunch-gray-light">
+                <CardDescription className="text-gray-400">
                   Sign in to submit your tournament and reach players nationwide
                 </CardDescription>
               </CardHeader>

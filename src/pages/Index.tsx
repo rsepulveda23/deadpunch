@@ -99,7 +99,7 @@ const Index = () => {
       {/* Add the ChatInterface component */}
       <ChatInterface />
       
-      <footer className="py-6 border-t border-deadpunch-gray-dark bg-deadpunch-dark">
+      <footer className="py-6 border-t border-gray-800 bg-black">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <div className="logo-container mr-4">
@@ -125,7 +125,7 @@ const Index = () => {
                 </a>
               </HoverCardTrigger>
               <HoverCardContent 
-                className="w-80 p-0 bg-deadpunch-dark-lighter border-deadpunch-gray-dark rounded-lg overflow-hidden" 
+                className="w-80 p-0 bg-gray-900 border-gray-800 rounded-lg overflow-hidden" 
                 sideOffset={12}
               >
                 <div className="flex flex-col">
@@ -134,7 +134,7 @@ const Index = () => {
                     <img 
                       src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
                       alt="Deadpunch TikTok" 
-                      className="w-full h-full object-contain bg-deadpunch-dark p-6"
+                      className="w-full h-full object-contain bg-black p-6"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
                       <TikTokIcon size={32} />
