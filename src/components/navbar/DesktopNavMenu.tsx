@@ -27,7 +27,7 @@ const DesktopNavMenu = ({ categories }: DesktopNavMenuProps) => {
       <NavigationMenuList>
         {categories.map((category) => (
           <NavigationMenuItem key={category.name}>
-            <NavigationMenuTrigger className="text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300 bg-transparent focus:bg-deadpunch-dark-lighter">
+            <NavigationMenuTrigger className="text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300 bg-transparent focus:bg-deadpunch-dark-lighter data-[state=open]:bg-deadpunch-dark-lighter data-[state=open]:text-deadpunch-red">
               {category.name}
             </NavigationMenuTrigger>
             <NavigationMenuContent className="bg-deadpunch-dark border-deadpunch-gray-dark">
@@ -39,7 +39,7 @@ const DesktopNavMenu = ({ categories }: DesktopNavMenuProps) => {
                         to={subcategory.path}
                         className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-deadpunch-dark-lighter hover:text-deadpunch-red focus:bg-deadpunch-dark-lighter focus:text-deadpunch-red text-deadpunch-gray-light"
                       >
-                        <div className="text-sm font-medium leading-none">{subcategory.name}</div>
+                        <div className="text-sm font-medium leading-none text-deadpunch-gray-light">{subcategory.name}</div>
                         {!subcategory.isActive && (
                           <p className="line-clamp-2 text-sm leading-snug text-deadpunch-red mt-1">
                             Coming Soon

@@ -55,9 +55,9 @@ const MobileMenu = ({ categories, isMenuOpen, setIsMenuOpen, setNotifyDialogOpen
                 className="flex justify-between items-center py-2 cursor-pointer"
                 onClick={() => toggleCategory(category.name)}
               >
-                <span className="text-deadpunch-gray-light font-medium">{category.name}</span>
+                <span className="text-deadpunch-gray-light font-medium hover:text-deadpunch-red transition-colors duration-300">{category.name}</span>
                 <ChevronDown 
-                  className={`h-5 w-5 text-deadpunch-gray-light transition-transform ${
+                  className={`h-5 w-5 text-deadpunch-gray-light transition-transform hover:text-deadpunch-red ${
                     expandedCategories.includes(category.name) ? 'rotate-180' : ''
                   }`} 
                 />
@@ -72,10 +72,10 @@ const MobileMenu = ({ categories, isMenuOpen, setIsMenuOpen, setNotifyDialogOpen
                   <div key={subcategory.name} className="py-1">
                     <Link 
                       to={subcategory.path} 
-                      className="block text-deadpunch-gray-light hover:text-deadpunch-red"
+                      className="block text-deadpunch-gray-light hover:text-deadpunch-red transition-colors duration-300"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <div>{subcategory.name}</div>
+                      <div className="text-deadpunch-gray-light hover:text-deadpunch-red">{subcategory.name}</div>
                       {!subcategory.isActive && (
                         <p className="text-xs text-deadpunch-red">Coming Soon</p>
                       )}
@@ -88,7 +88,7 @@ const MobileMenu = ({ categories, isMenuOpen, setIsMenuOpen, setNotifyDialogOpen
           
           <Button 
             variant="default" 
-            className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-deadpunch-gray-light w-full my-2"
+            className="bg-deadpunch-red hover:bg-deadpunch-red-hover text-deadpunch-gray-light border-deadpunch-red w-full my-2"
             onClick={() => {
               setIsMenuOpen(false);
               setNotifyDialogOpen(true);
