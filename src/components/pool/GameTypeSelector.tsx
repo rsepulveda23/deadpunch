@@ -23,7 +23,7 @@ interface GameTypeSelectorProps {
 export const GameTypeSelector = ({ gameType, onChange }: GameTypeSelectorProps) => {
   return (
     <div className="space-y-3">
-      <Label className="text-white">Game Type</Label>
+      <Label className="text-white font-medium">Game Type</Label>
       <RadioGroup 
         value={gameType} 
         onValueChange={(value) => onChange(value as GameType)}
@@ -33,7 +33,7 @@ export const GameTypeSelector = ({ gameType, onChange }: GameTypeSelectorProps) 
           <RadioGroupItem 
             value="9-ball" 
             id="r1" 
-            className="border-deadpunch-gray-dark text-deadpunch-red"
+            className="border-deadpunch-gray-dark text-deadpunch-red data-[state=checked]:bg-deadpunch-red data-[state=checked]:border-deadpunch-red"
           />
           <Label htmlFor="r1" className="text-white">9-Ball</Label>
         </div>
@@ -41,7 +41,7 @@ export const GameTypeSelector = ({ gameType, onChange }: GameTypeSelectorProps) 
           <RadioGroupItem 
             value="10-ball" 
             id="r2" 
-            className="border-deadpunch-gray-dark text-deadpunch-red"
+            className="border-deadpunch-gray-dark text-deadpunch-red data-[state=checked]:bg-deadpunch-red data-[state=checked]:border-deadpunch-red"
           />
           <Label htmlFor="r2" className="text-white">10-Ball</Label>
         </div>
@@ -49,7 +49,7 @@ export const GameTypeSelector = ({ gameType, onChange }: GameTypeSelectorProps) 
           <RadioGroupItem 
             value="8-ball" 
             id="r3" 
-            className="border-deadpunch-gray-dark text-deadpunch-red"
+            className="border-deadpunch-gray-dark text-deadpunch-red data-[state=checked]:bg-deadpunch-red data-[state=checked]:border-deadpunch-red"
           />
           <Label htmlFor="r3" className="text-white">8-Ball</Label>
         </div>
