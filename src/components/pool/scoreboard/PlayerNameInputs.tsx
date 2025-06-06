@@ -14,12 +14,6 @@ interface PlayerNameInputsProps {
   onInputFocus: (player: "player1" | "player2") => void;
 }
 
-/**
- * PlayerNameInputs Component
- * 
- * Renders input fields for both players' names with appropriate labels.
- * Handles name changes and focus events.
- */
 export const PlayerNameInputs = ({ 
   player1, 
   player2, 
