@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { signOut } from '@/services/authService';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +28,7 @@ const UserMenu = () => {
 
   const getUserInitials = () => {
     const email = user.email || '';
+    // Get first two characters of email and make them uppercase
     return email.substring(0, 2).toUpperCase();
   };
 
@@ -57,8 +58,11 @@ const UserMenu = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full focus:ring-0 focus:ring-offset-0">
-          <Avatar className="h-9 w-9 bg-deadpunch-red">
-            <AvatarFallback className="text-white">{getUserInitials()}</AvatarFallback>
+          <Avatar className="h-9 w-9">
+            <AvatarImage src={undefined} />
+            <AvatarFallback className="bg-deadpunch-red text-white font-semibold">
+              {getUserInitials()}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
