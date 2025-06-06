@@ -31,15 +31,19 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    // Clean up existing map
+    // Clean up existing map and markers
     if (map.current) {
-      markers.current.forEach(marker => marker.remove());
+      markers.current.forEach(marker => {
+        if (marker && marker.remove) {
+          marker.remove();
+        }
+      });
       markers.current = [];
       map.current.remove();
       map.current = null;
     }
 
-    // Create map using Leaflet (free alternative to Mapbox)
+    // Create map using Leaflet
     const initializeMap = async () => {
       try {
         const L = await import('leaflet');
@@ -60,7 +64,7 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
           attributionControl: false
         });
 
-        // Add OpenStreetMap tiles (free)
+        // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '© OpenStreetMap contributors',
           maxZoom: 19
@@ -76,7 +80,7 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
         console.log('Adding tournaments to map:', tournamentsWithCoords.length);
 
         if (tournamentsWithCoords.length > 0) {
-          const bounds = L.latLngBounds();
+          const bounds = L.latLngBounds([]);
 
           tournamentsWithCoords.forEach(tournament => {
             const marker = L.marker([tournament.latitude!, tournament.longitude!])
@@ -97,8 +101,8 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
             bounds.extend([tournament.latitude!, tournament.longitude!]);
           });
 
-          // Fit map to show all tournaments
-          if (bounds.isValid()) {
+          // Fit map to show all tournaments if we have valid bounds
+          if (tournamentsWithCoords.length > 0) {
             map.current.fitBounds(bounds, { padding: [20, 20] });
           }
         }
@@ -111,7 +115,11 @@ const TournamentMapView = ({ tournaments, onTournamentSelect, onToggleView }: To
 
     return () => {
       if (map.current) {
-        markers.current.forEach(marker => marker.remove());
+        markers.current.forEach(marker => {
+          if (marker && marker.remove) {
+            marker.remove();
+          }
+        });
         markers.current = [];
         map.current.remove();
         map.current = null;
