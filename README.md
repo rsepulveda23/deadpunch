@@ -1,8 +1,26 @@
+
 # Welcome to your Lovable project
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/87c41894-32c9-4675-b86c-dd11e1f1cc70
+
+## 🚨 IMPORTANT: Development Guidelines
+
+**EXISTING CODE MUST NEVER BE MODIFIED WITHOUT EXPLICIT USER REQUEST**
+
+This project follows strict code preservation policies. Before making any changes:
+
+1. **Read** `DEVELOPMENT_GUIDELINES.md` for complete rules
+2. **Check** `FEATURES.md` to understand existing functionality  
+3. **Log** new requests in `FEATURE_REQUESTS.md`
+4. **Only add new features** - never modify existing ones without explicit permission
+
+### Quick Rules for Contributors
+- ✋ **DO NOT** modify existing components, pages, or functionality
+- ✅ **DO** create new files for new features
+- ✅ **DO** add new routes and components additively
+- ✅ **DO** ask for permission before changing anything that exists
 
 ## How can I edit this code?
 
