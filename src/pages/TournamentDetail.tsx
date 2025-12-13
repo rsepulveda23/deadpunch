@@ -48,11 +48,10 @@ const TournamentDetail = () => {
   const fetchTournament = async () => {
     try {
       console.log('Fetching tournament with ID:', tournamentId);
+      
+      // Use the secure RPC function that filters contact info for anonymous users
       const { data, error } = await supabase
-        .from('tournaments')
-        .select('*')
-        .eq('id', tournamentId)
-        .single();
+        .rpc('get_tournament_by_id', { tournament_id: tournamentId });
 
       if (error) {
         console.error('Error fetching tournament:', error);
@@ -65,8 +64,44 @@ const TournamentDetail = () => {
         return;
       }
 
-      console.log('Tournament fetched:', data);
-      setTournament(data);
+      if (!data || data.length === 0) {
+        console.error('Tournament not found');
+        toast({
+          title: "Error",
+          description: "Tournament not found",
+          variant: "destructive",
+        });
+        navigate('/tournaments');
+        return;
+      }
+
+      // Map the RPC result to match the Tournament interface
+      const tournamentData = data[0];
+      const mappedTournament: Tournament = {
+        id: tournamentData.id,
+        name: tournamentData.name,
+        date: tournamentData.tournament_date,
+        time: tournamentData.tournament_time,
+        location_name: tournamentData.location_name,
+        address: tournamentData.address,
+        city: tournamentData.city,
+        state: tournamentData.state,
+        zip_code: tournamentData.zip_code,
+        game_type: tournamentData.game_type,
+        entry_fee: tournamentData.entry_fee,
+        prize_pool: tournamentData.prize_pool,
+        description: tournamentData.description,
+        organizer_name: tournamentData.organizer_name,
+        organizer_email: tournamentData.organizer_email,
+        organizer_phone: tournamentData.organizer_phone,
+        website_link: tournamentData.website_link,
+        flyer_image_url: tournamentData.flyer_image_url,
+        user_id: tournamentData.user_id,
+        created_at: tournamentData.created_at,
+      };
+
+      console.log('Tournament fetched:', mappedTournament);
+      setTournament(mappedTournament);
     } catch (error) {
       console.error('Error:', error);
       toast({
