@@ -107,14 +107,31 @@ const handler = async (req: Request): Promise<Response> => {
       password: Deno.env.get("SMTP_PASSWORD"),
     });
     
-    // Prepare email content
-    const source = metadata?.source || 'website';
-    const category = metadata?.category || '';
-    const subcategory = metadata?.subcategory || '';
+    // HTML sanitization function to prevent XSS/injection
+    const sanitizeHtml = (str: string): string => {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .slice(0, 100); // Limit length
+    };
+    
+    // Prepare email content with sanitized metadata
+    const source = sanitizeHtml(metadata?.source || 'website');
+    const category = sanitizeHtml(metadata?.category || '');
+    const subcategory = sanitizeHtml(metadata?.subcategory || '');
+    
+    // Build category text only if values exist
+    const categoryText = (category || subcategory) 
+      ? `<p>You signed up for updates about: ${category} ${subcategory}</p>`
+      : '';
     
     // Customize email based on source/category
-    let subject = "Welcome to DEADPUNCH";
-    let messageContent = `
+    const subject = "Welcome to DEADPUNCH";
+    const messageContent = `
       <html>
         <body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
           <div style="background-color: #1a1a1a; padding: 20px; text-align: center;">
@@ -124,12 +141,12 @@ const handler = async (req: Request): Promise<Response> => {
             <h2>Thanks for joining!</h2>
             <p>We're excited to have you on board. You'll be the first to know when we launch our products.</p>
             
-            <p>You signed up for updates about: ${category} ${subcategory}</p>
+            ${categoryText}
             
             <p>Stay tuned for more information coming soon!</p>
             
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 12px; color: #666;">
-              <p>© DEADPUNCH. All rights reserved.</p>
+              <p>&copy; DEADPUNCH. All rights reserved.</p>
               <p>If you didn't sign up for this email, you can safely ignore it.</p>
             </div>
           </div>
