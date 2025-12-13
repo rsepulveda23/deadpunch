@@ -211,7 +211,60 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_public_tournaments: {
+        Args: never
+        Returns: {
+          address: string
+          city: string
+          created_at: string
+          description: string
+          entry_fee: number
+          flyer_image_url: string
+          game_type: string
+          id: string
+          latitude: number
+          location_name: string
+          longitude: number
+          name: string
+          organizer_email: string
+          organizer_name: string
+          organizer_phone: string
+          prize_pool: string
+          state: string
+          tournament_date: string
+          tournament_time: string
+          user_id: string
+          website_link: string
+          zip_code: string
+        }[]
+      }
+      get_tournament_by_id: {
+        Args: { tournament_id: string }
+        Returns: {
+          address: string
+          city: string
+          created_at: string
+          description: string
+          entry_fee: number
+          flyer_image_url: string
+          game_type: string
+          id: string
+          latitude: number
+          location_name: string
+          longitude: number
+          name: string
+          organizer_email: string
+          organizer_name: string
+          organizer_phone: string
+          prize_pool: string
+          state: string
+          tournament_date: string
+          tournament_time: string
+          user_id: string
+          website_link: string
+          zip_code: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

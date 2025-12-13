@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -26,7 +26,8 @@ import {
   Globe,
   Trophy,
   Edit,
-  Trash
+  Trash,
+  Lock
 } from 'lucide-react';
 import TournamentEditForm from './TournamentEditForm';
 
@@ -60,8 +61,12 @@ interface TournamentDetailViewProps {
 
 const TournamentDetailView: React.FC<TournamentDetailViewProps> = ({ tournament, onUpdate, onDelete }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const isOwner = user?.id === tournament.user_id;
+  
+  // Check if contact info is hidden (for unauthenticated users)
+  const isContactHidden = tournament.organizer_email === '(Sign in to view)';
 
   const formatDate = (dateString: string) => {
     // Parse the date string directly as YYYY-MM-DD and create a local date
@@ -245,19 +250,36 @@ const TournamentDetailView: React.FC<TournamentDetailViewProps> = ({ tournament,
             </div>
           </div>
           
-          <div className="flex items-center text-deadpunch-gray-light">
-            <Mail className="h-5 w-5 mr-3 text-deadpunch-red" />
-            <a href={`mailto:${tournament.organizer_email}`} className="hover:text-white">
-              {tournament.organizer_email}
-            </a>
-          </div>
-          
-          <div className="flex items-center text-deadpunch-gray-light">
-            <Phone className="h-5 w-5 mr-3 text-deadpunch-red" />
-            <a href={`tel:${tournament.organizer_phone}`} className="hover:text-white">
-              {tournament.organizer_phone}
-            </a>
-          </div>
+          {isContactHidden ? (
+            <div className="bg-deadpunch-dark rounded-lg p-4 border border-deadpunch-gray-dark">
+              <div className="flex items-center gap-3 text-deadpunch-gray-light mb-3">
+                <Lock className="h-5 w-5 text-deadpunch-red" />
+                <span>Sign in to view contact information</span>
+              </div>
+              <Button
+                onClick={() => navigate('/auth')}
+                className="bg-deadpunch-red hover:bg-deadpunch-red-hover"
+              >
+                Sign In to View Contact Info
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center text-deadpunch-gray-light">
+                <Mail className="h-5 w-5 mr-3 text-deadpunch-red" />
+                <a href={`mailto:${tournament.organizer_email}`} className="hover:text-white">
+                  {tournament.organizer_email}
+                </a>
+              </div>
+              
+              <div className="flex items-center text-deadpunch-gray-light">
+                <Phone className="h-5 w-5 mr-3 text-deadpunch-red" />
+                <a href={`tel:${tournament.organizer_phone}`} className="hover:text-white">
+                  {tournament.organizer_phone}
+                </a>
+              </div>
+            </>
+          )}
           
           {tournament.website_link && (
             <div className="flex items-center text-deadpunch-gray-light">
