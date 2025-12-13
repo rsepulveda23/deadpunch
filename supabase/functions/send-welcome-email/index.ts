@@ -101,10 +101,10 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Connect to SMTP server using environment variables
     await client.connectTLS({
-      hostname: "smtp.mail.me.com", // Apple SMTP server
-      port: 587,
-      username: Deno.env.get("APPLE_SMTP_EMAIL"),
-      password: Deno.env.get("APPLE_SMTP_PASSWORD"),
+      hostname: Deno.env.get("SMTP_HOST") || "smtp.gmail.com",
+      port: parseInt(Deno.env.get("SMTP_PORT") || "587"),
+      username: Deno.env.get("SMTP_USER"),
+      password: Deno.env.get("SMTP_PASSWORD"),
     });
     
     // Prepare email content
@@ -139,7 +139,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Send email
     await client.send({
-      from: Deno.env.get("APPLE_SMTP_EMAIL") || "noreply@deadpunch.com",
+      from: Deno.env.get("SMTP_FROM_EMAIL") || "admin@deadpunch.com",
       to: email,
       subject: subject,
       html: messageContent,
