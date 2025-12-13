@@ -91,14 +91,17 @@ enable_confirmations = false
 
 # Add security configuration for functions
 [functions]
-# Set proper verification for edge functions
+# All functions now require JWT verification
 verify_jwt = true
-# Set the motion-task function to be public if it's used in webhooks
-[functions.motion-task]
-verify_jwt = false
-# Set the send-welcome-email function to be public if needed
-[functions.send-welcome-email]
-verify_jwt = false
-# Set the openai-chat function to be secured
+
+# openai-chat requires user authentication
 [functions.openai-chat]
 verify_jwt = true
+
+# motion-task and send-welcome-email handle their own auth
+# (supports both JWT and webhook secrets for internal triggers)
+[functions.motion-task]
+verify_jwt = false
+
+[functions.send-welcome-email]
+verify_jwt = false

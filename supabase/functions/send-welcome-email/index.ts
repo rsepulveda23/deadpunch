@@ -1,6 +1,6 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { SmtpClient } from "https://deno.land/x/smtp@v0.7.0/mod.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // Import shared CORS headers
 import { corsHeaders } from "../_shared/cors.ts";
@@ -14,11 +14,67 @@ interface EmailData {
 // Email sending configuration
 const client = new SmtpClient();
 
+/**
+ * Verify user authentication or webhook secret
+ */
+async function verifyAuth(req: Request): Promise<{ authenticated: boolean; isWebhook: boolean; userId?: string }> {
+  // Check for webhook secret header (for database triggers)
+  const webhookSecret = req.headers.get('x-webhook-secret');
+  const expectedSecret = Deno.env.get('WEBHOOK_SECRET');
+  
+  if (webhookSecret && expectedSecret && webhookSecret === expectedSecret) {
+    console.log('Webhook authentication verified');
+    return { authenticated: true, isWebhook: true };
+  }
+
+  // Check for user JWT authentication
+  const authHeader = req.headers.get('Authorization');
+  
+  if (!authHeader) {
+    console.log('No authorization header provided');
+    return { authenticated: false, isWebhook: false };
+  }
+
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+    
+    if (error || !user) {
+      console.log('Auth verification failed:', error?.message || 'No user found');
+      return { authenticated: false, isWebhook: false };
+    }
+
+    console.log('User authenticated:', user.id);
+    return { authenticated: true, isWebhook: false, userId: user.id };
+  } catch (error) {
+    console.error('Error verifying auth:', error);
+    return { authenticated: false, isWebhook: false };
+  }
+}
+
 // Handler for the edge function
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // Verify authentication
+  const auth = await verifyAuth(req);
+  if (!auth.authenticated) {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized', success: false }),
+      { 
+        status: 401, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
   }
 
   try {
@@ -27,6 +83,18 @@ const handler = async (req: Request): Promise<Response> => {
     
     if (!email) {
       throw new Error('Email is required');
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid email format' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
     
     console.log(`[Welcome Email] Sending welcome email to: ${email}`);
@@ -108,7 +176,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error instanceof Error ? error.message : "Unknown error" 
+        error: "Failed to send email" 
       }),
       { 
         status: 500,

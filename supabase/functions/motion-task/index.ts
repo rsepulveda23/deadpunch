@@ -1,11 +1,15 @@
-
 /**
  * Motion Task Function
  *
  * This function is triggered when a new email capture event occurs.
  * It creates a Motion task to send a welcome email.
+ * 
+ * SECURITY: This function accepts requests from:
+ * 1. Authenticated users (via JWT)
+ * 2. Internal webhook triggers (validated via webhook secret)
  */
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
 // Motion API configuration
@@ -13,6 +17,50 @@ const MOTION_API_ENDPOINT = 'https://api.usemotion.com/v1/tasks';
 const MOTION_API_KEY = Deno.env.get("Motion");
 // Get the workspace ID from environment variables
 const MOTION_WORKSPACE_ID = Deno.env.get("MOTION_WORKSPACE_ID") || "default";
+
+/**
+ * Verify user authentication or webhook secret
+ */
+async function verifyAuth(req: Request): Promise<{ authenticated: boolean; isWebhook: boolean; userId?: string }> {
+  // Check for webhook secret header (for database triggers)
+  const webhookSecret = req.headers.get('x-webhook-secret');
+  const expectedSecret = Deno.env.get('WEBHOOK_SECRET');
+  
+  if (webhookSecret && expectedSecret && webhookSecret === expectedSecret) {
+    console.log('Webhook authentication verified');
+    return { authenticated: true, isWebhook: true };
+  }
+
+  // Check for user JWT authentication
+  const authHeader = req.headers.get('Authorization');
+  
+  if (!authHeader) {
+    console.log('No authorization header provided');
+    return { authenticated: false, isWebhook: false };
+  }
+
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+    
+    if (error || !user) {
+      console.log('Auth verification failed:', error?.message || 'No user found');
+      return { authenticated: false, isWebhook: false };
+    }
+
+    console.log('User authenticated:', user.id);
+    return { authenticated: true, isWebhook: false, userId: user.id };
+  } catch (error) {
+    console.error('Error verifying auth:', error);
+    return { authenticated: false, isWebhook: false };
+  }
+}
 
 const handler = async (req: Request): Promise<Response> => {
   console.log("Motion task function triggered");
@@ -23,6 +71,18 @@ const handler = async (req: Request): Promise<Response> => {
       status: 204,
       headers: corsHeaders
     });
+  }
+
+  // Verify authentication
+  const auth = await verifyAuth(req);
+  if (!auth.authenticated) {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized', success: false }),
+      { 
+        status: 401, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
   }
   
   try {
@@ -81,7 +141,24 @@ const handler = async (req: Request): Promise<Response> => {
       return new Response(
         JSON.stringify({ 
           error: 'No email found in payload. Check the structure of your trigger data.',
-          payload: body,
+          success: false
+        }),
+        {
+          status: 400,
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          }
+        }
+      );
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid email format',
           success: false
         }),
         {
@@ -107,7 +184,7 @@ const handler = async (req: Request): Promise<Response> => {
       workspaceId: MOTION_WORKSPACE_ID, // Add the required workspaceId parameter
     };
 
-    console.log("Sending request to Motion API:", JSON.stringify(taskPayload));
+    console.log("Sending request to Motion API");
 
     // Make the API request to Motion with the correct X-API-Key header
     const response = await fetch(MOTION_API_ENDPOINT, {
@@ -122,14 +199,12 @@ const handler = async (req: Request): Promise<Response> => {
     // Get response text for logging
     const responseText = await response.text();
     console.log(`Motion API response status: ${response.status}`);
-    console.log(`Motion API response body: ${responseText}`);
 
     // Check for a successful response
     if (!response.ok) {
       return new Response(
         JSON.stringify({ 
           error: "Failed to create Motion task", 
-          details: responseText,
           status: response.status,
           success: false
         }),
@@ -154,7 +229,6 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({ 
         message: 'Motion task created successfully', 
-        data: responseData,
         success: true
       }),
       {
@@ -170,12 +244,10 @@ const handler = async (req: Request): Promise<Response> => {
     console.error("Unexpected error in motion-task function:", error);
     
     const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : 'No stack trace available';
     
     return new Response(
       JSON.stringify({ 
-        error: errorMessage,
-        stack: errorStack,
+        error: "An internal error occurred",
         success: false
       }),
       {

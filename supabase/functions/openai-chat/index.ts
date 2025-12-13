@@ -2,6 +2,7 @@
 // https://deno.land/manual/examples/deploy_node_server
 
 import { corsHeaders } from "../_shared/cors.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 /**
  * Type definition for chat message requests
@@ -112,6 +113,40 @@ Our approach integrates these mental aspects with technical skills, recognizing 
 `;
 
 /**
+ * Verify user authentication
+ */
+async function verifyAuth(req: Request): Promise<{ authenticated: boolean; userId?: string }> {
+  const authHeader = req.headers.get('Authorization');
+  
+  if (!authHeader) {
+    console.log('No authorization header provided');
+    return { authenticated: false };
+  }
+
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+    
+    if (error || !user) {
+      console.log('Auth verification failed:', error?.message || 'No user found');
+      return { authenticated: false };
+    }
+
+    console.log('User authenticated:', user.id);
+    return { authenticated: true, userId: user.id };
+  } catch (error) {
+    console.error('Error verifying auth:', error);
+    return { authenticated: false };
+  }
+}
+
+/**
  * Main server function that handles all incoming requests
  * Uses Deno's built-in server functionality
  * @param {Request} req - The incoming HTTP request
@@ -121,6 +156,18 @@ Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
+  }
+
+  // Verify authentication
+  const auth = await verifyAuth(req);
+  if (!auth.authenticated) {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized. Please sign in to use the chat.' }),
+      { 
+        status: 401, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
   }
   
   try {
@@ -141,7 +188,18 @@ Deno.serve(async (req) => {
       throw new Error('Message is required')
     }
 
-    console.log(`Processing chat request with model: ${model}`)
+    // Validate message length to prevent abuse
+    if (message.length > 2000) {
+      return new Response(
+        JSON.stringify({ error: 'Message too long. Maximum 2000 characters.' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    console.log(`Processing chat request for user ${auth.userId} with model: ${model}`)
 
     /**
      * Enhanced system prompt for the AI assistant
