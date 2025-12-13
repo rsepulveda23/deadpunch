@@ -23,6 +23,25 @@ export const signUp = async (email: string, password: string) => {
     
     if (error) throw error;
     
+    // Send DEADPUNCH welcome email after successful signup
+    if (data?.user) {
+      try {
+        await supabase.functions.invoke('send-welcome-email', {
+          body: {
+            email: email,
+            metadata: {
+              source: 'auth_signup',
+              category: 'account',
+              timestamp: new Date().toISOString()
+            }
+          }
+        });
+      } catch (emailError) {
+        console.error('Failed to send welcome email:', emailError);
+        // Don't block signup if welcome email fails
+      }
+    }
+    
     return { data, error: null };
   } catch (error: any) {
     console.error('Error signing up:', error.message);
