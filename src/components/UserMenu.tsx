@@ -21,8 +21,15 @@ const UserMenu = () => {
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   if (!user) {
-    // Return null instead of the Sign In button to hide it
-    return null;
+    return (
+      <Button
+        variant="outline"
+        onClick={() => navigate('/auth')}
+        className="border-deadpunch-red text-deadpunch-red hover:bg-deadpunch-red hover:text-white"
+      >
+        Sign In
+      </Button>
+    );
   }
 
   const getUserInitials = () => {
