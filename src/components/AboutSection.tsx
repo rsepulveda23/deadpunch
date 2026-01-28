@@ -25,11 +25,11 @@ const AboutSection = () => {
             <span className="font-semibold">Deadpunch isn't just a brand—it's the zone.</span>
           </p>
           
-          <p className="text-lg text-gray-400 mb-4 leading-relaxed">
+          <p className="text-lg text-gray-400 mb-4 text-center leading-relaxed">
             It's the moment when everything slows down, every angle is clear, and every shot drops without hesitation. That's Deadpunch.
           </p>
-          
-          <p className="text-lg text-gray-400 mb-4 leading-relaxed">
+
+          <p className="text-lg text-gray-400 mb-4 text-center leading-relaxed">
             Flow. Total focus. Confidence built through practice.
           </p>
           
