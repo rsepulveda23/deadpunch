@@ -30,7 +30,7 @@ const AboutSection = () => {
           </p>
           
           <p className="text-lg text-gray-400 mb-4 leading-relaxed">
-            It's flow. It's total focus. It's confidence forged through relentless preparation.
+            Flow. Total focus. Confidence built through practice.
           </p>
           
           <p className="text-2xl text-deadpunch-red font-display text-center font-semibold mb-8 leading-relaxed">
