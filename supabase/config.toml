@@ -89,11 +89,6 @@ double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
 enable_confirmations = false
 
-# Add security configuration for functions
-[functions]
-# All functions now require JWT verification
-verify_jwt = true
-
 # openai-chat requires user authentication
 [functions.openai-chat]
 verify_jwt = true

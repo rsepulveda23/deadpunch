@@ -17,10 +17,10 @@ const ChatHeader = ({ onClose }: ChatHeaderProps) => {
     <div className="p-4 bg-gray-900 border-b border-gray-800 flex justify-between items-center">
       <div className="flex items-center space-x-2">
         <div className="logo-container">
-          <img 
-            src="/lovable-uploads/4e57f636-100a-48d1-ae1e-dbfa44e28d6d.png" 
-            alt="DEADPUNCH" 
-            className="h-6 object-contain" 
+          <img
+            src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png"
+            alt="DEADPUNCH"
+            className="h-6 object-contain"
           />
         </div>
         <span className="font-display text-lg">CHAT</span>
