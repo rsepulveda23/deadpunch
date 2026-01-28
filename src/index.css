@@ -214,6 +214,11 @@
   @apply px-8 py-3 rounded-full font-medium text-white transition-all duration-300 transform hover:scale-105;
 }
 
+/* Input field styling */
+.input-field {
+  @apply w-full px-4 py-3 bg-deadpunch-dark-lighter border border-deadpunch-gray-dark rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-deadpunch-red transition-colors duration-300;
+}
+
 /* Cyan glow effect for accent elements */
 .cyan-glow {
   box-shadow: 0 0 15px rgba(0, 212, 170, 0.4);
