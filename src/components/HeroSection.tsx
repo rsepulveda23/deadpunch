@@ -82,7 +82,7 @@ const HeroSection = () => {
         >
           <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm">
             <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
-              The Future of Sports
+              For Players Who Play to Win
             </p>
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight text-white">
@@ -95,7 +95,7 @@ const HeroSection = () => {
               </p>
             </div>
             
-            <span className="block text-deadpunch-red text-3xl md:text-4xl lg:text-5xl">Get ready. The game is about to change.</span>
+            <span className="block text-deadpunch-red text-3xl md:text-4xl lg:text-5xl">Something's coming.</span>
           </h1>
           <p className="text-white text-lg md:text-xl mb-8 max-w-2xl mx-auto">
             Be the first to know. Sign up to receive exclusive updates on early access when Deadpunch launches.

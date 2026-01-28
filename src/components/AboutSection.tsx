@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Target, Compass, Flame } from 'lucide-react';
 
 const AboutSection = () => {
   return (
@@ -11,7 +10,7 @@ const AboutSection = () => {
         <div className="text-center mb-20 max-w-3xl mx-auto">
           <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm">
             <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
-              Our Identity
+              The Brand
             </p>
           </div>
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 animate-reveal text-white">
@@ -41,36 +40,10 @@ const AboutSection = () => {
           <div className="h-px w-full max-w-md mx-auto bg-gradient-to-r from-transparent via-deadpunch-red/30 to-transparent mb-8"></div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          <div className="bg-gray-900 border border-deadpunch-red/20 backdrop-blur-sm p-8 rounded-xl relative animate-reveal delay-100 transform transition-all duration-300 hover:-translate-y-2">
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-deadpunch-red rounded-full flex items-center justify-center shadow-lg shadow-deadpunch-red/30">
-              <Target className="text-white" size={24} />
-            </div>
-            <h3 className="text-xl font-display font-bold mb-4 text-center pt-6 text-white">OUR VISION</h3>
-            <p className="text-gray-400 text-center">
-              To ignite the next generation of elite billiards athletes—fearless competitors who dominate pressure, master precision, and relentlessly pursue victory.
-            </p>
-          </div>
-          
-          <div className="bg-gray-900 border border-deadpunch-red/20 backdrop-blur-sm p-8 rounded-xl relative animate-reveal delay-200 transform transition-all duration-300 hover:-translate-y-2">
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-deadpunch-red rounded-full flex items-center justify-center shadow-lg shadow-deadpunch-red/30">
-              <Compass className="text-white" size={24} />
-            </div>
-            <h3 className="text-xl font-display font-bold mb-4 text-center pt-6 text-white">OUR MISSION</h3>
-            <p className="text-gray-400 text-center">
-              Empowering billiards athletes through elite gear, mindset mastery, and a relentless pursuit of excellence—equipping every player to deliver their best shot under pressure.
-            </p>
-          </div>
-          
-          <div className="bg-gray-900 border border-deadpunch-red/20 backdrop-blur-sm p-8 rounded-xl relative animate-reveal delay-300 transform transition-all duration-300 hover:-translate-y-2">
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-deadpunch-red rounded-full flex items-center justify-center shadow-lg shadow-deadpunch-red/30">
-              <Flame className="text-white" size={24} />
-            </div>
-            <h3 className="text-xl font-display font-bold mb-4 text-center pt-6 text-white">OUR ENERGY</h3>
-            <p className="text-gray-400 text-center">
-              We live for the intensity, the adrenaline rush when everything's on the line—the fearless confidence of taking the winning shot. This is the spirit we embody, the standard we uphold, and the energy that fuels our every move.
-            </p>
-          </div>
+        <div className="max-w-2xl mx-auto text-center animate-reveal delay-100">
+          <p className="text-xl text-gray-400 leading-relaxed">
+            Gear for serious players. No excuses. No hype.
+          </p>
         </div>
       </div>
     </section>

@@ -156,14 +156,9 @@ const EmailForm = () => {
               </div>
             )}
             
-            <div className="text-center space-y-1">
-              <p className="text-xs text-deadpunch-gray-light">
-                We respect your privacy and will never share your information.
-              </p>
-              <p className="text-xs text-deadpunch-red font-medium">
-                No spam, just heat.
-              </p>
-            </div>
+            <p className="text-xs text-deadpunch-gray-light text-center">
+              We respect your privacy. No spam.
+            </p>
           </form>
         </div>
       </div>
