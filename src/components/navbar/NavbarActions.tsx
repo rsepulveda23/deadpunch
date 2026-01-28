@@ -24,8 +24,8 @@ const NavbarActions = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex-1 flex justify-end">
-      <div className="hidden md:flex items-center space-x-4">
+    <div className="flex items-center">
+      <div className="hidden md:flex items-center gap-4">
         <TikTokFollowButton size="normal" />
         <UserMenu />
         <NotifyDialog 
@@ -42,7 +42,7 @@ const NavbarActions = ({
         />
       </div>
 
-      <div className="md:hidden flex items-center space-x-4">
+      <div className="md:hidden flex items-center gap-3">
         <TikTokFollowButton size="small" />
         <UserMenu />
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>

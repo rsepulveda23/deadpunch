@@ -50,12 +50,10 @@ const Navbar = () => {
           : 'py-4 bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <div className="flex-1 flex justify-start">
-          <NavbarBrand />
-        </div>
+      <div className="container mx-auto px-4 md:px-6 flex items-center gap-8">
+        <NavbarBrand />
 
-        <div className="hidden md:flex items-center justify-center flex-1">
+        <div className="hidden md:flex items-center flex-1">
           <DesktopNavMenu categories={navCategories} />
         </div>
 
