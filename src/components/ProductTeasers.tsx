@@ -8,7 +8,7 @@ const ProductTeasers = () => {
     {
       icon: <Shirt className="h-12 w-12 text-deadpunch-red group-hover:text-deadpunch-red transition-colors duration-300" />,
       title: "T-shirts & Hoodies",
-      description: "Stylish apparel for pool enthusiasts both in the game and everyday wear."
+      description: "Apparel for the table and the street."
     },
     {
       icon: (
@@ -21,17 +21,17 @@ const ProductTeasers = () => {
         </div>
       ),
       title: "Signature Hats",
-      description: "Limited edition headwear for both in and out of the pool hall."
+      description: "Limited runs. Clean designs."
     },
     {
       icon: <Book className="h-12 w-12 text-deadpunch-red group-hover:text-deadpunch-red transition-colors duration-300" />,
       title: "Training Journals",
-      description: "Track your progress with our custom-designed training log books."
+      description: "Track your sessions. See your progress."
     },
     {
       icon: <Tags className="h-12 w-12 text-deadpunch-red group-hover:text-deadpunch-red transition-colors duration-300" />,
       title: "Stickers & Decals",
-      description: "Personalize your journal, cue case, or gear with Deadpunch stickers."
+      description: "Rep the brand on your case, journal, or wherever."
     }
   ];
 
@@ -47,11 +47,8 @@ const ProductTeasers = () => {
           <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 animate-reveal text-white">
             What's <span className="text-deadpunch-red">Coming</span>
           </h2>
-          <p className="text-white text-lg md:text-xl font-display font-medium mb-4 animate-reveal max-w-4xl mx-auto">
-            The ultimate gear and mindset brand for competitive pool players
-          </p>
           <p className="text-white text-lg animate-reveal delay-100 max-w-2xl mx-auto">
-            Preview our upcoming premium gear collection dropping soon.
+            Gear for serious players. Dropping soon.
           </p>
           
           <div className="w-16 h-px bg-deadpunch-red/30 mx-auto mt-8 hover:bg-deadpunch-red/50 transition-colors duration-300"></div>

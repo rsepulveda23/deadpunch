@@ -33,9 +33,9 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
     
-    /* Original DeadPunch Colors - Restored */
-    --deadpunch-red: 3 92% 62%;
-    --deadpunch-red-hover: 3 88% 56%;
+    /* DeadPunch Colors - Updated to cyan/teal to match corporate site */
+    --deadpunch-red: 174 100% 41%;
+    --deadpunch-red-hover: 174 100% 35%;
     --deadpunch-dark: 17 20% 7%;
     --deadpunch-dark-lighter: 17 18% 11%;
     --deadpunch-gray: 225 14% 20%;
