@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shirt, Book, Tags } from 'lucide-react';
+import { Shirt, Book, Tags, Crown } from 'lucide-react';
 
 const ProductTeasers = () => {
   const products = [
@@ -11,15 +11,7 @@ const ProductTeasers = () => {
       description: "Apparel for the table and the street."
     },
     {
-      icon: (
-        <div className="relative w-12 h-12 flex items-center justify-center">
-          <img 
-            src="/lovable-uploads/32d5857c-48eb-4cd6-95eb-8044d6d46782.png" 
-            alt="Signature Hat"
-            className="h-10 w-10 z-10 object-contain group-hover:scale-110 transition-transform duration-300"
-          />
-        </div>
-      ),
+      icon: <Crown className="h-12 w-12 text-deadpunch-red group-hover:text-deadpunch-red transition-colors duration-300" />,
       title: "Signature Hats",
       description: "Limited runs. Clean designs."
     },
