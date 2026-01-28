@@ -214,6 +214,11 @@
   @apply px-8 py-3 rounded-full font-medium text-white transition-all duration-300 transform hover:scale-105;
 }
 
+/* Cyan glow effect for accent elements */
+.cyan-glow {
+  box-shadow: 0 0 15px rgba(0, 212, 170, 0.4);
+}
+
 /* Fix Leaflet map display issues */
 .leaflet-container {
   height: 100%;

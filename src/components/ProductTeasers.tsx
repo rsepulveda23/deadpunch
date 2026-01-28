@@ -62,10 +62,10 @@ const ProductTeasers = () => {
             >
               <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark hover:border-deadpunch-red/40 hover:ring-2 hover:ring-deadpunch-red/20 transition-all duration-300 h-full group">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-deadpunch-red/10 mb-6 mt-2 ring-2 ring-deadpunch-red/10 group-hover:ring-deadpunch-red/40 group-hover:bg-deadpunch-red/20 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(225,60,60,0.3)]">
+                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-deadpunch-red/10 mb-6 mt-2 ring-2 ring-deadpunch-red/10 group-hover:ring-deadpunch-red/40 group-hover:bg-deadpunch-red/20 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(0,212,170,0.3)]">
                     {product.icon}
                   </div>
-                  <h3 className="text-xl font-display font-semibold mb-3 text-white group-hover:text-white group-hover:drop-shadow-[0_0_2px_rgba(225,60,60,0.5)] transition-all duration-300">{product.title}</h3>
+                  <h3 className="text-xl font-display font-semibold mb-3 text-white group-hover:text-white group-hover:drop-shadow-[0_0_2px_rgba(0,212,170,0.5)] transition-all duration-300">{product.title}</h3>
                   <p className="text-white group-hover:text-white transition-colors duration-300">{product.description}</p>
                 </CardContent>
               </Card>

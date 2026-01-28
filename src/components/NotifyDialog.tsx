@@ -124,7 +124,7 @@ const NotifyDialog = ({ trigger, open, onOpenChange }: NotifyDialogProps) => {
   const dialogContent = (
     <DialogContent className="sm:max-w-[425px] bg-deadpunch-dark border-deadpunch-gray-dark text-white">
       <DialogHeader>
-        <div className="mx-auto w-12 h-12 bg-deadpunch-red rounded-full flex items-center justify-center red-glow mb-4">
+        <div className="mx-auto w-12 h-12 bg-deadpunch-red rounded-full flex items-center justify-center cyan-glow mb-4">
           <Mail className="text-white" size={20} />
         </div>
         <DialogTitle className="text-center text-xl">Be The First To Know</DialogTitle>

@@ -68,9 +68,9 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				deadpunch: {
-					red: '#E13C3C',
-					'red-bright': '#FF3A3A',
-					'red-hover': '#FF5252',
+					red: '#00D4AA',
+					'red-bright': '#00E6B8',
+					'red-hover': '#00B894',
 					dark: '#121212',
 					'dark-lighter': '#1E1E1E',
 					'dark-lightest': '#2A2A2A',
@@ -105,12 +105,12 @@ export default {
 					'100%': { opacity: '1', transform: 'translateX(0)' }
 				},
 				'pulse-glow': {
-					'0%, 100%': { 
-						boxShadow: '0 0 20px 2px rgba(225, 60, 60, 0.3)',
+					'0%, 100%': {
+						boxShadow: '0 0 20px 2px rgba(0, 212, 170, 0.3)',
 						transform: 'scale(1)'
 					},
-					'50%': { 
-						boxShadow: '0 0 25px 5px rgba(225, 60, 60, 0.5)',
+					'50%': {
+						boxShadow: '0 0 25px 5px rgba(0, 212, 170, 0.5)',
 						transform: 'scale(1.01)'
 					}
 				},

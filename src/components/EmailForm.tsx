@@ -102,7 +102,7 @@ const EmailForm = () => {
       
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto glass p-8 md:p-12 rounded-xl relative z-10 animate-reveal">
-          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-deadpunch-red rounded-full flex items-center justify-center red-glow">
+          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-deadpunch-red rounded-full flex items-center justify-center cyan-glow">
             <Mail className="text-white" size={20} />
           </div>
           

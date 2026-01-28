@@ -25,7 +25,7 @@ export const RaceToSelector = ({ value, onChange }: RaceToSelectorProps) => {
           </Button>
         </div>
         
-        <div className="mx-3 text-4xl font-display font-bold text-deadpunch-red drop-shadow-[0_0_8px_rgba(225,60,60,0.7)]">
+        <div className="mx-3 text-4xl font-display font-bold text-deadpunch-red drop-shadow-[0_0_8px_rgba(0,212,170,0.7)]">
           {value}
         </div>
         

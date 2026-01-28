@@ -11,7 +11,7 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, delay }) => (
   <div className={`glass p-6 rounded-lg animate-reveal ${delay} border-l-2 border-deadpunch-red/10 hover:border-deadpunch-red/50 hover:ring-2 hover:ring-deadpunch-red/20 transition-all duration-300 group`}>
-    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-deadpunch-red/10 text-deadpunch-red mb-4 border border-deadpunch-red/10 group-hover:border-deadpunch-red/30 group-hover:shadow-[0_0_10px_rgba(225,60,60,0.2)] transition-all duration-300">
+    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-deadpunch-red/10 text-deadpunch-red mb-4 border border-deadpunch-red/10 group-hover:border-deadpunch-red/30 group-hover:shadow-[0_0_10px_rgba(0,212,170,0.2)] transition-all duration-300">
       {icon}
     </div>
     <h3 className="text-xl font-display font-semibold mb-2 text-white group-hover:text-white transition-colors duration-300">{title}</h3>

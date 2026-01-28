@@ -76,35 +76,25 @@ const HeroSection = () => {
         </div>
 
         {/* Hero Text */}
-        <div 
+        <div
           ref={textRef}
-          className="text-center max-w-4xl animate-reveal delay-200"
+          className="text-center max-w-2xl animate-reveal delay-200"
         >
-          <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm">
-            <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
-              For Players Who Play to Win
-            </p>
-          </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight text-white">
-            <span className="block mb-2">COMING SOON</span>
-            
-            {/* Definition Block - Added Here */}
-            <div className="max-w-2xl mx-auto my-4 px-5 py-3 bg-deadpunch-dark-lighter/50 border border-deadpunch-red/20 rounded-md backdrop-blur-sm">
-              <p className="text-base md:text-lg text-white italic">
-                <span className="text-deadpunch-red font-medium">The zone</span> is a state of complete focus and peak performance. In the billiards world, this heightened state of consciousness is known as <span className="text-deadpunch-red font-medium">deadpunch</span>.
-              </p>
-            </div>
-            
-            <span className="block text-deadpunch-red text-3xl md:text-4xl lg:text-5xl">Something's coming.</span>
-          </h1>
-          <p className="text-white text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-            Be the first to know. Sign up to receive exclusive updates on early access when Deadpunch launches.
+          <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm mb-6">
+            For Players Who Play to Win
           </p>
-          <div className="flex justify-center items-center">
-            <a href="#notify" className="btn-primary animate-reveal delay-300 bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
-              Notify Me
-            </a>
-          </div>
+
+          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
+            COMING SOON
+          </h1>
+
+          <p className="text-deadpunch-gray-light text-lg mb-8">
+            Sign up for early access when we launch.
+          </p>
+
+          <a href="#notify" className="btn-primary bg-deadpunch-red hover:bg-deadpunch-red-hover text-white">
+            Notify Me
+          </a>
         </div>
       </div>
 
