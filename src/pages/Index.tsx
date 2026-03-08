@@ -7,7 +7,7 @@ import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
 import ProductTeasers from '@/components/ProductTeasers';
 import EmailForm from '@/components/EmailForm';
-import ChatInterface from '@/components/Chat/ChatInterface';
+
 import TimeIndicator from '@/components/TimeIndicator';
 import TikTokIcon from '@/components/icons/TikTokIcon';
 import { Mail, Phone, Target } from 'lucide-react';
@@ -96,8 +96,6 @@ const Index = () => {
       <ProductTeasers />
       <EmailForm />
       
-      {/* Add the ChatInterface component */}
-      <ChatInterface />
       
       <footer className="py-6 border-t border-gray-800 bg-black">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
