@@ -96,8 +96,6 @@ const Index = () => {
       <ProductTeasers />
       <EmailForm />
       
-      {/* Add the ChatInterface component */}
-      <ChatInterface />
       
       <footer className="py-6 border-t border-gray-800 bg-black">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
