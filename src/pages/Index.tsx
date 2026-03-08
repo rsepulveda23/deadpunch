@@ -7,7 +7,7 @@ import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
 import ProductTeasers from '@/components/ProductTeasers';
 import EmailForm from '@/components/EmailForm';
-import ChatInterface from '@/components/Chat/ChatInterface';
+
 import TimeIndicator from '@/components/TimeIndicator';
 import TikTokIcon from '@/components/icons/TikTokIcon';
 import { Mail, Phone, Target } from 'lucide-react';
