@@ -6,31 +6,40 @@ interface ComingSoonHeaderProps {
   subcategory: string;
 }
 
-/**
- * ComingSoonHeader Component
- * 
- * Displays the header section of the coming soon page with category and subcategory titles.
- */
 export const ComingSoonHeader = ({ category, subcategory }: ComingSoonHeaderProps) => {
   return (
-    <>
-      <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
-        {category} <span className="text-deadpunch-red">{subcategory}</span>
-      </h1>
-      
-      <div className="w-24 h-1 bg-deadpunch-red mx-auto my-6"></div>
-      
-      <p className="text-xl md:text-2xl text-deadpunch-gray-light mb-8">
-        We're working hard to bring you the best {subcategory.toLowerCase()} collection.
-      </p>
-      
-      <div className="text-4xl md:text-6xl font-bold text-deadpunch-red mb-8">
-        COMING SOON
+    <div className="mb-10 md:mb-12">
+      <div className="mb-6">
+        <span className="section-label">DEADPUNCH / DROP</span>
       </div>
-      
-      <p className="text-deadpunch-gray-light mb-12">
-        Check back later or sign up to be notified when we launch.
+
+      <h1 className="text-display text-deadpunch-bone leading-[0.95] text-5xl md:text-7xl lg:text-8xl tracking-tighter">
+        {category}
+      </h1>
+      <h2 className="text-display text-deadpunch-red leading-[0.95] text-5xl md:text-7xl lg:text-8xl tracking-tighter mt-1">
+        {subcategory}.
+      </h2>
+
+      <div className="h-px w-full max-w-md bg-gradient-to-r from-deadpunch-red via-deadpunch-red/40 to-transparent my-8" />
+
+      <p className="text-deadpunch-bone text-lg md:text-xl max-w-xl leading-relaxed">
+        We're building the best{' '}
+        <span className="text-deadpunch-red">{subcategory.toLowerCase()}</span> in
+        the game. Get on the list and we'll let you know the second it drops.
       </p>
-    </>
+
+      <div className="mt-10 grid grid-cols-3 gap-px bg-deadpunch-gray-dark border border-deadpunch-gray-dark max-w-2xl">
+        {[
+          { k: 'STATUS', v: 'BUILDING' },
+          { k: 'ETA', v: 'SOON' },
+          { k: 'EARLY ACCESS', v: 'OPEN' },
+        ].map((s) => (
+          <div key={s.k} className="bg-deadpunch-dark px-4 py-5">
+            <div className="text-mono text-[10px] tracking-[0.2em] text-deadpunch-gray-light">{s.k}</div>
+            <div className="mt-2 font-display text-xl md:text-2xl text-deadpunch-bone">{s.v}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };

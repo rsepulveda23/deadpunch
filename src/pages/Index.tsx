@@ -1,181 +1,124 @@
 
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme } from '@/contexts/ThemeContext';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
 import ProductTeasers from '@/components/ProductTeasers';
 import EmailForm from '@/components/EmailForm';
-
-import TimeIndicator from '@/components/TimeIndicator';
 import TikTokIcon from '@/components/icons/TikTokIcon';
-import { Mail, Phone, Target } from 'lucide-react';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Button } from '@/components/ui/button';
+import { Mail, Phone, Target, ArrowUpRight } from 'lucide-react';
 
 const Index = () => {
-  const { isDayTime, isNightTime } = useTheme();
-  
   useEffect(() => {
-    // Scroll reveal animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: "0px 0px -100px 0px"
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
-    
-    const revealElements = document.querySelectorAll('.animate-reveal');
-    revealElements.forEach(el => observer.observe(el));
-    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -80px 0px' }
+    );
+
+    document.querySelectorAll('.animate-reveal').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
-  // Generate stars for night time - Fixed to use proper themed colors
-  const renderStars = () => {
-    if (!isNightTime) return null;
-    
-    return (
-      <div className="stars">
-        {Array.from({ length: 50 }).map((_, i) => {
-          const size = Math.random() * 3 + 1;
-          const top = Math.random() * 100;
-          const left = Math.random() * 100;
-          const animationDelay = Math.random() * 5;
-          
-          return (
-            <div 
-              key={i} 
-              className="absolute bg-white rounded-full animate-pulse"
-              style={{
-                width: `${size}px`,
-                height: `${size}px`,
-                top: `${top}%`,
-                left: `${left}%`,
-                opacity: Math.random() * 0.7 + 0.3,
-                animationDelay: `${animationDelay}s`,
-                animationDuration: '3s'
-              }}
-            />
-          );
-        })}
-      </div>
-    );
-  };
-  
   return (
-    <main className={`relative min-h-screen overflow-hidden ${isDayTime ? 'theme-day' : 'theme-night'}`}>
-      {/* Celestial elements */}
-      {isDayTime && (
-        <div className="fixed top-20 right-20 sun z-0" />
-      )}
-      {isNightTime && (
-        <div className="fixed top-20 right-20 moon z-0" />
-      )}
-      {renderStars()}
-      
-      {/* Noise texture overlay */}
-      <div className="noise-overlay"></div>
-      
+    <main className="relative min-h-screen overflow-hidden bg-deadpunch-dark text-deadpunch-bone theme-night">
+      <div className="noise-overlay" />
+
       <Navbar />
-      <TimeIndicator />
       <HeroSection />
       <AboutSection />
       <ProductTeasers />
       <EmailForm />
-      
-      
-      <footer className="py-6 border-t border-gray-800 bg-black">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center mb-4 md:mb-0">
-            <div className="logo-container mr-4">
-              <img 
-                src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
-                alt="Deadpunch" 
-                className="h-8 object-contain" 
-              />
-            </div>
-            
-            {/* Social Media Links moved next to logo */}
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <a 
-                  href="https://www.tiktok.com/@deadpunch.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center text-white hover:text-deadpunch-red transition-colors duration-300"
-                  aria-label="TikTok"
-                >
-                  <TikTokIcon size={64} />
-                  <span className="ml-2 text-sm font-medium">Follow Us</span>
+
+      {/* FOOTER — sports magazine masthead */}
+      <footer className="relative bg-deadpunch-dark border-t border-deadpunch-gray-dark">
+        {/* Giant brand wordmark */}
+        <div className="container mx-auto px-4 md:px-10 pt-16 pb-10 md:pt-24 md:pb-14">
+          <div className="font-display font-bold text-deadpunch-bone tracking-[-0.05em] leading-none text-[18vw] md:text-[14vw] select-none">
+            DEAD<span className="text-deadpunch-red">PUNCH</span>
+          </div>
+        </div>
+
+        {/* Footer grid */}
+        <div className="container mx-auto px-4 md:px-10 pb-12 grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-10">
+          {/* Mission */}
+          <div className="col-span-2 md:col-span-4">
+            <p className="text-mono text-[11px] tracking-[0.25em] text-deadpunch-red mb-4">MISSION</p>
+            <p className="text-deadpunch-bone leading-relaxed text-sm md:text-base">
+              Performance gear and a competitive home for serious pool players.
+              No filler. No hype. Just the work.
+            </p>
+          </div>
+
+          {/* Explore */}
+          <div className="md:col-span-2">
+            <p className="text-mono text-[11px] tracking-[0.25em] text-deadpunch-red mb-4">EXPLORE</p>
+            <ul className="space-y-2.5">
+              <li><Link to="/tournaments" className="text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors flex items-center gap-1.5 group">Tournaments <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+              <li><Link to="/pool-tools" className="text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors flex items-center gap-1.5 group">Pool Tools <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+              <li><a href="#products" className="text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors flex items-center gap-1.5 group">Drops <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></a></li>
+              <li><a href="#about" className="text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors flex items-center gap-1.5 group">The Brand <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></a></li>
+            </ul>
+          </div>
+
+          {/* Shop */}
+          <div className="md:col-span-2">
+            <p className="text-mono text-[11px] tracking-[0.25em] text-deadpunch-red mb-4">SHOP</p>
+            <ul className="space-y-2.5">
+              <li><Link to="/men/t-shirts" className="text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors">Men</Link></li>
+              <li><Link to="/women/t-shirts" className="text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors">Women</Link></li>
+              <li><Link to="/new-arrivals/t-shirts" className="text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors">New Arrivals</Link></li>
+              <li><Link to="/training-tools/journals" className="text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors">Training Tools</Link></li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div className="col-span-2 md:col-span-4">
+            <p className="text-mono text-[11px] tracking-[0.25em] text-deadpunch-red mb-4">CONTACT</p>
+            <ul className="space-y-3">
+              <li>
+                <a href="mailto:contact@deadpunch.com" className="group flex items-center gap-3 text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors">
+                  <Mail size={14} className="text-deadpunch-gray-light group-hover:text-deadpunch-red transition-colors" />
+                  contact@deadpunch.com
                 </a>
-              </HoverCardTrigger>
-              <HoverCardContent 
-                className="w-80 p-0 bg-gray-900 border-gray-800 rounded-lg overflow-hidden" 
-                sideOffset={12}
-              >
-                <div className="flex flex-col">
-                  <div className="relative w-full aspect-[1/1] overflow-hidden">
-                    {/* Replace the image with the Deadpunch logo */}
-                    <img 
-                      src="/lovable-uploads/37cea651-5218-4a94-9866-a47b51d4bf2b.png" 
-                      alt="Deadpunch TikTok" 
-                      className="w-full h-full object-contain bg-black p-6"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
-                      <TikTokIcon size={32} />
-                      <span className="text-white text-sm font-medium ml-2">@deadpunch.com</span>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h4 className="text-white font-medium mb-1">DEADPUNCH on TikTok</h4>
-                    <p className="text-white text-sm mb-3">
-                      Check out our latest videos and updates on TikTok
-                    </p>
-                    <Button 
-                      variant="default" 
-                      className="w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-white"
-                      onClick={() => window.open('https://www.tiktok.com/@deadpunch.com', '_blank')}
-                    >
-                      Visit our TikTok
-                    </Button>
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
+              </li>
+              <li>
+                <a href="tel:+14134759156" className="group flex items-center gap-3 text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors">
+                  <Phone size={14} className="text-deadpunch-gray-light group-hover:text-deadpunch-red transition-colors" />
+                  413 · 475 · 9156
+                </a>
+              </li>
+              <li>
+                <Link to="/pool-tools" className="group flex items-center gap-3 text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors">
+                  <Target size={14} className="text-deadpunch-gray-light group-hover:text-deadpunch-red transition-colors" />
+                  Pool Tools
+                </Link>
+              </li>
+              <li>
+                <a href="https://www.tiktok.com/@deadpunch.com" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 text-sm text-deadpunch-bone hover:text-deadpunch-red transition-colors">
+                  <TikTokIcon size={16} />
+                  @deadpunch.com
+                </a>
+              </li>
+            </ul>
           </div>
-          
-          {/* Contact info in the middle */}
-          <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0 text-white">
-            <a href="mailto:contact@deadpunch.com" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
-              <Mail size={16} className="mr-2" />
-              <span className="text-sm">contact@deadpunch.com</span>
-            </a>
-            <a href="tel:+14134759156" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
-              <Phone size={16} className="mr-2" />
-              <span className="text-sm">413-475-9156</span>
-            </a>
-            <Link to="/training-tools/pool-tools" className="flex items-center hover:text-deadpunch-red transition-colors duration-300">
-              <Target size={16} className="mr-2" />
-              <span className="text-sm">Pool Tools</span>
-            </Link>
-          </div>
-          
-          <div className="flex flex-col items-center md:items-end">
-            <div className="text-white text-sm">
-              &copy; {new Date().getFullYear()} Deadpunch™. All rights reserved.
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-deadpunch-gray-dark">
+          <div className="container mx-auto px-4 md:px-10 py-5 flex flex-col md:flex-row justify-between items-center gap-3 text-mono text-[10px] tracking-[0.25em] text-deadpunch-gray-light">
+            <div>© {new Date().getFullYear()} · DEADPUNCH™ · ALL RIGHTS RESERVED</div>
+            <div className="flex items-center gap-4">
+              <span>BUILT IN THE NORTHEAST</span>
+              <span className="text-deadpunch-gray-light/40">·</span>
+              <span className="text-deadpunch-red">FOR PLAYERS WHO PLAY TO WIN</span>
             </div>
           </div>
         </div>

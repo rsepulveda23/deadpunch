@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
+import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
@@ -24,32 +24,43 @@ interface DesktopNavMenuProps {
 const DesktopNavMenu = ({ categories }: DesktopNavMenuProps) => {
   return (
     <NavigationMenu>
-      <NavigationMenuList>
+      <NavigationMenuList className="gap-1">
         {categories.map((category) => (
           <NavigationMenuItem key={category.name}>
-            <NavigationMenuTrigger className="text-gray-400 hover:text-deadpunch-red transition-colors duration-300 bg-transparent focus:bg-gray-900 data-[state=open]:bg-gray-900 data-[state=open]:text-deadpunch-red">
+            <NavigationMenuTrigger className="bg-transparent text-deadpunch-bone/80 hover:text-deadpunch-red focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-deadpunch-red font-display font-medium text-sm tracking-wide px-3 h-9">
               {category.name}
             </NavigationMenuTrigger>
-            <NavigationMenuContent className="bg-black border-gray-800">
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
-                {category.subcategories.map((subcategory) => (
-                  <li key={subcategory.name} className="row-span-1">
-                    <NavigationMenuLink asChild>
-                      <Link
-                        to={subcategory.path}
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-900 hover:text-deadpunch-red focus:bg-gray-900 focus:text-deadpunch-red text-gray-400"
-                      >
-                        <div className="text-sm font-medium leading-none text-gray-400">{subcategory.name}</div>
-                        {!subcategory.isActive && (
-                          <p className="line-clamp-2 text-sm leading-snug text-deadpunch-red mt-1">
-                            Coming Soon
-                          </p>
-                        )}
-                      </Link>
-                    </NavigationMenuLink>
-                  </li>
-                ))}
-              </ul>
+            <NavigationMenuContent className="bg-deadpunch-dark border border-deadpunch-gray-dark rounded-none">
+              <div className="w-[480px] p-2">
+                <div className="px-3 py-2 mb-1 border-b border-deadpunch-gray-dark">
+                  <p className="text-mono text-[10px] tracking-[0.2em] text-deadpunch-red">
+                    {category.name.toUpperCase()}
+                  </p>
+                </div>
+                <ul className="grid grid-cols-2 gap-1 p-1">
+                  {category.subcategories.map((subcategory) => (
+                    <li key={subcategory.name}>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to={subcategory.path}
+                          className="group block px-3 py-3 transition-colors outline-none hover:bg-deadpunch-dark-lighter"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="font-display font-medium text-sm text-deadpunch-bone group-hover:text-deadpunch-red transition-colors">
+                              {subcategory.name}
+                            </div>
+                            {!subcategory.isActive && (
+                              <span className="text-mono text-[9px] tracking-[0.18em] text-deadpunch-red shrink-0">
+                                SOON
+                              </span>
+                            )}
+                          </div>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
         ))}

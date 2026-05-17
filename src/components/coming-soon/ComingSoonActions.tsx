@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { NotificationDialog } from '@/components/coming-soon/NotificationDialog';
 
 interface ComingSoonActionsProps {
@@ -12,36 +11,30 @@ interface ComingSoonActionsProps {
   setIsDialogOpen: (open: boolean) => void;
 }
 
-/**
- * ComingSoonActions Component
- * 
- * Provides action buttons for the coming soon page, including navigation
- * back to home and notification sign-up.
- */
-export const ComingSoonActions = ({ 
-  category, 
+export const ComingSoonActions = ({
+  category,
   subcategory,
   isDialogOpen,
   setIsDialogOpen
 }: ComingSoonActionsProps) => {
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <Button 
-        variant="outline"
-        asChild
-      >
-        <Link to="/">
-          <ArrowLeft className="mr-2" size={18} />
-          Back to Home
-        </Link>
-      </Button>
-      
-      <NotificationDialog 
+    <div className="flex flex-wrap items-center gap-3">
+      <NotificationDialog
         category={category}
         subcategory={subcategory}
         isOpen={isDialogOpen}
         onOpenChange={setIsDialogOpen}
       />
+
+      <Link to="/" className="btn-ghost">
+        <ArrowLeft size={14} />
+        Back to Home
+      </Link>
+
+      <Link to="/tournaments" className="inline-flex items-center gap-2 px-2 text-mono text-[11px] tracking-[0.25em] text-deadpunch-gray-light hover:text-deadpunch-red transition-colors">
+        TOURNAMENTS
+        <ArrowRight size={12} />
+      </Link>
     </div>
   );
 };

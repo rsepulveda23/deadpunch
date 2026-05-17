@@ -1,74 +1,114 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Shirt, Book, Tags, Crown } from 'lucide-react';
+import { ArrowUpRight, Shirt, Book, Tags, Crown } from 'lucide-react';
 
 const ProductTeasers = () => {
   const products = [
     {
-      icon: <Shirt className="h-12 w-12 text-deadpunch-red group-hover:text-deadpunch-red transition-colors duration-300" />,
-      title: "T-shirts & Hoodies",
-      description: "Apparel for the table and the street."
+      n: '01',
+      icon: Shirt,
+      kicker: 'APPAREL',
+      title: 'T-Shirts & Hoodies',
+      description: 'Heavyweight cotton and fleece built for the table and the street.',
+      meta: 'DROP · 01',
+      span: 'md:col-span-7',
+      tall: true,
     },
     {
-      icon: <Crown className="h-12 w-12 text-deadpunch-red group-hover:text-deadpunch-red transition-colors duration-300" />,
-      title: "Signature Hats",
-      description: "Limited runs. Clean designs."
+      n: '02',
+      icon: Crown,
+      kicker: 'HEADWEAR',
+      title: 'Signature Hats',
+      description: 'Limited runs. Clean silhouettes. Built to last.',
+      meta: 'DROP · 02',
+      span: 'md:col-span-5',
     },
     {
-      icon: <Book className="h-12 w-12 text-deadpunch-red group-hover:text-deadpunch-red transition-colors duration-300" />,
-      title: "Training Journals",
-      description: "Track your sessions. See your progress."
+      n: '03',
+      icon: Book,
+      kicker: 'TRAINING',
+      title: 'Training Journals',
+      description: 'Log every session. Track every drill. See the work compound.',
+      meta: 'TOOLKIT · 01',
+      span: 'md:col-span-5',
     },
     {
-      icon: <Tags className="h-12 w-12 text-deadpunch-red group-hover:text-deadpunch-red transition-colors duration-300" />,
-      title: "Stickers & Decals",
-      description: "Rep the brand on your case, journal, or wherever."
-    }
+      n: '04',
+      icon: Tags,
+      kicker: 'EXTRAS',
+      title: 'Stickers & Decals',
+      description: 'Rep the mark on your case, your journal, anywhere.',
+      meta: 'DROP · 03',
+      span: 'md:col-span-7',
+    },
   ];
 
   return (
-    <section id="products" className="py-16 bg-gradient-to-b from-deadpunch-dark to-deadpunch-dark-lighter relative overflow-hidden">
-      <div className="container mx-auto px-4 relative">
-        <div className="text-center mb-16">
-          <div className="inline-block px-4 py-1 mb-4 bg-deadpunch-red/10 border border-deadpunch-red/20 rounded-full backdrop-blur-sm hover:border-deadpunch-red/40 transition-all duration-300">
-            <p className="text-deadpunch-red font-display uppercase tracking-wider text-sm">
-              Deadpunch Drops
+    <section id="products" className="py-24 md:py-36 bg-deadpunch-dark relative overflow-hidden">
+      <div className="absolute inset-0 bg-dot-grid opacity-40 pointer-events-none" />
+
+      <div className="container mx-auto px-4 md:px-10 relative">
+        {/* Header */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12 md:mb-20">
+          <div className="md:col-span-8">
+            <div className="section-label mb-6">CHAPTER · 02 / THE DROPS</div>
+            <h2 className="text-display text-5xl md:text-7xl leading-[0.95] text-deadpunch-bone">
+              What's <span className="text-deadpunch-red">coming.</span>
+            </h2>
+          </div>
+          <div className="md:col-span-4 flex md:justify-end md:items-end">
+            <p className="text-deadpunch-gray-light text-base md:text-lg max-w-xs leading-relaxed">
+              Four product lines launching. Each built for serious play, not aesthetics.
             </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 animate-reveal text-white">
-            What's <span className="text-deadpunch-red">Coming</span>
-          </h2>
-          <p className="text-white text-lg animate-reveal delay-100 max-w-2xl mx-auto">
-            Gear for serious players. Dropping soon.
-          </p>
-          
-          <div className="w-16 h-px bg-deadpunch-red/30 mx-auto mt-8 hover:bg-deadpunch-red/50 transition-colors duration-300"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product, index) => (
-            <div 
-              key={index} 
-              className={`animate-reveal transform transition-all duration-500 delay-${index * 100}`}
-            >
-              <Card className="bg-deadpunch-dark-lighter border-deadpunch-gray-dark hover:border-deadpunch-red/40 hover:ring-2 hover:ring-deadpunch-red/20 transition-all duration-300 h-full group">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-deadpunch-red/10 mb-6 mt-2 ring-2 ring-deadpunch-red/10 group-hover:ring-deadpunch-red/40 group-hover:bg-deadpunch-red/20 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(0,212,170,0.3)]">
-                    {product.icon}
+        {/* Asymmetric grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5">
+          {products.map((p, i) => {
+            const Icon = p.icon;
+            return (
+              <a
+                href="#notify"
+                key={p.n}
+                className={`group relative card-sport ${p.span} ${p.tall ? 'md:row-span-1' : ''} animate-reveal`}
+                style={{ transitionDelay: `${i * 80}ms` }}
+              >
+                <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[320px] p-8 md:p-10 flex flex-col justify-between overflow-hidden">
+                  {/* Top row */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 flex items-center justify-center border border-deadpunch-gray-dark group-hover:border-deadpunch-red group-hover:bg-deadpunch-red/10 transition-all duration-300">
+                        <Icon className="w-5 h-5 text-deadpunch-bone group-hover:text-deadpunch-red transition-colors" />
+                      </div>
+                      <span className="text-mono text-[11px] tracking-[0.2em] text-deadpunch-red">{p.kicker}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-mono text-[10px] tracking-[0.2em] text-deadpunch-gray-light/60">{p.meta}</span>
+                      <span className="text-display text-2xl text-deadpunch-bone/30 group-hover:text-deadpunch-red transition-colors">{p.n}</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-display font-semibold mb-3 text-white group-hover:text-white group-hover:drop-shadow-[0_0_2px_rgba(0,212,170,0.5)] transition-all duration-300">{product.title}</h3>
-                  <p className="text-white group-hover:text-white transition-colors duration-300">{product.description}</p>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
-        </div>
-        
-        <div className="w-full flex justify-center mt-16">
-          <div className="relative w-40 h-0.5 group hover:w-52 transition-all duration-500">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-deadpunch-red/30 to-transparent group-hover:via-deadpunch-red/70 transition-colors duration-300"></div>
-          </div>
+
+                  {/* Bottom */}
+                  <div>
+                    <h3 className="text-display text-3xl md:text-4xl text-deadpunch-bone mb-3 leading-tight group-hover:text-deadpunch-red transition-colors duration-300">
+                      {p.title}
+                    </h3>
+                    <p className="text-deadpunch-gray-light text-sm md:text-base max-w-md leading-relaxed">
+                      {p.description}
+                    </p>
+                    <div className="mt-6 flex items-center gap-2 text-mono text-[11px] tracking-[0.2em] text-deadpunch-bone group-hover:text-deadpunch-red transition-colors">
+                      NOTIFY ME
+                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                    </div>
+                  </div>
+
+                  {/* Decorative line */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-deadpunch-red/0 to-transparent group-hover:via-deadpunch-red/60 transition-all duration-500" />
+                </div>
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>

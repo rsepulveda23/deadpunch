@@ -1,7 +1,6 @@
+
 import React, { useState } from 'react';
-import { Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Loader2, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { saveEmailSubscription } from '@/lib/supabase';
 import { validateEmailFormat, formatEmail } from '@/utils/emailUtils';
@@ -12,23 +11,11 @@ interface EmailSubscriptionFormProps {
   onSuccess: () => void;
 }
 
-/**
- * EmailSubscriptionForm Component
- * 
- * A specialized email subscription form used on "Coming Soon" pages.
- * Collects name and email with additional metadata about which product/feature
- * the user is interested in.
- * 
- * @param {string} category - The product category (e.g., 'Training')
- * @param {string} subcategory - The product subcategory (e.g., 'Pool Tools')
- * @param {Function} onSuccess - Callback function to execute after successful submission
- */
-export const EmailSubscriptionForm = ({ 
-  category, 
-  subcategory, 
-  onSuccess 
+export const EmailSubscriptionForm = ({
+  category,
+  subcategory,
+  onSuccess
 }: EmailSubscriptionFormProps) => {
-  // Form state management
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,91 +23,56 @@ export const EmailSubscriptionForm = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { toast } = useToast();
 
-  /**
-   * Handles the email and name submission form
-   * 
-   * @param {React.FormEvent} e - The form submission event
-   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Reset state for new submission
     setErrorMsg(null);
-    
-    // Basic validation
+
     if (!name.trim()) {
       setErrorMsg("Please enter your name");
-      toast({
-        title: "Name required",
-        description: "Please enter your name.",
-        variant: "destructive"
-      });
+      toast({ title: "Name required", description: "Please enter your name.", variant: "destructive" });
       return;
     }
-    
+
     const formattedEmail = formatEmail(email);
     if (!formattedEmail || !validateEmailFormat(formattedEmail)) {
       setErrorMsg("Please enter a valid email address");
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
-        variant: "destructive"
-      });
+      toast({ title: "Invalid email", description: "Please enter a valid email address.", variant: "destructive" });
       return;
     }
-    
-    // Submit data to Supabase
+
     setIsSubmitting(true);
-    
+
     try {
-      console.log('[ComingSoon] Submitting subscription:', { name, email: formattedEmail, category, subcategory });
-      
-      // Save email with rich metadata, now including the name
       const result = await saveEmailSubscription(formattedEmail, {
         name: name.trim(),
-        category, 
+        category,
         subcategory,
         source: 'coming_soon_page',
         timestamp: new Date().toISOString()
       });
-      
-      // Handle successful submission
+
       if (result.success) {
         setIsSuccess(true);
-        
-        // Different message for duplicate vs new subscription
         if (result.duplicate) {
-          toast({
-            title: "Already Subscribed",
-            description: "This email is already on our notification list.",
-            variant: "default"
-          });
+          toast({ title: "Already on the list.", description: "We've got you." });
         } else {
-          toast({
-            title: "Success!",
-            description: "You've been added to our notification list.",
-            variant: "default"
-          });
+          toast({ title: "You're in.", description: "Welcome to early access." });
         }
-        
-        // Reset form after delay and trigger parent callback
         setTimeout(() => {
           setName('');
           setEmail('');
           setIsSuccess(false);
-          onSuccess(); // Notify parent component
+          onSuccess();
         }, 2000);
       } else {
-        // Handle errors from the service
         throw new Error(result.error || 'Failed to save subscription');
       }
     } catch (error) {
       console.error('[ComingSoon] Submission error:', error);
-      
-      setErrorMsg(`Failed to submit subscription`);
+      setErrorMsg('Failed to submit subscription');
       toast({
-        title: "Something went wrong",
-        description: `There was an error submitting your details. Please try again later.`,
+        title: "Something broke.",
+        description: "Couldn't save your details. Try again.",
         variant: "destructive"
       });
     } finally {
@@ -129,67 +81,73 @@ export const EmailSubscriptionForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-      <div className="space-y-2">
-        <label htmlFor="name" className="text-sm font-medium text-deadpunch-gray-light">
-          Your Name
-        </label>
-        <Input
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <div className="relative">
+        <input
           id="name"
           type="text"
           placeholder="Your name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+          className="input-field h-12"
           disabled={isSubmitting || isSuccess}
           required
         />
+        <span className="absolute left-3 -top-2 px-2 bg-deadpunch-dark text-mono text-[9px] tracking-[0.2em] text-deadpunch-red">
+          NAME
+        </span>
       </div>
-      <div className="space-y-2">
-        <label htmlFor="email" className="text-sm font-medium text-deadpunch-gray-light">
-          Email address
-        </label>
-        <Input
+
+      <div className="relative">
+        <input
           id="email"
           type="email"
-          placeholder="Your email address"
+          placeholder="your.email@anywhere.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="bg-deadpunch-dark border-deadpunch-gray-dark text-white"
+          className="input-field h-12"
           disabled={isSubmitting || isSuccess}
           required
         />
-        {errorMsg && (
-          <div className="text-sm text-red-500 mt-1">
-            <AlertTriangle className="inline-block mr-1" size={14} />
-            <span>{errorMsg}</span>
-          </div>
-        )}
+        <span className="absolute left-3 -top-2 px-2 bg-deadpunch-dark text-mono text-[9px] tracking-[0.2em] text-deadpunch-red">
+          EMAIL
+        </span>
       </div>
-      
-      <Button
+
+      {errorMsg && (
+        <div className="flex items-center gap-2 text-mono text-[11px] tracking-[0.15em] text-red-400">
+          <AlertTriangle size={12} />
+          <span>{errorMsg}</span>
+        </div>
+      )}
+
+      <button
         type="submit"
-        className={`w-full bg-deadpunch-red hover:bg-deadpunch-red-hover text-white ${
-          isSuccess 
-            ? 'bg-green-600 hover:bg-green-700' 
-            : ''
-        }`}
         disabled={isSubmitting || isSuccess}
+        className="btn-primary w-full h-12"
+        style={isSuccess ? { background: '#16442F', color: '#D7FE3C', boxShadow: 'none' } : undefined}
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="animate-spin mr-2" size={18} />
-            <span>Submitting...</span>
+            <Loader2 className="animate-spin" size={16} />
+            Submitting
           </>
         ) : isSuccess ? (
           <>
-            <CheckCircle size={18} className="mr-2" />
-            <span>Subscribed!</span>
+            <CheckCircle size={16} />
+            You're In
           </>
         ) : (
-          'Notify Me'
+          <>
+            Notify Me
+            <ArrowRight size={16} />
+          </>
         )}
-      </Button>
+      </button>
+
+      <p className="text-center text-mono text-[9px] tracking-[0.25em] text-deadpunch-gray-light/60 pt-2">
+        ENCRYPTED · UNSUBSCRIBE ANYTIME
+      </p>
     </form>
   );
 };

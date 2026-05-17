@@ -13,15 +13,21 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: '1.5rem',
 			screens: {
-				'2xl': '1400px'
+				'2xl': '1440px'
 			}
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
-				display: ['Orbitron', 'sans-serif'],
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+				display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+				stencil: ['"Bebas Neue"', '"Space Grotesk"', 'sans-serif'],
+				mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+			},
+			letterSpacing: {
+				'mega': '-0.04em',
+				'tightest': '-0.03em',
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -67,15 +73,24 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				// DEADPUNCH — sports performance palette.
+				// "red" name is legacy; values are now the volt accent.
 				deadpunch: {
-					red: '#00D4AA',
-					'red-bright': '#00E6B8',
-					'red-hover': '#00B894',
-					dark: '#121212',
-					'dark-lighter': '#1E1E1E',
-					'dark-lightest': '#2A2A2A',
-					'gray-light': '#8E9196',
-					'gray-dark': '#4A4A4A',
+					red: '#D7FE3C',
+					'red-bright': '#E5FF5C',
+					'red-hover': '#B8E020',
+					volt: '#D7FE3C',
+					'volt-bright': '#E5FF5C',
+					'volt-hover': '#B8E020',
+					felt: '#0B2A1E',
+					'felt-light': '#16442F',
+					bone: '#EDE7DA',
+					chalk: '#F5F1E6',
+					dark: '#0A0A0A',
+					'dark-lighter': '#121212',
+					'dark-lightest': '#1A1A1A',
+					'gray-light': '#A6A6A6',
+					'gray-dark': '#262626',
 				}
 			},
 			borderRadius: {
@@ -106,17 +121,29 @@ export default {
 				},
 				'pulse-glow': {
 					'0%, 100%': {
-						boxShadow: '0 0 20px 2px rgba(0, 212, 170, 0.3)',
+						boxShadow: '0 0 24px 0 rgba(215, 254, 60, 0.25)',
 						transform: 'scale(1)'
 					},
 					'50%': {
-						boxShadow: '0 0 25px 5px rgba(0, 212, 170, 0.5)',
+						boxShadow: '0 0 36px 4px rgba(215, 254, 60, 0.55)',
 						transform: 'scale(1.01)'
 					}
 				},
 				'float': {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' }
+				},
+				'marquee': {
+					'0%': { transform: 'translateX(0)' },
+					'100%': { transform: 'translateX(-50%)' }
+				},
+				'ticker-flash': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.35' }
+				},
+				'grid-pan': {
+					'0%': { backgroundPosition: '0 0' },
+					'100%': { backgroundPosition: '60px 60px' }
 				}
 			},
 			animation: {
@@ -126,12 +153,21 @@ export default {
 				'fade-in-right': 'fade-in-right 0.7s ease-out',
 				'fade-in-left': 'fade-in-left 0.7s ease-out',
 				'pulse-glow': 'pulse-glow 3s infinite',
-				'float': 'float 6s ease-in-out infinite'
+				'float': 'float 6s ease-in-out infinite',
+				'marquee': 'marquee 40s linear infinite',
+				'marquee-fast': 'marquee 20s linear infinite',
+				'ticker-flash': 'ticker-flash 1.6s ease-in-out infinite',
+				'grid-pan': 'grid-pan 8s linear infinite'
 			},
 			backgroundImage: {
-				'hero-pattern': 'linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.7)), url("/public/lovable-uploads/92c1d270-51fd-4c00-9eb5-98cbc13fb7a8.png")',
 				'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))',
-				'noise-texture': 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%\' height=\'100%\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+				'volt-gradient': 'linear-gradient(135deg, #D7FE3C 0%, #B8E020 100%)',
+				'felt-gradient': 'radial-gradient(ellipse at top, #16442F 0%, #0A0A0A 70%)',
+				'grid-lines': "linear-gradient(rgba(215,254,60,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(215,254,60,0.06) 1px, transparent 1px)",
+				'noise-texture': 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%\' height=\'100%\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+			},
+			backgroundSize: {
+				'grid': '60px 60px',
 			}
 		}
 	},
