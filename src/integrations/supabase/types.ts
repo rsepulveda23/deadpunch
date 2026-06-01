@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
@@ -37,41 +37,59 @@ export type Database = {
       }
       articles: {
         Row: {
-          category: string | null
-          content: string
+          author_id: string | null
+          body: string | null
+          category: string
           created_at: string | null
+          dek: string | null
           excerpt: string | null
           featured_image_url: string | null
           id: string
-          is_published: boolean | null
-          publish_date: string | null
+          is_featured: boolean
+          likes_count: number
+          published_at: string | null
+          rubric: string | null
+          sketch_prompt: string | null
           slug: string
+          status: string | null
           title: string
           updated_at: string | null
         }
         Insert: {
-          category?: string | null
-          content: string
+          author_id?: string | null
+          body?: string | null
+          category: string
           created_at?: string | null
+          dek?: string | null
           excerpt?: string | null
           featured_image_url?: string | null
           id?: string
-          is_published?: boolean | null
-          publish_date?: string | null
+          is_featured?: boolean
+          likes_count?: number
+          published_at?: string | null
+          rubric?: string | null
+          sketch_prompt?: string | null
           slug: string
+          status?: string | null
           title: string
           updated_at?: string | null
         }
         Update: {
-          category?: string | null
-          content?: string
+          author_id?: string | null
+          body?: string | null
+          category?: string
           created_at?: string | null
+          dek?: string | null
           excerpt?: string | null
           featured_image_url?: string | null
           id?: string
-          is_published?: boolean | null
-          publish_date?: string | null
+          is_featured?: boolean
+          likes_count?: number
+          published_at?: string | null
+          rubric?: string | null
+          sketch_prompt?: string | null
           slug?: string
+          status?: string | null
           title?: string
           updated_at?: string | null
         }
@@ -104,6 +122,54 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      crm_sync_log: {
+        Row: {
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          job_name: string
+          rows_changed: number | null
+          rows_processed: number | null
+          started_at: string
+        }
+        Insert: {
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          job_name: string
+          rows_changed?: number | null
+          rows_processed?: number | null
+          started_at?: string
+        }
+        Update: {
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          job_name?: string
+          rows_changed?: number | null
+          rows_processed?: number | null
+          started_at?: string
+        }
+        Relationships: []
+      }
       deadpunch_email_capture: {
         Row: {
           created_at: string | null
@@ -122,6 +188,117 @@ export type Database = {
           email?: string
           id?: string
           metadata?: Json | null
+        }
+        Relationships: []
+      }
+      email_log: {
+        Row: {
+          body_html: string
+          contact_email: string
+          created_at: string
+          error_message: string | null
+          gmail_draft_id: string | null
+          id: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["email_log_status"]
+          subject: string
+          template_slug: string | null
+        }
+        Insert: {
+          body_html: string
+          contact_email: string
+          created_at?: string
+          error_message?: string | null
+          gmail_draft_id?: string | null
+          id?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["email_log_status"]
+          subject: string
+          template_slug?: string | null
+        }
+        Update: {
+          body_html?: string
+          contact_email?: string
+          created_at?: string
+          error_message?: string | null
+          gmail_draft_id?: string | null
+          id?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["email_log_status"]
+          subject?: string
+          template_slug?: string | null
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          body_html: string
+          created_at: string
+          id: string
+          merge_fields: string[]
+          name: string
+          slug: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body_html: string
+          created_at?: string
+          id?: string
+          merge_fields?: string[]
+          name: string
+          slug: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          created_at?: string
+          id?: string
+          merge_fields?: string[]
+          name?: string
+          slug?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      game_events: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_date: string | null
+          event_id: number
+          event_type: string
+          regime_id: number | null
+          source_snapshot_id: number | null
+          source_url: string | null
+          title: string
+          verification_status: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          event_id?: number
+          event_type: string
+          regime_id?: number | null
+          source_snapshot_id?: number | null
+          source_url?: string | null
+          title: string
+          verification_status?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          event_id?: number
+          event_type?: string
+          regime_id?: number | null
+          source_snapshot_id?: number | null
+          source_url?: string | null
+          title?: string
+          verification_status?: string
         }
         Relationships: []
       }
@@ -149,6 +326,39 @@ export type Database = {
           id?: string
           name?: string
           phone?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          email: string
+          id: string
+          last_contacted: string | null
+          name: string | null
+          source: string
+          status: string | null
+          subscribed_at: string | null
+          tags: Json
+        }
+        Insert: {
+          email: string
+          id?: string
+          last_contacted?: string | null
+          name?: string | null
+          source?: string
+          status?: string | null
+          subscribed_at?: string | null
+          tags?: Json
+        }
+        Update: {
+          email?: string
+          id?: string
+          last_contacted?: string | null
+          name?: string | null
+          source?: string
+          status?: string | null
+          subscribed_at?: string | null
+          tags?: Json
         }
         Relationships: []
       }
@@ -191,6 +401,174 @@ export type Database = {
           updated_at?: string
           user_id?: string
           website_url?: string | null
+        }
+        Relationships: []
+      }
+      page_views: {
+        Row: {
+          country: string | null
+          created_at: string
+          device_type: string | null
+          id: string
+          page_path: string
+          referrer: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          page_path: string
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          page_path?: string
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          handle: string | null
+          id: string
+          role: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_current_period_end: string | null
+          subscription_price_cents: number | null
+          subscription_status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          handle?: string | null
+          id: string
+          role?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_current_period_end?: string | null
+          subscription_price_cents?: number | null
+          subscription_status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          handle?: string | null
+          id?: string
+          role?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_current_period_end?: string | null
+          subscription_price_cents?: number | null
+          subscription_status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quick_news: {
+        Row: {
+          body: string
+          created_at: string | null
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      simulations: {
+        Row: {
+          created_at: string
+          draw_count: number
+          parameters_json: Json | null
+          random_seed: number | null
+          regime_id: number | null
+          result_json: Json | null
+          simulation_id: number
+          simulation_name: string
+          trial_count: number
+        }
+        Insert: {
+          created_at?: string
+          draw_count: number
+          parameters_json?: Json | null
+          random_seed?: number | null
+          regime_id?: number | null
+          result_json?: Json | null
+          simulation_id?: number
+          simulation_name: string
+          trial_count: number
+        }
+        Update: {
+          created_at?: string
+          draw_count?: number
+          parameters_json?: Json | null
+          random_seed?: number | null
+          regime_id?: number | null
+          result_json?: Json | null
+          simulation_id?: number
+          simulation_name?: string
+          trial_count?: number
+        }
+        Relationships: []
+      }
+      ticker_messages: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          message: string
+          sort_order: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          message: string
+          sort_order?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          message?: string
+          sort_order?: number
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -356,10 +734,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_article_likes: {
+        Args: { article_slug: string }
+        Returns: number
+      }
       is_admin: { Args: { user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      email_log_status: "draft" | "sent" | "failed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -488,6 +871,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      email_log_status: ["draft", "sent", "failed"],
     },
   },
 } as const
