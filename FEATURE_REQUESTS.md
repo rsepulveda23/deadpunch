@@ -40,3 +40,13 @@
 3. **Additive Development:** New features should add to existing functionality, not replace it
 4. **User Approval Required:** All changes must be explicitly requested by the user
 5. **Minimal Changes:** Implement only what is specifically requested
+
+## 2026-07-12
+
+### Request #002
+**Date:** 2026-07-12  
+**Type:** Maintenance  
+**Description:** Replace the public application with a maintenance page and stop live Supabase connections  
+**Status:** ✅ Complete  
+**Priority:** 🔴 High  
+**Files Modified:** src/App.tsx, src/pages/MaintenancePage.tsx, FEATURE_REQUESTS.md
